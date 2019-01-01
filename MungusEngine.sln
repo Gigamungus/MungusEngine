@@ -3,8 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.168
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SandBox", "SandBox\SandBox.vcxproj", "{0CAF6315-A6D3-409D-89FF-2298FC94F518}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MungusEngine", "MungusEngine\MungusEngine.vcxproj", "{E42EF287-193B-4D06-896D-5581B227B957}"
 EndProject
+
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +24,14 @@ Global
 		{E42EF287-193B-4D06-896D-5581B227B957}.Release|x64.Build.0 = Release|x64
 		{E42EF287-193B-4D06-896D-5581B227B957}.Release|x86.ActiveCfg = Release|Win32
 		{E42EF287-193B-4D06-896D-5581B227B957}.Release|x86.Build.0 = Release|Win32
+		{0CAF6315-A6D3-409D-89FF-2298FC94F518}.Debug|x64.ActiveCfg = Debug|x64
+		{0CAF6315-A6D3-409D-89FF-2298FC94F518}.Debug|x64.Build.0 = Debug|x64
+		{0CAF6315-A6D3-409D-89FF-2298FC94F518}.Debug|x86.ActiveCfg = Debug|Win32
+		{0CAF6315-A6D3-409D-89FF-2298FC94F518}.Debug|x86.Build.0 = Debug|Win32
+		{0CAF6315-A6D3-409D-89FF-2298FC94F518}.Release|x64.ActiveCfg = Release|x64
+		{0CAF6315-A6D3-409D-89FF-2298FC94F518}.Release|x64.Build.0 = Release|x64
+		{0CAF6315-A6D3-409D-89FF-2298FC94F518}.Release|x86.ActiveCfg = Release|Win32
+		{0CAF6315-A6D3-409D-89FF-2298FC94F518}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
