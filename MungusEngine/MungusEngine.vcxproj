@@ -99,7 +99,10 @@
     <ClInclude Include="..\Resources\Vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\Resources\Vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="..\Resources\Vendor\imgui\imstb_truetype.h" />
-    <ClInclude Include="MungusEngine.h" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="Core.h" />
+    <ClInclude Include="EntryPoint.h" />
+    <ClInclude Include="Mungus.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Resources\Vendor\imgui\imgui.cpp" />
@@ -108,7 +111,7 @@
     <ClCompile Include="..\Resources\Vendor\imgui\imgui_impl_glfw.cpp" />
     <ClCompile Include="..\Resources\Vendor\imgui\imgui_impl_opengl3.cpp" />
     <ClCompile Include="..\Resources\Vendor\imgui\imgui_widgets.cpp" />
-    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="Application.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

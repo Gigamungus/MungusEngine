@@ -75,7 +75,16 @@
     <ClInclude Include="..\Resources\Vendor\imgui\imstb_truetype.h">
       <Filter>Resource Files\Vendor\ImGUI</Filter>
     </ClInclude>
-    <ClInclude Include="MungusEngine.h">
+    <ClInclude Include="Core.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="EntryPoint.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Source Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Mungus.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -98,7 +107,7 @@
     <ClCompile Include="..\Resources\Vendor\imgui\imgui_widgets.cpp">
       <Filter>Resource Files\Vendor\ImGUI</Filter>
     </ClCompile>
-    <ClCompile Include="Test.cpp">
+    <ClCompile Include="Application.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
   </ItemGroup>
