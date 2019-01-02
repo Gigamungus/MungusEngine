@@ -13,5 +13,93 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Resource Files\OpenGL">
+      <UniqueIdentifier>{3641ad1e-db49-45c5-88a7-ae4b07a4aaf1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\OpenGL\GLEW">
+      <UniqueIdentifier>{77e634e8-abc8-426b-a6dc-fb3d334dbdb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\OpenGL\GLFW">
+      <UniqueIdentifier>{29446f16-a45e-494c-96e4-9acd7a6d9cc2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Vendor">
+      <UniqueIdentifier>{503a5a5d-149e-4b31-bca5-4981cab44147}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Vendor\ImGUI">
+      <UniqueIdentifier>{a6400ae6-f071-4e2f-ac32-418dde9b3a40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{31d58c5a-8eda-47f5-98db-cd2781c13494}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\eglew.h">
+      <Filter>Resource Files\OpenGL\GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\glew.h">
+      <Filter>Resource Files\OpenGL\GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\glxew.h">
+      <Filter>Resource Files\OpenGL\GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\wglew.h">
+      <Filter>Resource Files\OpenGL\GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\OpenGL\GLFW\include\GLFW\glfw3.h">
+      <Filter>Resource Files\OpenGL\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\OpenGL\GLFW\include\GLFW\glfw3native.h">
+      <Filter>Resource Files\OpenGL\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Vendor\imgui\imconfig.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Vendor\imgui\imgui.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Vendor\imgui\imgui_impl_glfw.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Vendor\imgui\imgui_impl_opengl3.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Vendor\imgui\imgui_internal.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Vendor\imgui\imstb_rectpack.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Vendor\imgui\imstb_textedit.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Vendor\imgui\imstb_truetype.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="MungusEngine.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\Resources\Vendor\imgui\imgui.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Resources\Vendor\imgui\imgui_demo.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Resources\Vendor\imgui\imgui_draw.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Resources\Vendor\imgui\imgui_impl_glfw.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Resources\Vendor\imgui\imgui_impl_opengl3.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Resources\Vendor\imgui\imgui_widgets.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
