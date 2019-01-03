@@ -1,6 +1,6 @@
 #pragma once
 #include "Application.h"
-#include <iostream>
+
 extern Mungus::Application* Mungus::createApplication();
 
 int main(int argc, char** argv) {
