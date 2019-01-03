@@ -1,25 +1,22 @@
 #pragma once
-#include "Core.h"
-#include "pch.h"
+#include "stdafx.h"
 
 namespace Mungus {
 
 	class Renderer {
 	private:
-		std::unordered_map<const unsigned int, const unsigned int> shaders;
-
-
+		std::unordered_map<std::string, const unsigned int> vertexShaders;
+		std::unordered_map<std::string, const unsigned int> fragmentShaders;
+		GLFWwindow* window;
 
 	public:
-		Renderer();
-		virtual ~Renderer();
+		Renderer() {};
+		Renderer(GLFWwindow* window, std::vector<std::string> urls);
+		~Renderer();
 
-		const unsigned int compileShader(const std::string sourceCode, const unsigned int type);
+		const unsigned int compileShader(const std::string& sourceCode, const unsigned int& type);
 
 		const std::string shaderSourceFromUrl(const std::string url) const;
-
-		unsigned int buildProgram();
-
 
 	};
 

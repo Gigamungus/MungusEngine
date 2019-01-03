@@ -43,6 +43,15 @@
     <Filter Include="Source Files\Engine\Application\Renderer\VertexBuffer">
       <UniqueIdentifier>{96fca918-b797-460d-b90c-5d8f0325774c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine\Application\Renderer\Shader">
+      <UniqueIdentifier>{9df79c51-67cd-45d4-9e37-f1e139f6c8c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Application\Entity">
+      <UniqueIdentifier>{48bb1fa9-b539-4127-8cf5-2614c129a827}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Shaders">
+      <UniqueIdentifier>{2092753b-9ff0-42ae-998a-fab528f14a4d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\eglew.h">
@@ -102,11 +111,14 @@
     <ClInclude Include="Renderer.h">
       <Filter>Source Files\Engine\Application\Renderer</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Source Files\Engine\CoreItems</Filter>
-    </ClInclude>
     <ClInclude Include="VertexBuffer.h">
       <Filter>Source Files\Engine\Application\Renderer\VertexBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Source Files\Engine\Application\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Source Files\Engine\CoreItems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,5 +149,19 @@
     <ClCompile Include="VertexBuffer.cpp">
       <Filter>Source Files\Engine\Application\Renderer\VertexBuffer</Filter>
     </ClCompile>
+    <ClCompile Include="Entity.cpp">
+      <Filter>Source Files\Engine\Application\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files\Engine\CoreItems</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Resources\Shaders\basic_shader.vertexshader.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
+    <None Include="..\Resources\Shaders\basic_shader.fragmentshader.shader">
+      <Filter>Resource Files\Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

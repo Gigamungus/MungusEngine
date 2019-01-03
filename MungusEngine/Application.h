@@ -1,19 +1,23 @@
 #pragma once
 
-#include "pch.h"
+#include "stdafx.h"
 
-#include "Core.h"
 #include "Renderer.h"
 
 namespace Mungus {
 
 	class MUNGUS Application {
 	private:
+		std::vector<std::string> shaderLocations;
 		Renderer renderer;
 
 	public:
 		Application();
 		virtual ~Application();
+
+		void glfwStartup(GLFWwindow** win);
+
+		void glewStartup(void);
 
 		virtual void run();
 
