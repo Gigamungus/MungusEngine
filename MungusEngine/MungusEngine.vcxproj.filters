@@ -49,53 +49,8 @@
     <Filter Include="Source Files\Engine\Application\Entity">
       <UniqueIdentifier>{48bb1fa9-b539-4127-8cf5-2614c129a827}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Shaders">
-      <UniqueIdentifier>{2092753b-9ff0-42ae-998a-fab528f14a4d}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\eglew.h">
-      <Filter>Resource Files\OpenGL\GLEW</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\glew.h">
-      <Filter>Resource Files\OpenGL\GLEW</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\glxew.h">
-      <Filter>Resource Files\OpenGL\GLEW</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\wglew.h">
-      <Filter>Resource Files\OpenGL\GLEW</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\OpenGL\GLFW\include\GLFW\glfw3.h">
-      <Filter>Resource Files\OpenGL\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\OpenGL\GLFW\include\GLFW\glfw3native.h">
-      <Filter>Resource Files\OpenGL\GLFW</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\Vendor\imgui\imconfig.h">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\Vendor\imgui\imgui.h">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\Vendor\imgui\imgui_impl_glfw.h">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\Vendor\imgui\imgui_impl_opengl3.h">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\Vendor\imgui\imgui_internal.h">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\Vendor\imgui\imstb_rectpack.h">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\Vendor\imgui\imstb_textedit.h">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Resources\Vendor\imgui\imstb_truetype.h">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClInclude>
     <ClInclude Include="Application.h">
       <Filter>Source Files\Engine\Application</Filter>
     </ClInclude>
@@ -120,26 +75,50 @@
     <ClInclude Include="stdafx.h">
       <Filter>Source Files\Engine\CoreItems</Filter>
     </ClInclude>
+    <ClInclude Include="Resources\Vendor\imgui\imconfig.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Vendor\imgui\imgui.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Vendor\imgui\imgui_impl_glfw.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Vendor\imgui\imgui_impl_opengl3.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Vendor\imgui\imgui_internal.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Vendor\imgui\imstb_rectpack.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Vendor\imgui\imstb_textedit.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\Vendor\imgui\imstb_truetype.h">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\OpenGL\GLFW\include\GLFW\glfw3.h">
+      <Filter>Resource Files\OpenGL\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\OpenGL\GLFW\include\GLFW\glfw3native.h">
+      <Filter>Resource Files\OpenGL\GLFW</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\OpenGL\GLEW\include\GL\eglew.h">
+      <Filter>Resource Files\OpenGL\GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\OpenGL\GLEW\include\GL\glew.h">
+      <Filter>Resource Files\OpenGL\GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\OpenGL\GLEW\include\GL\glxew.h">
+      <Filter>Resource Files\OpenGL\GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\OpenGL\GLEW\include\GL\wglew.h">
+      <Filter>Resource Files\OpenGL\GLEW</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Resources\Vendor\imgui\imgui.cpp">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Resources\Vendor\imgui\imgui_demo.cpp">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Resources\Vendor\imgui\imgui_draw.cpp">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Resources\Vendor\imgui\imgui_impl_glfw.cpp">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Resources\Vendor\imgui\imgui_impl_opengl3.cpp">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Resources\Vendor\imgui\imgui_widgets.cpp">
-      <Filter>Resource Files\Vendor\ImGUI</Filter>
-    </ClCompile>
     <ClCompile Include="Application.cpp">
       <Filter>Source Files\Engine\Application</Filter>
     </ClCompile>
@@ -155,13 +134,23 @@
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files\Engine\CoreItems</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\Resources\Shaders\basic_shader.vertexshader.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Shaders\basic_shader.fragmentshader.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
+    <ClCompile Include="Resources\Vendor\imgui\imgui.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Vendor\imgui\imgui_demo.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Vendor\imgui\imgui_draw.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Vendor\imgui\imgui_impl_glfw.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Vendor\imgui\imgui_impl_opengl3.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources\Vendor\imgui\imgui_widgets.cpp">
+      <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

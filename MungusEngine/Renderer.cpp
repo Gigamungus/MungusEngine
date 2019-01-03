@@ -1,18 +1,22 @@
 #include "stdafx.h"
 #include "Renderer.h"
 
+
 Mungus::Renderer::Renderer(GLFWwindow * window, std::vector<std::string> urls) : window(window) {
 
-	while (urls.size() > 0) {
+	std::cout << std::filesystem::current_path() << "\n";
+
+	while (false) {
 		std::string url = urls.back();
 		urls.pop_back();
-
+		std::cout << std::filesystem::path(url) << "\n";
+		std::cout << std::filesystem::current_path() << "\n";
 		if (std::filesystem::is_directory(url)) {
 			for (auto subFile : std::filesystem::directory_iterator(url)) {
 				urls.push_back(subFile.path().string());
 			}
 		}
-		else {
+		else if (url.find(".shader") != std::string::npos) {
 			if (url.find(".vertexshader") != std::string::npos) {
 				if (vertexShaders.find(url) != vertexShaders.end()) {
 					MLOG("trying to recompile shader: " + url);

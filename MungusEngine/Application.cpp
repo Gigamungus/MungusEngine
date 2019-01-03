@@ -7,7 +7,7 @@ Mungus::Application::Application() {
 	glfwStartup(&window);
 	glewStartup();
 
-	std::vector<std::string> shaderDirectory = {"../resources/shaders"};
+	std::vector<std::string> shaderDirectory = {"/MungusEngine/Resources/shaders"};
 	renderer = Mungus::Renderer(window, shaderDirectory);
 }
 
@@ -61,7 +61,7 @@ void Mungus::Application::glewStartup(void) {
 }
 
 void Mungus::Application::run() {
-
+	std::cin.get();
 
 	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
