@@ -104,10 +104,6 @@
       <Project>{e42ef287-193b-4d06-896d-5581b227b957}</Project>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Shaders\basic_shader.fragmentshader.shader" />
-    <None Include="Shaders\basic_shader.vertexshader.shader" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

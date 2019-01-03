@@ -3,34 +3,32 @@
 
 
 Mungus::Renderer::Renderer(GLFWwindow * window, std::vector<std::string> urls) : window(window) {
-
-	std::cout << std::filesystem::current_path() << "\n";
-
-	while (false) {
+	while (urls.size() > 0) {
 		std::string url = urls.back();
+		std::cout << url << "\n";
 		urls.pop_back();
-		std::cout << std::filesystem::path(url) << "\n";
-		std::cout << std::filesystem::current_path() << "\n";
+
 		if (std::filesystem::is_directory(url)) {
 			for (auto subFile : std::filesystem::directory_iterator(url)) {
 				urls.push_back(subFile.path().string());
 			}
 		}
 		else if (url.find(".shader") != std::string::npos) {
+			std::string fileName = getFileName(std::filesystem::path(url).filename().string());
 			if (url.find(".vertexshader") != std::string::npos) {
-				if (vertexShaders.find(url) != vertexShaders.end()) {
-					MLOG("trying to recompile shader: " + url);
+				if (vertexShaders.find(fileName) != vertexShaders.end()) {
+					MLOG("trying to recompile shader: " + fileName);
 				}
 				else {
-					vertexShaders.insert(std::make_pair(url, compileShader(url, GL_VERTEX_SHADER)));
+					vertexShaders.insert(std::make_pair(fileName, compileShader(url, GL_VERTEX_SHADER)));
 				}
 			}
 			else if (url.find(".fragmentshader") != std::string::npos) {
-				if (fragmentShaders.find(url) != fragmentShaders.end()) {
-					MLOG("trying to recompile shader: " + url);
+				if (fragmentShaders.find(fileName) != fragmentShaders.end()) {
+					MLOG("trying to recompile shader: " + fileName);
 				}
 				else {
-					vertexShaders.insert(std::make_pair(url, compileShader(url, GL_FRAGMENT_SHADER)));
+					fragmentShaders.insert(std::make_pair(fileName, compileShader(url, GL_FRAGMENT_SHADER)));
 				}
 			}
 			else {
@@ -38,6 +36,16 @@ Mungus::Renderer::Renderer(GLFWwindow * window, std::vector<std::string> urls) :
 			}
 		}
 	}
+}
+
+inline std::string Mungus::Renderer::getFileName(const std::string& url) {
+	std::stringstream name;
+
+	for (int i = 0; i < url.size() && url[i] != '.'; i++) {
+		name << url[i];
+	}
+
+	return name.str();
 }
 
 Mungus::Renderer::~Renderer() {

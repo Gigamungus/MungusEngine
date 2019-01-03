@@ -7,7 +7,7 @@ Mungus::Application::Application() {
 	glfwStartup(&window);
 	glewStartup();
 
-	std::vector<std::string> shaderDirectory = {"/MungusEngine/Resources/shaders"};
+	std::vector<std::string> shaderDirectory = { std::filesystem::current_path().string() + "/../resources/shaders"};
 	renderer = Mungus::Renderer(window, shaderDirectory);
 }
 

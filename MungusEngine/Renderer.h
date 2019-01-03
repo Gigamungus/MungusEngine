@@ -9,6 +9,8 @@ namespace Mungus {
 		std::unordered_map<std::string, const unsigned int> fragmentShaders;
 		GLFWwindow* window;
 
+
+		inline std::string getFileName(const std::string& url);
 	public:
 		Renderer() {};
 		Renderer(GLFWwindow* window, std::vector<std::string> urls);
