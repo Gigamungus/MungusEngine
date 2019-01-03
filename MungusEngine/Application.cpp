@@ -41,7 +41,6 @@ void Mungus::Application::glfwStartup(GLFWwindow** win) {
 }
 
 
-
 void Mungus::Application::glewStartup(void) {
 	if (glewInit() != GLEW_OK) {
 		MLOG("error initializing glew");
@@ -61,8 +60,8 @@ void Mungus::Application::glewStartup(void) {
 }
 
 void Mungus::Application::run() {
-	std::cin.get();
 
+	std::cin.get();
 	//ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
 	//float positions[9] = {
