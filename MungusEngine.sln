@@ -7,6 +7,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SandBox", "SandBox\SandBox.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MungusEngine", "MungusEngine\MungusEngine.vcxproj", "{E42EF287-193B-4D06-896D-5581B227B957}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Experimental", "Experimental\Experimental.vcxproj", "{2F00C1B3-6B55-4BF4-B845-E4339AA396E0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MungusAssetCreator", "MungusAssetCreator\MungusAssetCreator.vcxproj", "{9BE569F7-A477-44A6-AA21-B60DD73BFCFB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -21,6 +25,14 @@ Global
 		{E42EF287-193B-4D06-896D-5581B227B957}.Debug|x64.Build.0 = Debug|x64
 		{E42EF287-193B-4D06-896D-5581B227B957}.Release|x64.ActiveCfg = Release|x64
 		{E42EF287-193B-4D06-896D-5581B227B957}.Release|x64.Build.0 = Release|x64
+		{2F00C1B3-6B55-4BF4-B845-E4339AA396E0}.Debug|x64.ActiveCfg = Debug|x64
+		{2F00C1B3-6B55-4BF4-B845-E4339AA396E0}.Debug|x64.Build.0 = Debug|x64
+		{2F00C1B3-6B55-4BF4-B845-E4339AA396E0}.Release|x64.ActiveCfg = Release|x64
+		{2F00C1B3-6B55-4BF4-B845-E4339AA396E0}.Release|x64.Build.0 = Release|x64
+		{9BE569F7-A477-44A6-AA21-B60DD73BFCFB}.Debug|x64.ActiveCfg = Debug|x64
+		{9BE569F7-A477-44A6-AA21-B60DD73BFCFB}.Debug|x64.Build.0 = Debug|x64
+		{9BE569F7-A477-44A6-AA21-B60DD73BFCFB}.Release|x64.ActiveCfg = Release|x64
+		{9BE569F7-A477-44A6-AA21-B60DD73BFCFB}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

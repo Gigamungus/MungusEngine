@@ -1,11 +1,65 @@
 #include "stdafx.h"
 #include "Renderer.h"
 
+Mungus::Renderer::Renderer() {
+	GLFWwindow* window;
+	glfwStartup(&window);
+	this->window = window;
 
-Mungus::Renderer::Renderer(GLFWwindow * window, std::vector<std::string> urls) : window(window) {
+	glewStartup();
+
+
+	compileShaders();
+}
+
+void Mungus::Renderer::glfwStartup(GLFWwindow** win) {
+	if (!glfwInit()) {
+		MLOG("error initializing glfw");
+	}
+
+
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+
+	*win = glfwCreateWindow(1200, 740, "Application", NULL, NULL);
+
+	if (*win == NULL) {
+		MLOG("error creating glfw window");
+	}
+
+	glfwMakeContextCurrent(*win);
+	glfwSwapInterval(1);
+
+	glfwSetErrorCallback([](int code, const char* message) {
+		MLOG("glfw error " << code << ": " << message);
+	});
+}
+
+
+void Mungus::Renderer::glewStartup(void) {
+	if (glewInit() != GLEW_OK) {
+		MLOG("error initializing glew");
+	}
+
+	glEnable(GL_DEBUG_OUTPUT);
+	glDebugMessageCallback([](GLenum source,
+		GLenum type,
+		GLuint id,
+		GLenum severity,
+		GLsizei length,
+		const GLchar *message,
+		const void *userParam)
+	{	std::cout << message << std::endl;	},
+		NULL);
+}
+
+void Mungus::Renderer::compileShaders(void) {
+	std::vector<std::string> urls{ std::filesystem::current_path().string() + "/../resources/shaders" };
+
 	while (urls.size() > 0) {
 		std::string url = urls.back();
-		std::cout << url << "\n";
 		urls.pop_back();
 
 		if (std::filesystem::is_directory(url)) {
@@ -20,7 +74,7 @@ Mungus::Renderer::Renderer(GLFWwindow * window, std::vector<std::string> urls) :
 					MLOG("trying to recompile shader: " + fileName);
 				}
 				else {
-					vertexShaders.insert(std::make_pair(fileName, compileShader(url, GL_VERTEX_SHADER)));
+					vertexShaders.insert(std::make_pair(fileName, compileShader(shaderSourceFromUrl(url), GL_VERTEX_SHADER)));
 				}
 			}
 			else if (url.find(".fragmentshader") != std::string::npos) {
@@ -28,7 +82,7 @@ Mungus::Renderer::Renderer(GLFWwindow * window, std::vector<std::string> urls) :
 					MLOG("trying to recompile shader: " + fileName);
 				}
 				else {
-					fragmentShaders.insert(std::make_pair(fileName, compileShader(url, GL_FRAGMENT_SHADER)));
+					fragmentShaders.insert(std::make_pair(fileName, compileShader(shaderSourceFromUrl(url), GL_FRAGMENT_SHADER)));
 				}
 			}
 			else {
@@ -38,23 +92,10 @@ Mungus::Renderer::Renderer(GLFWwindow * window, std::vector<std::string> urls) :
 	}
 }
 
-inline std::string Mungus::Renderer::getFileName(const std::string& url) {
-	std::stringstream name;
-
-	for (int i = 0; i < url.size() && url[i] != '.'; i++) {
-		name << url[i];
-	}
-
-	return name.str();
-}
-
-Mungus::Renderer::~Renderer() {
-
-}
-
-const unsigned int Mungus::Renderer::compileShader(const std::string& shaderSource, const unsigned int& type) {
+const unsigned int Mungus::Renderer::compileShader(const std::string shaderSource, const unsigned int& type) const {
 	unsigned int shader = glCreateShader(type);
 	const char* shaderSourceString = shaderSource.c_str();
+
 	glShaderSource(shader, 1, &shaderSourceString, NULL);
 	glCompileShader(shader);
 
@@ -64,8 +105,9 @@ const unsigned int Mungus::Renderer::compileShader(const std::string& shaderSour
 		int log_length = 0;
 		char message[1024];
 		glGetShaderInfoLog(shader, 1024, &log_length, message);
-		std::cout << "failed to compile shader " << "\n" << message << "\n";
-	}
+		MLOG("failed to compile shader: " << message);
+		MLOG(shaderSource);
+	} 
 
 	return shader;
 }
@@ -80,8 +122,19 @@ const std::string Mungus::Renderer::shaderSourceFromUrl(const std::string url) c
 	}
 
 	while (getline(file, line)) {
-		source << line;
+		source << line << "\n";
 	}
 
 	return source.str();
 }
+
+inline std::string Mungus::Renderer::getFileName(const std::string& url) const {
+	std::stringstream name;
+
+	for (int i = 0; i < url.size() && url[i] != '.'; i++) {
+		name << url[i];
+	}
+
+	return name.str();
+}
+

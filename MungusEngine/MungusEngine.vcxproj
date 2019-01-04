@@ -70,8 +70,17 @@
     </Link>
     <PostBuildEvent>
       <Command>md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources"
+
 md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Shaders"
-xcopy "$(SolutionDir)Resources\Shaders" "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Shaders" /y</Command>
+xcopy "$(SolutionDir)Resources\Shaders" "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Shaders" /y
+
+md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Assets"
+xcopy "$(SolutionDir)Resources\Assets" "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Assets" /y
+
+md "$(SolutionDir)Resources\Mungus"
+md "$(SolutionDir)Resources\Mungus\lib"
+xcopy "$(OutDir)MungusEngine.dll" "$(SolutionDir)Resources\Mungus\lib" /y
+xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -96,8 +105,17 @@ xcopy "$(SolutionDir)Resources\Shaders" "$(SolutionDir)bin\$(Configuration)-$(Pl
     </Link>
     <PostBuildEvent>
       <Command>md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources"
+
 md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Shaders"
-xcopy "$(SolutionDir)Resources\Shaders" "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Shaders" /y</Command>
+xcopy "$(SolutionDir)Resources\Shaders" "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Shaders" /y
+
+md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Assets"
+xcopy "$(SolutionDir)Resources\Assets" "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Assets" /y
+
+md "$(SolutionDir)Resources\Mungus"
+md "$(SolutionDir)Resources\Mungus\lib"
+xcopy "$(OutDir)MungusEngine.dll" "$(SolutionDir)Resources\Mungus\lib" /y
+xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

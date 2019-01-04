@@ -1,7 +1,5 @@
 #pragma once
-
 #include "stdafx.h"
-
 #include "Renderer.h"
 
 namespace Mungus {
@@ -12,12 +10,8 @@ namespace Mungus {
 		Renderer renderer;
 
 	public:
-		Application();
-		virtual ~Application();
-
-		void glfwStartup(GLFWwindow** win);
-
-		void glewStartup(void);
+		Application(void) {};
+		virtual ~Application() {};
 
 		virtual void run();
 

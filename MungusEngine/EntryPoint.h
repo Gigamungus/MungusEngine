@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 #include "Application.h"
 
 extern Mungus::Application* Mungus::createApplication();

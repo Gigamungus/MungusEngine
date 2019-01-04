@@ -1,6 +1,7 @@
-R"(Line 1
-Line 2
-Line 3
-Line 4
-Line 5
-Line 6)"
+#version 420 core
+
+out vec3 color;
+
+void main() {
+	color = vec3(1, 0, 0);
+}
