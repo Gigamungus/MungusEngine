@@ -1,17 +1,6 @@
 #include "stdafx.h"
 #include "Renderer.h"
 
-Mungus::Renderer::Renderer() {
-	GLFWwindow* window;
-	glfwStartup(&window);
-	this->window = window;
-
-	glewStartup();
-
-
-	compileShaders();
-}
-
 void Mungus::Renderer::glfwStartup(GLFWwindow** win) {
 	if (!glfwInit()) {
 		MLOG("error initializing glfw");

@@ -1,19 +1,31 @@
 #pragma once
 #include "stdafx.h"
 #include "Renderer.h"
+#include "World.h"
+#include "Controller.h"
 
 namespace Mungus {
 
 	class MUNGUS Application {
 	private:
-		std::vector<std::string> shaderLocations;
-		Renderer renderer;
+		World* world;
+		Renderer* renderer;
+		Controller* controller;
 
 	public:
-		Application(void) {};
-		virtual ~Application() {};
+		Application(void) : world(new World(this)), renderer(new Renderer(this)), controller(new Controller(this)) {};
+		virtual ~Application() {
+			delete world;
+			delete renderer;
+			delete controller;
+		};
 
-		virtual void run();
+		virtual void startup(void);
+		virtual void run(void);
+
+		void inline loadAsset(const std::string& assetPath) {
+			world->loadAsset(assetPath);
+		};
 
 	};
 

@@ -46,11 +46,15 @@
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\Application\</OutDir>
     <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
     <TargetExt>.dll</TargetExt>
+    <LinkIncremental>
+    </LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)bin\$(Configuration)-$(Platform)\Application\</OutDir>
     <IntDir>$(SolutionDir)bin-int\$(Configuration)-$(Platform)\$(ProjectName)\</IntDir>
     <TargetExt>.dll</TargetExt>
+    <LinkIncremental>
+    </LinkIncremental>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -58,10 +62,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Resources\OpenGL\GLEW\include;$(SolutionDir)Resources\OpenGL\GLFW\include;$(SolutionDir)Resources</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Resources\OpenGL\GLEW\include;$(SolutionDir)Resources\OpenGL\GLFW\include;$(SolutionDir)Resources\MungusLibs;$(SolutionDir)Resources</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(SolutionDir)Resources\OpenGL\GLEW\lib\Release\x64;$(SolutionDir)Resources\OpenGL\GLFW\lib-vc2015</AdditionalLibraryDirectories>
@@ -70,7 +75,6 @@
     </Link>
     <PostBuildEvent>
       <Command>md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources"
-
 md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Shaders"
 xcopy "$(SolutionDir)Resources\Shaders" "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Shaders" /y
 
@@ -80,8 +84,14 @@ xcopy "$(SolutionDir)Resources\Assets" "$(SolutionDir)bin\$(Configuration)-$(Pla
 md "$(SolutionDir)Resources\Mungus"
 md "$(SolutionDir)Resources\Mungus\lib"
 xcopy "$(OutDir)MungusEngine.dll" "$(SolutionDir)Resources\Mungus\lib" /y
-xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y</Command>
+xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y
+</Command>
     </PostBuildEvent>
+    <PreLinkEvent>
+      <Command>del "$(OutDir)MungusEngine.dll"
+del "$(OutDir)MungusEngine.lib"
+</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -91,10 +101,11 @@ xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y</Comma
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)Resources\OpenGL\GLEW\include;$(SolutionDir)Resources\OpenGL\GLFW\include;$(SolutionDir)Resources</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Resources\OpenGL\GLEW\include;$(SolutionDir)Resources\OpenGL\GLFW\include;$(SolutionDir)Resources\MungusLibs;$(SolutionDir)Resources</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>GLEW_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -105,7 +116,6 @@ xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y</Comma
     </Link>
     <PostBuildEvent>
       <Command>md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources"
-
 md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Shaders"
 xcopy "$(SolutionDir)Resources\Shaders" "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources\Shaders" /y
 
@@ -115,10 +125,18 @@ xcopy "$(SolutionDir)Resources\Assets" "$(SolutionDir)bin\$(Configuration)-$(Pla
 md "$(SolutionDir)Resources\Mungus"
 md "$(SolutionDir)Resources\Mungus\lib"
 xcopy "$(OutDir)MungusEngine.dll" "$(SolutionDir)Resources\Mungus\lib" /y
-xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y</Command>
+xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y
+</Command>
     </PostBuildEvent>
+    <PreLinkEvent>
+      <Command>del "$(OutDir)MungusEngine.dll"
+del "$(OutDir)MungusEngine.lib"
+</Command>
+    </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Resources\MungusLibs\MungusMath.h" />
+    <ClInclude Include="..\Resources\MungusLibs\MungusUtil.h" />
     <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\eglew.h" />
     <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\glew.h" />
     <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\glxew.h" />
@@ -133,7 +151,9 @@ xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y</Comma
     <ClInclude Include="..\Resources\Vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\Resources\Vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="..\Resources\Vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntryPoint.h" />
@@ -141,6 +161,7 @@ xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y</Comma
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="VertexBuffer.h" />
+    <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Resources\Vendor\imgui\imgui.cpp">
@@ -191,7 +212,9 @@ xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y</Comma
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -199,6 +222,7 @@ xcopy "$(OutDir)MungusEngine.lib" "$(SolutionDir)Resources\Mungus\lib" /y</Comma
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="VertexBuffer.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\basic_shader.fragmentshader.shader" />

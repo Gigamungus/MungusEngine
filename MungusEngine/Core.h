@@ -2,4 +2,10 @@
 
 #define MUNGUS __declspec(dllexport)
 
-#define MLOG(x) std::cout << x << "\n"
+#ifdef _DEBUG
+#define MLOG(x) std::cout << x << "\n";
+#define MASSERT(x, y) if (!(x)) {MLOG(y)}
+#else
+#define MLOG(x)
+#define MASSERT(x, y)
+#endif

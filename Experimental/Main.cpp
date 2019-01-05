@@ -9,21 +9,20 @@
 #include <unordered_map>
 #include <stack>
 
-#define TYPE unsigned long long
 
+void reverseString(std::string* string) {
+	size_t size = string->size();
+	for (size_t i = 0, j = size - 1; i < size / 2; i++, j--) {
+		char tmp = (*string)[i];
+		(*string)[i] = (*string)[j];
+		(*string)[j] = tmp;
+	}
+}
 
 int main(void) {
-	char bytes[1000];
-	TYPE num = 27.482364;
-	for (int i = 0; i < sizeof(bytes) / sizeof(TYPE); i++) {
-		memcpy(&bytes[i * sizeof(TYPE)], &num, sizeof(TYPE));
-		num *= 3.123;
-	}
-	(TYPE*)bytes;
-	TYPE* floats = (TYPE*)bytes;
-	for (int i = 0; i < sizeof(bytes) / sizeof(TYPE); i++) {
-		std::cout << floats[i] << "\n";
-	}
-	std::cin.get();
+	std::string str = "1234567890";
+	reverseString(&str);
 
+	std::cout << str << "\n";
+	std::cin.get();
 }

@@ -28,55 +28,58 @@
     <Filter Include="Resource Files\Vendor\ImGUI">
       <UniqueIdentifier>{a6400ae6-f071-4e2f-ac32-418dde9b3a40}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Engine">
-      <UniqueIdentifier>{31d58c5a-8eda-47f5-98db-cd2781c13494}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine\Application">
-      <UniqueIdentifier>{65cdbe7c-6caa-48bd-b138-d6a561df13da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine\CoreItems">
-      <UniqueIdentifier>{d4b4cbf4-c873-4e2a-9d70-792de0f2f4bc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine\Application\Renderer">
-      <UniqueIdentifier>{37cc614f-1ca9-4111-9abb-d619d6e30d87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine\Application\Renderer\VertexBuffer">
-      <UniqueIdentifier>{96fca918-b797-460d-b90c-5d8f0325774c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine\Application\Renderer\Shader">
-      <UniqueIdentifier>{9df79c51-67cd-45d4-9e37-f1e139f6c8c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine\Application\Entity">
-      <UniqueIdentifier>{48bb1fa9-b539-4127-8cf5-2614c129a827}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{9e6bb597-c31f-4df6-b571-a364e4a5530a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CoreItems">
+      <UniqueIdentifier>{d4b4cbf4-c873-4e2a-9d70-792de0f2f4bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{65cdbe7c-6caa-48bd-b138-d6a561df13da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Model">
+      <UniqueIdentifier>{3497693f-a6d0-47c3-8bfc-6dd8a15b78b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\View">
+      <UniqueIdentifier>{af0f7472-ef45-4092-a89b-289a0c8c392e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Controller">
+      <UniqueIdentifier>{a4a3d30d-3a4f-4f40-93b2-9c5bf9c959cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\Model\Entity">
+      <UniqueIdentifier>{48bb1fa9-b539-4127-8cf5-2614c129a827}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\View\VertexBuffer">
+      <UniqueIdentifier>{96fca918-b797-460d-b90c-5d8f0325774c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\View\Shader">
+      <UniqueIdentifier>{9df79c51-67cd-45d4-9e37-f1e139f6c8c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\MungusLibs">
+      <UniqueIdentifier>{ec23f59e-080a-42b6-aa89-e3dcee184356}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
-      <Filter>Source Files\Engine\Application</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="Mungus.h">
-      <Filter>Source Files\Engine\CoreItems</Filter>
+      <Filter>Source Files\CoreItems</Filter>
     </ClInclude>
     <ClInclude Include="EntryPoint.h">
-      <Filter>Source Files\Engine\CoreItems</Filter>
+      <Filter>Source Files\CoreItems</Filter>
     </ClInclude>
     <ClInclude Include="Core.h">
-      <Filter>Source Files\Engine\CoreItems</Filter>
-    </ClInclude>
-    <ClInclude Include="Renderer.h">
-      <Filter>Source Files\Engine\Application\Renderer</Filter>
+      <Filter>Source Files\CoreItems</Filter>
     </ClInclude>
     <ClInclude Include="VertexBuffer.h">
-      <Filter>Source Files\Engine\Application\Renderer\VertexBuffer</Filter>
+      <Filter>Source Files\Engine\View\VertexBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Source Files\Engine\Application\Entity</Filter>
+      <Filter>Source Files\Engine\Model\Entity</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>Source Files\Engine\CoreItems</Filter>
+      <Filter>Source Files\CoreItems</Filter>
     </ClInclude>
     <ClInclude Include="..\Resources\Vendor\imgui\imconfig.h">
       <Filter>Resource Files\Vendor\ImGUI</Filter>
@@ -108,34 +111,49 @@
     <ClInclude Include="..\Resources\OpenGL\GLFW\include\GLFW\glfw3native.h">
       <Filter>Resource Files\OpenGL\GLFW</Filter>
     </ClInclude>
-    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\eglew.h">
-      <Filter>Resource Files\OpenGL\GLEW</Filter>
+    <ClInclude Include="Actor.h">
+      <Filter>Source Files\Engine\Model\Entity</Filter>
     </ClInclude>
-    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\glew.h">
+    <ClInclude Include="World.h">
+      <Filter>Source Files\Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Source Files\Engine\Controller</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer.h">
+      <Filter>Source Files\Engine\View</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\wglew.h">
       <Filter>Resource Files\OpenGL\GLEW</Filter>
     </ClInclude>
     <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\glxew.h">
       <Filter>Resource Files\OpenGL\GLEW</Filter>
     </ClInclude>
-    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\wglew.h">
+    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\glew.h">
       <Filter>Resource Files\OpenGL\GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\eglew.h">
+      <Filter>Resource Files\OpenGL\GLEW</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\MungusLibs\MungusMath.h">
+      <Filter>Resource Files\MungusLibs</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\MungusLibs\MungusUtil.h">
+      <Filter>Resource Files\MungusLibs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
-      <Filter>Source Files\Engine\Application</Filter>
-    </ClCompile>
-    <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files\Engine\Application\Renderer</Filter>
+      <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="VertexBuffer.cpp">
-      <Filter>Source Files\Engine\Application\Renderer\VertexBuffer</Filter>
+      <Filter>Source Files\Engine\View\VertexBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
-      <Filter>Source Files\Engine\Application\Entity</Filter>
+      <Filter>Source Files\Engine\Model\Entity</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Source Files\Engine\CoreItems</Filter>
+      <Filter>Source Files\CoreItems</Filter>
     </ClCompile>
     <ClCompile Include="..\Resources\Vendor\imgui\imgui.cpp">
       <Filter>Resource Files\Vendor\ImGUI</Filter>
@@ -154,6 +172,18 @@
     </ClCompile>
     <ClCompile Include="..\Resources\Vendor\imgui\imgui_widgets.cpp">
       <Filter>Resource Files\Vendor\ImGUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Source Files\Engine\Model\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\Engine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Source Files\Engine\Controller</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer.cpp">
+      <Filter>Source Files\Engine\View</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
