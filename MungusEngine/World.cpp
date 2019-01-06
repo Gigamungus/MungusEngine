@@ -83,7 +83,6 @@ std::shared_ptr<Mungus::Entity> Mungus::World::createEntityFromSourceString(cons
 			}
 		}
 
-		std::cout << actor->vertices.size() << "\n";
 		return actor;
 	}
 

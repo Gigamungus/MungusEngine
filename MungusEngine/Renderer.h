@@ -14,26 +14,20 @@ namespace Mungus {
 		GLFWwindow* window;
 
 
-		inline std::string getFileName(const std::string& url) const;
+
+		void glfwStartup(GLFWwindow*& win);
+		void glewStartup(void);
+
 	public:
 		Renderer(const Application& owner) : owner(owner) {
-			GLFWwindow* window;
-			glfwStartup(&window);
-			this->window = window;
-
+			glfwStartup(window);
 			glewStartup();
-
 			compileShaders();
 		};
 
 		~Renderer() {};
 
-		void glfwStartup(GLFWwindow** win);
-		void glewStartup(void);
-
 		void compileShaders(void);
-		const unsigned int compileShader(const std::string sourceCode, const unsigned int& type) const;
-		const std::string shaderSourceFromUrl(const std::string url) const;
 
 		GLFWwindow* getWindow() const { return window; }
 

@@ -1,7 +1,13 @@
 #include "stdafx.h"
 #include "Renderer.h"
 
-void Mungus::Renderer::glfwStartup(GLFWwindow** win) {
+
+inline std::string getFileName(const std::string& url);
+const std::string shaderSourceFromUrl(const std::string url);
+const unsigned int compileShader(const std::string shaderSource, const unsigned int& type);
+
+
+void Mungus::Renderer::glfwStartup(GLFWwindow*& win) {
 	if (!glfwInit()) {
 		MLOG("error initializing glfw");
 	}
@@ -12,13 +18,13 @@ void Mungus::Renderer::glfwStartup(GLFWwindow** win) {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	*win = glfwCreateWindow(1200, 740, "Application", NULL, NULL);
+	win = glfwCreateWindow(1200, 740, "Application", NULL, NULL);
 
-	if (*win == NULL) {
+	if (win == NULL) {
 		MLOG("error creating glfw window");
 	}
 
-	glfwMakeContextCurrent(*win);
+	glfwMakeContextCurrent(win);
 	glfwSwapInterval(1);
 
 	glfwSetErrorCallback([](int code, const char* message) {
@@ -81,7 +87,7 @@ void Mungus::Renderer::compileShaders(void) {
 	}
 }
 
-const unsigned int Mungus::Renderer::compileShader(const std::string shaderSource, const unsigned int& type) const {
+const unsigned int compileShader(const std::string shaderSource, const unsigned int& type) {
 	unsigned int shader = glCreateShader(type);
 	const char* shaderSourceString = shaderSource.c_str();
 
@@ -101,7 +107,7 @@ const unsigned int Mungus::Renderer::compileShader(const std::string shaderSourc
 	return shader;
 }
 
-const std::string Mungus::Renderer::shaderSourceFromUrl(const std::string url) const {
+const std::string shaderSourceFromUrl(const std::string url) {
 	std::ifstream file(url);
 	std::string line;
 	std::stringstream source;
@@ -117,7 +123,7 @@ const std::string Mungus::Renderer::shaderSourceFromUrl(const std::string url) c
 	return source.str();
 }
 
-inline std::string Mungus::Renderer::getFileName(const std::string& url) const {
+inline std::string getFileName(const std::string& url) {
 	std::stringstream name;
 
 	for (int i = 0; i < url.size() && url[i] != '.'; i++) {
