@@ -7,19 +7,6 @@
 
 static std::unordered_map<std::string, int> paramCodes = {
 	{
-		{"vertices", MVERTICES},
-		{"posx", MPOSX},
-		{"posy", MPOSY},
-		{"posz", MPOSZ},
-		{"posw", MPOSW},
-		{"primitives", MPRIMITIVES},
-		{"primitiveType", MPRIMITIVETYPE},
-		{"vertexIndices", MVERTEXINDICES},
-		{"surfaceNormal", MSURFACENORMAL},
-		{"surfaceColor", MSURFACECOLOR},
-		{"shadersToUse", MSHADERSTOUSE},
-		{"vertexShaders", MVERTEXSHADERS},
-		{"fragmentShaders", MFRAGMENTSHADERS},
 		{"triangle", MTRIANGLE},
 		{"actor", MACTOR}
 	}
@@ -96,6 +83,7 @@ std::shared_ptr<Mungus::Entity> Mungus::World::createEntityFromSourceString(cons
 			}
 		}
 
+		std::cout << actor->vertices.size() << "\n";
 		return actor;
 	}
 
@@ -193,12 +181,30 @@ std::vector<std::string::iterator> parseArray(const std::string::iterator& sourc
 	return indexedLocations;
 }
 
+std::unordered_set<char> nums{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.' };
+
 float parseFloat(const std::string::iterator& position) {
-	return std::stof(&(*(position)));
+	std::stringstream stream;
+	std::string::iterator itr(position);
+
+	while (nums.find(*itr) != nums.end()) {
+		stream << *itr;
+		itr++;
+	}
+
+	return std::stof(stream.str());
 }
 
 int parseInt(const std::string::iterator& position) {
-	return std::stoi(&(*(position)));
+	std::stringstream stream;
+	std::string::iterator itr(position);
+
+	while (nums.find(*itr) != nums.end()) {
+		stream << *itr;
+		itr++;
+	}
+
+	return std::stoi(stream.str());
 }
 
 std::string parseString(const std::string::iterator& position) {

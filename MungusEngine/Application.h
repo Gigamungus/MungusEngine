@@ -20,7 +20,16 @@ namespace Mungus {
 		virtual void run(void);
 
 		void inline loadAsset(const std::string& assetPath) {
-			world.loadAsset(assetPath);
+			auto start = std::chrono::high_resolution_clock::now();
+
+			// operation to be timed ...
+			for (int i = 0; i < 1; i++) {
+				world.loadAsset(assetPath);
+			}
+
+			auto finish = std::chrono::high_resolution_clock::now();
+
+			std::cout << std::chrono::duration_cast<std::chrono::nanoseconds>(finish - start).count() << "ns\n";
 		};
 
 	};

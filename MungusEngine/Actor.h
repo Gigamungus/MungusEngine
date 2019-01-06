@@ -6,12 +6,12 @@ namespace Mungus {
 
 	class MUNGUS Actor : public Entity {
 	private:
-		std::vector<MVec4> vertices;
 		std::vector<Primitive> primitives;
 		std::vector<std::string> vertexShaders;
 		std::vector<std::string> fragmentShaders;
 
 	public:
+		std::vector<MVec4> vertices;
 		Actor(const std::string& assetPath, const unsigned int entityType) : Mungus::Entity(assetPath, entityType)  {};
 		virtual ~Actor() {};
 

@@ -11,18 +11,8 @@
 #endif
 
 
-#define MVERTICES 1
-#define MPOSX 2
-#define MPOSY 3
-#define MPOSZ 4
-#define MPOSW 5
-#define MPRIMITIVES 6
-#define MPRIMITIVETYPE 7
-#define MVERTEXINDICES 8
-#define MSURFACENORMAL 9
-#define MSURFACECOLOR 10
-#define MSHADERSTOUSE 11
-#define MVERTEXSHADERS 12
-#define MFRAGMENTSHADERS 13
-#define MTRIANGLE 14
-#define MACTOR 15
+#define MPOINT 1
+#define MLINE 2
+#define MTRIANGLE 3
+
+#define MACTOR 1
