@@ -2,12 +2,37 @@
 #include "Renderer.h"
 
 
+//////////// internal method declarations //////////////
+
+void glfwStartup(GLFWwindow*& win);
+void glewStartup(void);
 inline std::string getFileName(const std::string& url);
 const std::string shaderSourceFromUrl(const std::string url);
 const unsigned int compileShader(const std::string shaderSource, const unsigned int& type);
+void compileShaders(std::unordered_map<std::string, const unsigned int>& vertexShaders,
+	std::unordered_map<std::string, const unsigned int>& fragmentShaders);
+
+//////////////end internal method declarations /////////////
 
 
-void Mungus::Renderer::glfwStartup(GLFWwindow*& win) {
+
+
+////////////////// start member function implementations ///////////////
+
+Mungus::Renderer::Renderer(const Application& owner) : owner(owner) {
+	glfwStartup(window);
+	glewStartup();
+	compileShaders(vertexShaders, fragmentShaders);
+};
+
+//////////// end member function implementations
+
+
+
+
+//////////////// start internal method implementations /////////////////
+
+void glfwStartup(GLFWwindow*& win) {
 	if (!glfwInit()) {
 		MLOG("error initializing glfw");
 	}
@@ -33,7 +58,7 @@ void Mungus::Renderer::glfwStartup(GLFWwindow*& win) {
 }
 
 
-void Mungus::Renderer::glewStartup(void) {
+void glewStartup(void) {
 	if (glewInit() != GLEW_OK) {
 		MLOG("error initializing glew");
 	}
@@ -50,7 +75,8 @@ void Mungus::Renderer::glewStartup(void) {
 		NULL);
 }
 
-void Mungus::Renderer::compileShaders(void) {
+void compileShaders(	std::unordered_map<std::string, const unsigned int>& vertexShaders,
+						std::unordered_map<std::string, const unsigned int>& fragmentShaders) {
 	std::vector<std::string> urls{ std::filesystem::current_path().string() + "/../resources/shaders" };
 
 	while (urls.size() > 0) {
@@ -133,3 +159,4 @@ inline std::string getFileName(const std::string& url) {
 	return name.str();
 }
 
+//////////////// end internal method implementations /////////////////
