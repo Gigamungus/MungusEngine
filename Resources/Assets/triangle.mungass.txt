@@ -1,5 +1,4 @@
-actor
-{
+"actor": {
 	"vertices": [
 		{
 			"posx": 0.0,
@@ -23,12 +22,14 @@ actor
 	"primitives": [
 		{
 			"primitiveType": triangle,
-			"vertexIndices": [0, 1, 2],
-			"surfaceNormal": {dirx: 1.0, diry: 0.0, dirz: 0.0},
-			"surfaceColor": {r: 1.0, g: 0.5, b: 0.25, a: 1.0}
+			"primitiveData": {
+				"vertexIndices": [0, 1, 2],
+				"surfaceNormal": {"dirx": 1.0, "diry": 0.0, "dirz": 0.0},
+				"surfaceColor": {"r": 1.0, "g": 0.5, "b": 0.25, "a": 1.0}
+			}
 		}
 	],
-	"shadersToUse": {
+	"shaders": {
 		"vertexShaders": [basic_shader],
 		"fragmentShaders": [basic_shader]
 	}

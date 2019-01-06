@@ -7,7 +7,7 @@ namespace Mungus {
 
 	class MUNGUS Renderer {
 	private:
-		Application* owner;
+		const Application& owner;
 
 		std::unordered_map<std::string, const unsigned int> vertexShaders;
 		std::unordered_map<std::string, const unsigned int> fragmentShaders;
@@ -16,7 +16,7 @@ namespace Mungus {
 
 		inline std::string getFileName(const std::string& url) const;
 	public:
-		Renderer(Application* owner) : owner(owner) {
+		Renderer(const Application& owner) : owner(owner) {
 			GLFWwindow* window;
 			glfwStartup(&window);
 			this->window = window;

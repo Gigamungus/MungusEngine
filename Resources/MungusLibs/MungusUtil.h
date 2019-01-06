@@ -38,16 +38,20 @@ namespace MungusUtil {
 		}
 	}
 
-	std::string removeAllWhiteSpace(const std::string* str) {
+	std::string removeAllWhiteSpace(const std::string& str) {
 		std::stringstream stream;
 
-		for (char letter : *str) {
+		for (char letter : str) {
 			if (letter != ' ' && letter != '\t' && letter != '\n') {
 				stream << letter;
 			}
 		}
 
 		return stream.str();
+	}
+
+	long long inline getStringIteratorIndex(const std::string::iterator& begin, const std::string::iterator& itr) {
+		return std::distance(begin, itr);
 	}
 
 }

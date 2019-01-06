@@ -3,26 +3,46 @@
 
 namespace Mungus {
 
-	struct Vertex {
+	struct MVec4 {
 		float x;
 		float y;
 		float z;
 		float w;
 	};
 
+	struct MVec3 {
+		float x;
+		float y;
+		float z;
+	};
+
+	struct Primitive {
+		unsigned int primType;
+		std::vector<unsigned int> vertexIndices;
+		MVec4 surfaceColor;
+	};
+
+	struct Triangle : public Primitive {
+		MVec3 surfaceNormal;
+	};
+
 	class MUNGUS Entity {
-	protected:
+	private:
+		const unsigned int entityType;
 		std::string path;
-		std::vector<Vertex> vertices;
+
+	protected:
 
 	public:
-		Entity() {}
-		Entity(const std::string& assetPath) : path(assetPath) {}
+		Entity(const std::string& assetPath, const unsigned int entityType) :
+			path(assetPath),
+			entityType(entityType)
+		{}
+
 		virtual ~Entity() {}
 
 		const std::string inline getPath() const { return path; }
-
-		void inline addVertex(Vertex vert) { vertices.push_back(vert); }
+		const unsigned int inline type() const { return entityType; }
 	};
 
 }

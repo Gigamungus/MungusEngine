@@ -8,23 +8,19 @@ namespace Mungus {
 
 	class MUNGUS Application {
 	private:
-		World* world;
-		Renderer* renderer;
-		Controller* controller;
+		World world;
+		Renderer renderer;
+		Controller controller;
 
 	public:
-		Application(void) : world(new World(this)), renderer(new Renderer(this)), controller(new Controller(this)) {};
-		virtual ~Application() {
-			delete world;
-			delete renderer;
-			delete controller;
-		};
+		Application(void) : world(*this), renderer(*this), controller(*this) {};
+		virtual ~Application() {};
 
 		virtual void startup(void);
 		virtual void run(void);
 
 		void inline loadAsset(const std::string& assetPath) {
-			world->loadAsset(assetPath);
+			world.loadAsset(assetPath);
 		};
 
 	};

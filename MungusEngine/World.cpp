@@ -5,21 +5,6 @@
 #include "../Resources/MungusLibs/MungusMath.h"
 #include "../Resources/MungusLibs/MungusUtil.h"
 
-#define MVERTICES 1
-#define MPOSX 2
-#define MPOSY 3
-#define MPOSZ 4
-#define MPOSW 5
-#define MPRIMITIVES 6
-#define MPRIMITIVETYPE 7
-#define MVERTEXINDICIES 8
-#define MSURFACENORMAL 9
-#define MSURFACECOLOR 10
-#define MSHADERSTOUSE 11
-#define MVERTEXSHADERS 12
-#define MFRAGMENTSHADERS 13
-
-
 static std::unordered_map<std::string, int> paramCodes = {
 	{
 		{"vertices", MVERTICES},
@@ -29,26 +14,32 @@ static std::unordered_map<std::string, int> paramCodes = {
 		{"posw", MPOSW},
 		{"primitives", MPRIMITIVES},
 		{"primitiveType", MPRIMITIVETYPE},
-		{"vertexIndices", MVERTEXINDICIES},
+		{"vertexIndices", MVERTEXINDICES},
 		{"surfaceNormal", MSURFACENORMAL},
 		{"surfaceColor", MSURFACECOLOR},
 		{"shadersToUse", MSHADERSTOUSE},
 		{"vertexShaders", MVERTEXSHADERS},
-		{"fragmentShaders", MFRAGMENTSHADERS}
+		{"fragmentShaders", MFRAGMENTSHADERS},
+		{"triangle", MTRIANGLE},
+		{"actor", MACTOR}
 	}
 };
 
-struct CompileState {
-	std::vector<Mungus::Vertex> vertices;
+// get the name of a variable, iterator should start at the first quote, and will end after the colon
+std::string getVarName(std::string::iterator& sourceItr);
 
+// break a general buffered collection of data into a tangible collection of iterators at each element
+std::unordered_map<std::string, std::string::iterator> parseObject(const std::string::iterator& itr);
+std::vector<std::string::iterator> parseArray(const std::string::iterator& itr);
 
-};
+// get integral values from buffer locations
+float parseFloat(const std::string::iterator& position);
+int parseInt(const std::string::iterator& position);
+std::string parseString(const std::string::iterator& position);
 
-void parseVertices(std::string::iterator* sourceItr, std::string::iterator* sourceEnd, std::shared_ptr<Mungus::Entity>& entity);
-void parseVertex(std::string::iterator* sourceItr, std::string::iterator* sourceEnd, std::shared_ptr<Mungus::Entity>& entity);
-
-void parsePrimitives(std::string::iterator* sourceItr, std::string::iterator* sourceEnd, std::shared_ptr<Mungus::Entity>& entity);
-void parsePrimitive(std::string::iterator* sourceItr, std::string::iterator* sourceEnd, std::shared_ptr<Mungus::Entity>& entity);
+// parse more specific collection types into a relevant tangible container
+Mungus::MVec4 parseVertex(const std::string::iterator& itr);
+Mungus::Primitive parsePrimitive(const std::string::iterator& primitiveDataBuffer);
 
 
 void Mungus::World::loadAsset(const std::string& assetPath) {
@@ -57,215 +48,219 @@ void Mungus::World::loadAsset(const std::string& assetPath) {
 }
 
 std::shared_ptr<Mungus::Entity> Mungus::World::createEntityFromSourceString(const std::string & sourcePath, const std::string & source) {
-	std::string sourceText = MungusUtil::removeAllWhiteSpace(&source);
-	std::shared_ptr<Mungus::Entity> ptr;
-	std::stringstream entityType;
 
-	auto sourceItr = sourceText.begin();
-	auto sourceEnd = sourceText.end();
-	
-	while (*sourceItr != '{') {
-		entityType << *sourceItr;
-		sourceItr++;
-	}
+	std::string sourceText = MungusUtil::removeAllWhiteSpace(source);
 
-	std::string type = entityType.str();
+	auto itr = sourceText.begin();
+	auto end = sourceText.end();
 
-	if (type == "actor") {
-		ptr = std::make_shared<Mungus::Actor>(sourcePath);
-	}
-	else {
-		MLOG("trying to load unsupported asset type: " << type);
-		return ptr;
-	}
+	std::string entityType = getVarName(itr);
 
-	sourceItr++;
+	///////////////////////////////////////////////////////////////////
+	////////////                                           ////////////
+	////////////    update asset layout by editing here    ////////////
+	////////////                                           ////////////
+	///////////////////////////////////////////////////////////////////
 
-	CompileState state;
+	switch (paramCodes.at(entityType)) {
+	case MACTOR: {
+		std::shared_ptr<Mungus::Actor> actor = std::make_shared<Mungus::Actor>(sourcePath, MACTOR);
 
-	////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////                       ///////////////////////////////
-	//////////////////////////////       PARSER          ///////////////////////////////
-	//////////////////////////////                       ///////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////
+		auto properties = parseObject(itr);
 
-
-
-	while (*sourceItr != '}') {
-		// skip first quote of parameter name
-		sourceItr++;
-
-		std::stringstream paramNameStream;
-
-		// put parameter name into paramNameStream
-		while (*sourceItr != '"') {
-			paramNameStream << *sourceItr;
-			sourceItr++;
+		{
+			auto vertices = parseArray(properties.at("vertices"));
+			for (auto vertexDataBuffer : vertices)
+				actor->addVertex(parseVertex(vertexDataBuffer));
 		}
 
-		// skip end quote and colon
-		sourceItr += 2;
-
-		std::string paramName = paramNameStream.str();
-
-		// parse the parameter's data based on name
-		if (paramCodes.find(paramName) == paramCodes.end())
-			MLOG("unrecognized parameter name in asset: " << sourcePath)
-
-		else {
-			switch (paramCodes.at(paramName)) {
-			case MVERTICES:
-				parseVertices(&sourceItr, &sourceEnd, ptr);
-				break;
-
-			case MPRIMITIVES:
-				parsePrimitives(&sourceItr, &sourceEnd, ptr);
-				break;
-
-			default:
-				MLOG("unrecognized parameter name in asset: " << sourcePath)
+		{
+			auto primitives = parseArray(properties.at("primitives"));
+			for (auto primitiveBuffer : primitives) {
+				actor->addPrimitive(parsePrimitive(primitiveBuffer));
 			}
 		}
 		
-	}
+		{
+			auto shaders = parseObject(properties.at("shaders"));
 
-	////////////////////////////////////////////////////////////////////////////////////
-	//////////////////////////////                       ///////////////////////////////
-	//////////////////////////////       PARSER          ///////////////////////////////
-	//////////////////////////////                       ///////////////////////////////
-	////////////////////////////////////////////////////////////////////////////////////
+			auto vertexShaders = parseArray(shaders.at("vertexShaders"));
+			auto fragmentShaders = parseArray(shaders.at("fragmentShaders"));
 
-	return ptr;
-}
-
-// process an array of vertices
-void parseVertices(std::string::iterator* sourceItr, std::string::iterator* sourceEnd, std::shared_ptr<Mungus::Entity>& entity) {
-	MASSERT(**sourceItr == '[', "problem parsing vertices attribute on asset: " << entity->getPath())
-
-	// skip initial bracket
-	(*sourceItr)++;
-
-	// while there are more vertices
-	while (**sourceItr == '{') {
-		parseVertex(sourceItr, sourceEnd, entity);
-		if (**sourceItr == ',')
-			(*sourceItr)++;
-	}
-	// no more vertices, go to next item
-	(*sourceItr)++;
-	if ((**sourceItr) == ',')
-		(*sourceItr)++;
-}
-
-// process a single vertex
-void parseVertex(std::string::iterator* sourceItr, std::string::iterator* sourceEnd, std::shared_ptr<Mungus::Entity>& entity) {
-	MASSERT(**sourceItr == '{', "problem parsing vertex attribute on asset: " << entity->getPath())
-
-	// vertex to build
-	Mungus::Vertex vert;
-
-	// reusable vars
-	std::stringstream vertexParamNameStream;
-	std::string vertexParamName;
-	std::stringstream paramValueStream;
-	float paramValue;
-
-	// while there are more attributes
-	while ((**sourceItr) != '}') {
-
-		// skip the opening brace/trailing commas
-		(*sourceItr)+= 2;
-
-		// while there are more characters in the name
-		while ((**sourceItr) != '"') {
-			vertexParamNameStream << (**sourceItr);
-			(*sourceItr)++;
-		}
-
-		vertexParamName = vertexParamNameStream.str();
-
-		// skip ending quote and colon
-		(*sourceItr) += 2;
-
-
-		if (paramCodes.find(vertexParamName) == paramCodes.end())
-			MLOG("unrecognized parameter name in asset: " << entity->getPath())
-
-		else {
-			switch (paramCodes.at(vertexParamName)) {
-			case MPOSX: {
-				// posx attribute, get the value as a string, convert to float, and add to vertex
-				while ((**sourceItr) != ',' && (**sourceItr) != '}') {
-					paramValueStream << (**sourceItr);
-					(*sourceItr)++;
-				}
-				vert.x = std::stof(paramValueStream.str());
-				break;
+			for (auto vertexShader : vertexShaders) {
+				actor->addVertexShader(parseString(vertexShader));
 			}
-			case MPOSY: {
-				// posy attribute, get the value as a string, convert to float, and add to vertex
-				while ((**sourceItr) != ',' && (**sourceItr) != '}') {
-					paramValueStream << (**sourceItr);
-					(*sourceItr)++;
-				}
-				vert.y = std::stof(paramValueStream.str());
-				break;
-			}
-			case MPOSZ: {
-				// posz attribute, get the value as a string, convert to float, and add to vertex
-				while ((**sourceItr) != ',' && (**sourceItr) != '}') {
-					paramValueStream << (**sourceItr);
-					(*sourceItr)++;
-				}
-				vert.z = std::stof(paramValueStream.str());
-				break;
-			}
-			case MPOSW: {
-				// posw attribute, get the value as a string, convert to float, and add to vertex
-				while ((**sourceItr) != ',' && (**sourceItr) != '}') {
-					paramValueStream << (**sourceItr);
-					(*sourceItr)++;
-				}
-				vert.w = std::stof(paramValueStream.str());
-				break;
-			}
-			default:
-				MLOG("unrecognized parameter name in asset: " << entity->getPath())
+
+			for (auto fragmentShader : fragmentShaders) {
+				actor->addFragmentShader(parseString(fragmentShader));
 			}
 		}
-		vertexParamNameStream.str("");
-		vertexParamNameStream.clear();
-		paramValueStream.str("");
-		paramValueStream.clear();
-	}
-	(*sourceItr)++;
-	if ((**sourceItr) == ',')
-		(*sourceItr)++;
 
-	entity->addVertex(vert);
-}
-
-// process an array of primitves
-void parsePrimitives(std::string::iterator* sourceItr, std::string::iterator* sourceEnd, std::shared_ptr<Mungus::Entity>& entity) {
-	MASSERT(**sourceItr == '[', "problem parsing primitives attribute on asset: " << entity->getPath())
-
-	// skip initial bracket
-	(*sourceItr)++;
-
-	// while there are more primitives
-	while (**sourceItr == '{') {
-		parsePrimitive(sourceItr, sourceEnd, entity);
-		if (**sourceItr == ',')
-			(*sourceItr)++;
+		return actor;
 	}
 
-	// no more primitives, go to next item
-	(*sourceItr)++;
-	if ((**sourceItr) == ',')
-		(*sourceItr)++;
+	default:
+		MLOG("trying to load unsupported asset type: " << entityType);
+		return nullptr;
+	}
+
+	///////////////////////////////////////////////////////////////////////
+	//////////////                                           //////////////
+	//////////////    update asset layout by editing here    //////////////
+	//////////////                                           //////////////
+	///////////////////////////////////////////////////////////////////////
 }
 
-// process a single primitive
-void parsePrimitive(std::string::iterator* sourceItr, std::string::iterator* sourceEnd, std::shared_ptr<Mungus::Entity>& entity) {
+// parsing support functions
+static std::unordered_set<char> enclosureOpenings{ '(', '[', '{' };
+static std::unordered_set<char> enclosureEndings{ ')', ']', '}' };
 
+
+std::string getVarName(std::string::iterator& sourceItr) {
+	std::stringstream stream;
+
+	// skip opening quote
+	sourceItr++;
+
+	// while there is data left to be read
+	while (*sourceItr != '"') {
+		stream << *sourceItr;
+		sourceItr++;
+	}
+
+	// skip closing quote and colon
+	sourceItr += 2;
+
+	return stream.str();
+}
+
+std::unordered_map<std::string, std::string::iterator> parseObject(const std::string::iterator& sourceItr) {
+	std::string::iterator itr(sourceItr);
+
+	std::stack<char> enclosures;
+
+	std::unordered_map<std::string, std::string::iterator> parameters;
+	std::string name;
+	std::string::iterator nextParam;
+
+	enclosures.push(*itr);
+	itr++;
+
+	while (!enclosures.empty()) {
+		if (enclosures.size() == 1 && *itr == '"') {
+			name = getVarName(itr);
+			parameters[name] = std::string::iterator(itr);
+		}
+
+		if (enclosureOpenings.find(*itr) != enclosureOpenings.end())
+			enclosures.push(*itr);
+
+		else if (enclosureEndings.find(*itr) != enclosureEndings.end() && !enclosures.empty())
+			enclosures.pop();
+
+		itr++;
+	}
+
+	return parameters;
+}
+
+std::vector<std::string::iterator> parseArray(const std::string::iterator& sourceItr) {
+	std::string::iterator itr(sourceItr);
+
+	std::stack<char> enclosures;
+	
+	std::vector<std::string::iterator> indexedLocations;
+
+	enclosures.push(*itr);
+	itr++;
+
+	if (*itr != ']')
+		indexedLocations.push_back(std::string::iterator(itr));
+
+	while (!enclosures.empty()) {
+		if (enclosureOpenings.find(*itr) != enclosureOpenings.end())
+			enclosures.push(*itr);
+
+		else if (enclosureEndings.find(*itr) != enclosureEndings.end() && !enclosures.empty())
+			enclosures.pop();
+
+		if (enclosures.size() == 1 && *itr == ',')
+			indexedLocations.push_back(std::string::iterator(itr + 1));
+
+		itr++;
+	}
+
+	return indexedLocations;
+}
+
+float parseFloat(const std::string::iterator& position) {
+	return std::stof(&(*(position)));
+}
+
+int parseInt(const std::string::iterator& position) {
+	return std::stoi(&(*(position)));
+}
+
+std::string parseString(const std::string::iterator& position) {
+	std::stringstream stream;
+	std::string::iterator itr(position);
+
+	while (*itr != ',' && *itr != ']' && *itr != ')' && *itr != '}') {
+		stream << *itr;
+		itr++;
+	}
+
+	return stream.str();
+}
+
+Mungus::MVec4 parseVertex(const std::string::iterator& vertexDataBuffer) {
+	auto vertexData = parseObject(vertexDataBuffer);
+	return Mungus::MVec4{
+				parseFloat(vertexData.at("posx")),
+				parseFloat(vertexData.at("posy")),
+				parseFloat(vertexData.at("posz")),
+				parseFloat(vertexData.at("posw")),
+	};
+}
+
+Mungus::Primitive parsePrimitive(const std::string::iterator& primitiveDataBuffer) {
+	auto primitive = parseObject(primitiveDataBuffer);
+
+	std::string primitiveType = parseString(primitive.at("primitiveType"));
+
+	switch (paramCodes.at(primitiveType)) {
+	case MTRIANGLE: {
+		Mungus::Triangle triangle;
+		triangle.primType = MTRIANGLE;
+		auto primitiveData = parseObject(primitive.at("primitiveData"));
+
+		{
+			auto vertexIndices = parseArray(primitiveData.at("vertexIndices"));
+
+			for (auto vertexIndex : vertexIndices) {
+				triangle.vertexIndices.push_back(parseInt(vertexIndex));
+			}
+		}
+
+		{
+			auto surfaceNormal = parseObject(primitiveData.at("surfaceNormal"));
+			triangle.surfaceNormal.x = parseFloat(surfaceNormal.at("dirx"));
+			triangle.surfaceNormal.y = parseFloat(surfaceNormal.at("diry"));
+			triangle.surfaceNormal.z = parseFloat(surfaceNormal.at("dirz"));
+		}
+
+		{
+			auto surfaceColor = parseObject(primitiveData.at("surfaceColor"));
+			triangle.surfaceColor.x = parseFloat(surfaceColor.at("r"));
+			triangle.surfaceColor.y = parseFloat(surfaceColor.at("g"));
+			triangle.surfaceColor.z = parseFloat(surfaceColor.at("b"));
+			triangle.surfaceColor.w = parseFloat(surfaceColor.at("a"));
+		}
+
+		return triangle;
+	}
+	default:
+		MLOG("trying to compile unknow primitive type" << primitiveType)
+		return Mungus::Primitive();
+	}
 }

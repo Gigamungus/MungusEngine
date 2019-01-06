@@ -28,7 +28,7 @@ void Mungus::Application::run(void) {
 	glEnableVertexAttribArray(0);
 
 	// Main loop
-	while (!glfwWindowShouldClose(renderer->getWindow())) {
+	while (!glfwWindowShouldClose(renderer.getWindow())) {
 		glfwPollEvents();
 
 
@@ -37,11 +37,11 @@ void Mungus::Application::run(void) {
 
 		glDrawArrays(GL_TRIANGLES, 0, 3);
 
-		glfwSwapBuffers(renderer->getWindow());
+		glfwSwapBuffers(renderer.getWindow());
 	}
 
 
-	glfwDestroyWindow(renderer->getWindow());
+	glfwDestroyWindow(renderer.getWindow());
 	glfwTerminate();
 
 	return;
