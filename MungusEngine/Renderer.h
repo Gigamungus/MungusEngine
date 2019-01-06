@@ -19,6 +19,7 @@ namespace Mungus {
 
 
 
+
 		GLFWwindow* getWindow() const { return window; }
 
 	};

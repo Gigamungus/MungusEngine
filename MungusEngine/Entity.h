@@ -1,29 +1,17 @@
 #pragma once
 #include "stdafx.h"
+#include "../Resources/MungusLibs/MungusMath.h"
 
 namespace Mungus {
-
-	struct MVec4 {
-		float x;
-		float y;
-		float z;
-		float w;
-	};
-
-	struct MVec3 {
-		float x;
-		float y;
-		float z;
-	};
 
 	struct Primitive {
 		unsigned int primType;
 		std::vector<unsigned int> vertexIndices;
-		MVec4 surfaceColor;
+		MungusMath::MVec4 surfaceColor;
 	};
 
 	struct Triangle : public Primitive {
-		MVec3 surfaceNormal;
+		MungusMath::MVec3 surfaceNormal;
 	};
 
 	class MUNGUS Entity {

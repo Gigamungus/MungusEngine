@@ -25,7 +25,7 @@ int parseInt(const std::string::iterator& position);
 std::string parseString(const std::string::iterator& position);
 
 // parse more specific collection types into a relevant tangible container
-Mungus::MVec4 parseVertex(const std::string::iterator& itr);
+MungusMath::MVec4 parseVertex(const std::string::iterator& itr);
 Mungus::Primitive parsePrimitive(const std::string::iterator& primitiveDataBuffer);
 
 
@@ -218,9 +218,9 @@ std::string parseString(const std::string::iterator& position) {
 	return stream.str();
 }
 
-Mungus::MVec4 parseVertex(const std::string::iterator& vertexDataBuffer) {
+MungusMath::MVec4 parseVertex(const std::string::iterator& vertexDataBuffer) {
 	auto vertexData = parseObject(vertexDataBuffer);
-	return Mungus::MVec4{
+	return MungusMath::MVec4{
 				parseFloat(vertexData.at("posx")),
 				parseFloat(vertexData.at("posy")),
 				parseFloat(vertexData.at("posz")),

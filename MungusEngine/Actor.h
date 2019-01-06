@@ -6,7 +6,7 @@ namespace Mungus {
 
 	class MUNGUS Actor : public Entity {
 	private:
-		std::vector<MVec4> vertices;
+		std::vector<MungusMath::MVec4> vertices;
 		std::vector<Primitive> primitives;
 		std::vector<std::string> vertexShaders;
 		std::vector<std::string> fragmentShaders;
@@ -15,7 +15,7 @@ namespace Mungus {
 		Actor(const std::string& assetPath, const unsigned int entityType) : Mungus::Entity(assetPath, entityType)  {};
 		virtual ~Actor() {};
 
-		void inline addVertex(const MVec4& vert) { vertices.push_back(vert); }
+		void inline addVertex(const MungusMath::MVec4& vert) { vertices.push_back(vert); }
 		void inline addPrimitive(const Primitive& prim) { primitives.push_back(prim); }
 		void inline addVertexShader(const std::string& shader) { vertexShaders.push_back(shader); }
 		void inline addFragmentShader(const std::string& shader) { fragmentShaders.push_back(shader); }
