@@ -7,10 +7,10 @@ namespace Mungus {
 
 	class MUNGUS Controller {
 	private:
-		const Application& owner;
+		const Application* owner;
 
 	public:
-		Controller(const Application& owner) : owner(owner) {};
+		Controller(const Application* owner) : owner(owner) {};
 		virtual ~Controller() {};
 
 	};

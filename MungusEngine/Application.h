@@ -1,25 +1,25 @@
 #pragma once
 #include "stdafx.h"
-#include "Renderer.h"
-#include "World.h"
-#include "Controller.h"
 
 namespace Mungus {
+	class Renderer;
+	class World;
+	class Controller;
 
 	class MUNGUS Application {
 	protected:
-		World world;
-		Renderer renderer;
-		Controller controller;
+		std::shared_ptr<Mungus::World> world;
+		std::shared_ptr<Mungus::Renderer> renderer;
+		std::shared_ptr<Mungus::Controller> controller;
 
 	public:
-		Application(void) : world(*this), renderer(*this), controller(*this) {}
-		virtual ~Application() {}
+		Application(void);
+		virtual ~Application();
 		
 		void run(void);
 
-		void inline loadAsset(const std::string& assetPath) { world.loadAsset(assetPath); }
-
+		void inline loadAsset(const std::string& assetPath);
+		void inline setBackground(MungusMath::MVec4 color);
 
 
 		//////// client should override these ///////

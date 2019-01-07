@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-class VertexBuffer {
+class MUNGUS VertexBuffer {
 private:
 
 

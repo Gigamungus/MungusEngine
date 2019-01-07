@@ -55,8 +55,11 @@
     <Filter Include="Source Files\Engine\View\Shader">
       <UniqueIdentifier>{9df79c51-67cd-45d4-9e37-f1e139f6c8c7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\MungusLibs">
-      <UniqueIdentifier>{ec23f59e-080a-42b6-aa89-e3dcee184356}</UniqueIdentifier>
+    <Filter Include="Source Files\Engine\Model\Asset">
+      <UniqueIdentifier>{22da6ef6-c92b-493e-accf-425d4a260090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\CoreItems\util">
+      <UniqueIdentifier>{f38c5291-d83e-4ea2-a438-893e4cfecd22}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -135,11 +138,14 @@
     <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\eglew.h">
       <Filter>Resource Files\OpenGL\GLEW</Filter>
     </ClInclude>
-    <ClInclude Include="..\Resources\MungusLibs\MungusMath.h">
-      <Filter>Resource Files\MungusLibs</Filter>
+    <ClInclude Include="Asset.h">
+      <Filter>Source Files\Engine\Model\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="..\Resources\MungusLibs\MungusUtil.h">
-      <Filter>Resource Files\MungusLibs</Filter>
+    <ClInclude Include="MungusUtil.h">
+      <Filter>Source Files\CoreItems\util</Filter>
+    </ClInclude>
+    <ClInclude Include="MungusMath.h">
+      <Filter>Source Files\CoreItems\util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -184,6 +190,12 @@
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
       <Filter>Source Files\Engine\View</Filter>
+    </ClCompile>
+    <ClCompile Include="Asset.cpp">
+      <Filter>Source Files\Engine\Model\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="MungusUtil.cpp">
+      <Filter>Source Files\CoreItems\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

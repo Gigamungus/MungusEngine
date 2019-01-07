@@ -139,8 +139,6 @@ del "$(OutDir)MungusEngine.lib"
     </PreLinkEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Resources\MungusLibs\MungusMath.h" />
-    <ClInclude Include="..\Resources\MungusLibs\MungusUtil.h" />
     <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\eglew.h" />
     <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\glew.h" />
     <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\glxew.h" />
@@ -157,11 +155,14 @@ del "$(OutDir)MungusEngine.lib"
     <ClInclude Include="..\Resources\Vendor\imgui\imstb_truetype.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Application.h" />
+    <ClInclude Include="Asset.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Entity.h" />
     <ClInclude Include="EntryPoint.h" />
     <ClInclude Include="Mungus.h" />
+    <ClInclude Include="MungusMath.h" />
+    <ClInclude Include="MungusUtil.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Renderer.h" />
     <ClInclude Include="VertexBuffer.h" />
@@ -218,8 +219,17 @@ del "$(OutDir)MungusEngine.lib"
     </ClCompile>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="Asset.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Entity.cpp" />
+    <ClCompile Include="MungusUtil.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+      </PrecompiledHeaderFile>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+      </PrecompiledHeaderFile>
+    </ClCompile>
     <ClCompile Include="Renderer.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

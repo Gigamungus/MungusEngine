@@ -22,11 +22,9 @@
 	"primitives": [
 		{
 			"primitiveType": triangle,
-			"primitiveData": {
-				"vertexIndices": [0, 1, 2],
-				"surfaceNormal": {"dirx": 1.0, "diry": 0.0, "dirz": 0.0},
-				"surfaceColor": {"r": 1.0, "g": 0.5, "b": 0.25, "a": 1.0}
-			}
+			"vertexIndices": [0, 1, 2],
+			"surfaceNormal": {"dirx": 1.0, "diry": 0.0, "dirz": 0.0},
+			"surfaceColor": {"r": 1.0, "g": 0.5, "b": 0.25, "a": 1.0}
 		}
 	],
 	"shaders": {

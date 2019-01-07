@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Renderer.h"
+#include "Actor.h"
 
+#include "../Resources//MungusLibs/MungusMath.h"
+#include "../Resources//MungusLibs/MungusUtil.h"
 
 //////////// internal method declarations //////////////
 
@@ -19,11 +22,20 @@ void compileShaders(std::unordered_map<std::string, const unsigned int>& vertexS
 
 ////////////////// start member function implementations ///////////////
 
-Mungus::Renderer::Renderer(const Application& owner) : owner(owner) {
+Mungus::Renderer::Renderer(const Application* owner) : owner(owner) {
 	glfwStartup(window);
 	glewStartup();
 	compileShaders(vertexShaders, fragmentShaders);
 };
+
+void Mungus::Renderer::renderActor(Mungus::Actor actor) {
+
+}
+
+void inline Mungus::Renderer::setBackground(MungusMath::MVec4 color) {
+	glClearColor(color.x, color.y, color.z, color.w);
+	glClear(GL_COLOR_BUFFER_BIT);
+}
 
 //////////// end member function implementations
 
