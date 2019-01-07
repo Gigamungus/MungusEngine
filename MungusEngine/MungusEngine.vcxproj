@@ -72,6 +72,8 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Resources\OpenGL\GLEW\lib\Release\x64;$(SolutionDir)Resources\OpenGL\GLFW\lib-vc2015</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;Gdi32.lib;Shell32.lib;</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;MSVCRT</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources"
@@ -113,6 +115,8 @@ del "$(OutDir)MungusEngine.lib"
       <AdditionalLibraryDirectories>$(SolutionDir)Resources\OpenGL\GLEW\lib\Release\x64;$(SolutionDir)Resources\OpenGL\GLFW\lib-vc2015</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;Gdi32.lib;Shell32.lib;</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;MSVCRT</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources"

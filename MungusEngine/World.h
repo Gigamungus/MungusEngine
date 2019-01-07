@@ -10,14 +10,13 @@ namespace Mungus {
 	class MUNGUS World {
 	private:
 		const Application& owner;
-		std::vector<std::shared_ptr<Mungus::Entity>> entities;
+		std::unordered_map<std::string, std::shared_ptr<Mungus::Entity>> entities;
 
 	public:
 		World(const Application& owner) : owner(owner) {};
 		virtual ~World() {};
 
 		void loadAsset(const std::string& title);
-		std::shared_ptr<Entity> createEntityFromSourceString(const std::string& sourcePath, const std::string& sourceText);
 	};
 
 }

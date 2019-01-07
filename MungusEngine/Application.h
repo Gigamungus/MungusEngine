@@ -7,7 +7,7 @@
 namespace Mungus {
 
 	class MUNGUS Application {
-	private:
+	protected:
 		World world;
 		Renderer renderer;
 		Controller controller;
@@ -15,14 +15,18 @@ namespace Mungus {
 	public:
 		Application(void) : world(*this), renderer(*this), controller(*this) {}
 		virtual ~Application() {}
+		
+		void run(void);
 
+		void inline loadAsset(const std::string& assetPath) { world.loadAsset(assetPath); }
+
+
+
+		//////// client should override these ///////
 		virtual void startup(void);
-		virtual void run(void);
+		virtual void mainLoop(void);
+		/////////////////////////////////////////////
 
-		void inline loadAsset(const std::string& assetPath) {
-			world.loadAsset(assetPath);
-			
-		}
 	};
 
 	// must be created by client

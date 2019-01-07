@@ -12,7 +12,7 @@ namespace Mungus {
 		std::vector<std::string> fragmentShaders;
 
 	public:
-		Actor(const std::string& assetPath, const unsigned int entityType) : Mungus::Entity(assetPath, entityType)  {};
+		Actor(const std::string& assetPath, const unsigned int entityType, std::string::iterator& itr);
 		virtual ~Actor() {};
 
 		void inline addVertex(const MungusMath::MVec4& vert) { vertices.push_back(vert); }

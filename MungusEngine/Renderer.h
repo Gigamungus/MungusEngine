@@ -1,5 +1,6 @@
 #pragma once
 #include "stdafx.h"
+#include "Actor.h"
 
 namespace Mungus {
 
@@ -17,8 +18,8 @@ namespace Mungus {
 		Renderer(const Application& owner);
 		~Renderer() {};
 
-
-
+		void renderActor(Mungus::Actor actor) {/* TODO: implement */}
+		
 
 		GLFWwindow* getWindow() const { return window; }
 
