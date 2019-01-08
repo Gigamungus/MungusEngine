@@ -18,15 +18,24 @@ namespace Mungus {
 		
 		void run(void);
 
+
+		///////////// client can call these ///////////////
 		void inline loadAsset(const std::string& assetPath);
 		void inline setBackground(MungusMath::MVec4 color);
-
+		const unsigned long frameCount(void) const;
+		/////////////////////////////////////////////////////
 
 		//////// client should override these ///////
 		virtual void startup(void);
 		virtual void mainLoop(void);
 		/////////////////////////////////////////////
 
+		//////////////////// client should IGNORE these ////////////////
+		void inline incrementFrameCount(void);
+		const unsigned int inline createEntity(const std::string& name);
+		void renderEntities(void);
+		////////////////////////////////////////////////////////////////
+		///////////////// good luck with your project //////////////////
 	};
 
 	// must be created by client

@@ -197,6 +197,9 @@
     <ClCompile Include="MungusUtil.cpp">
       <Filter>Source Files\CoreItems\util</Filter>
     </ClCompile>
+    <ClCompile Include="MungusMath.cpp">
+      <Filter>Source Files\CoreItems\util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Resources\Shaders\basic_shader.vertexshader.shader">

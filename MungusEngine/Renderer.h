@@ -5,6 +5,7 @@ namespace Mungus {
 
 	class Application;
 	class Actor;
+	class Entity;
 
 
 	class MUNGUS Renderer {
@@ -19,13 +20,14 @@ namespace Mungus {
 		Renderer(const Application* owner);
 		~Renderer() {};
 
-		void renderActor(Mungus::Actor actor);
 		void inline setBackground(MungusMath::MVec4 color);
 		
 
 		GLFWwindow* getWindow() const { return window; }
 		const std::unordered_map<std::string, const unsigned int> inline getVertexShaders(void) const { return vertexShaders; }
 		const std::unordered_map<std::string, const unsigned int> inline getFragmentShaders(void) const { return fragmentShaders; }
+
+		void renderEntities( const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Entity>>& entities);
 	};
 
 }

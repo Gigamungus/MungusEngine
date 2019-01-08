@@ -3,20 +3,20 @@
 
 namespace Mungus {
 
-	struct Primitive {
-		unsigned int primitiveType;
-		unsigned int iboID;
-		MungusMath::MVec3 surfaceNormal;
-		MungusMath::MVec4 surfaceColor;
+	struct RenderInfo {
+		unsigned int assetType;
+		unsigned int programId = 0;
+		unsigned int VAO = 0;
+		bool triangles = false;
+		unsigned int numTriangles = 0;
+		void* trianglesOffset = 0;
 	};
 
 	class MUNGUS Asset {
 	public:
-		unsigned int assetType;
 		std::string assetName;
-		unsigned int programID;
-		unsigned int vaoID;
-		std::shared_ptr<std::vector<Primitive>> primitives;
+
+		struct RenderInfo renderInfo;
 
 		Asset() {};
 		Asset(	const std::string& name,
@@ -26,7 +26,12 @@ namespace Mungus {
 	};
 
 
-	struct ParseAssetFunctions {
+	struct ParseAssetHelpers {
+		struct Primitive {
+			unsigned int primitiveType;
+			std::vector<unsigned int> indices;
+		};
+
 		static const std::unordered_map<std::string, int> paramCodes;
 		static const std::unordered_set<char> enclosureOpenings;
 		static const std::unordered_set<char> enclosureEndings;
@@ -46,7 +51,7 @@ namespace Mungus {
 
 		// parse more specific collection types into a relevant tangible container
 		static std::vector<float> parseVertex(const std::string::iterator& itr);
-		static Mungus::Primitive parsePrimitive(const std::string::iterator& primitiveDataBuffer);
+		static Primitive parsePrimitive(const std::string::iterator& primitiveDataBuffer);
 	};
 
 }

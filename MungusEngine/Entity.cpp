@@ -4,7 +4,7 @@
 
 Mungus::Entity::Entity(const Mungus::Asset& source) :
 	name(source.assetName),
-	entityType(source.assetType),
-	programID(source.programID),
-	vaoID(source.vaoID)
+	renderInfo(&source.renderInfo)
 {}
+
+const Mungus::RenderInfo inline Mungus::Entity::getRenderInfo(void) const { return *renderInfo; }

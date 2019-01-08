@@ -7,8 +7,6 @@ namespace Mungus {
 	struct Primitive;
 
 	class MUNGUS Actor : public Entity {
-	private:
-		std::shared_ptr<std::vector<Mungus::Primitive>> primitives;
 
 	public:
 		Actor(const Mungus::Asset& base);

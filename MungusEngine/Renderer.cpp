@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "Renderer.h"
 #include "Actor.h"
+#include "Entity.h"
+#include "Asset.h"
 
-#include "../Resources//MungusLibs/MungusMath.h"
-#include "../Resources//MungusLibs/MungusUtil.h"
+#include "MungusMath.h"
+#include "MungusUtil.h"
 
 //////////// internal method declarations //////////////
 
@@ -12,8 +14,8 @@ void glewStartup(void);
 inline std::string getFileName(const std::string& url);
 const std::string shaderSourceFromUrl(const std::string url);
 const unsigned int compileShader(const std::string shaderSource, const unsigned int& type);
-void compileShaders(std::unordered_map<std::string, const unsigned int>& vertexShaders,
-	std::unordered_map<std::string, const unsigned int>& fragmentShaders);
+void compileShaders(std::unordered_map<std::string, const unsigned int>& vertexShaders, std::unordered_map<std::string, const unsigned int>& fragmentShaders);
+void renderActor(const Mungus::Actor& actor);
 
 //////////////end internal method declarations /////////////
 
@@ -28,13 +30,21 @@ Mungus::Renderer::Renderer(const Application* owner) : owner(owner) {
 	compileShaders(vertexShaders, fragmentShaders);
 };
 
-void Mungus::Renderer::renderActor(Mungus::Actor actor) {
-
-}
-
 void inline Mungus::Renderer::setBackground(MungusMath::MVec4 color) {
 	glClearColor(color.x, color.y, color.z, color.w);
 	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void Mungus::Renderer::renderEntities(const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Entity>>& entities) {
+	for (auto entity : entities) {
+		switch (entity.second->getRenderInfo().assetType) {
+		case MACTOR:
+			renderActor(static_cast<const Mungus::Actor&>(*entity.second));
+			break;
+		default:
+			MLOG("tried to render unknown entity type: " << entity.second)
+		}
+	}
 }
 
 //////////// end member function implementations
@@ -68,7 +78,6 @@ void glfwStartup(GLFWwindow*& win) {
 		MLOG("glfw error " << code << ": " << message);
 	});
 }
-
 
 void glewStartup(void) {
 	if (glewInit() != GLEW_OK) {
@@ -171,4 +180,14 @@ inline std::string getFileName(const std::string& url) {
 	return name.str();
 }
 
+void renderActor(const Mungus::Actor& actor) {
+	glUseProgram(actor.getRenderInfo().programId);
+	glBindVertexArray(actor.getRenderInfo().VAO);
+
+	if (actor.getRenderInfo().triangles)
+		glDrawElements(GL_TRIANGLES, actor.getRenderInfo().numTriangles, GL_UNSIGNED_INT, actor.getRenderInfo().trianglesOffset);
+
+	glUseProgram(0);
+	glBindVertexArray(0);
+}
 //////////////// end internal method implementations /////////////////
