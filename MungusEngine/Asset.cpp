@@ -11,7 +11,7 @@ const std::unordered_map<std::string, int> Mungus::ParseAssetHelpers::paramCodes
 };
 const std::unordered_set<char> Mungus::ParseAssetHelpers::enclosureOpenings{ '(', '[', '{' };
 const std::unordered_set<char> Mungus::ParseAssetHelpers::enclosureEndings{ ')', ']', '}' };
-const std::unordered_set<char> Mungus::ParseAssetHelpers::nums{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.' };
+const std::unordered_set<char> Mungus::ParseAssetHelpers::nums{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-' };
 
 
 
@@ -81,12 +81,13 @@ Mungus::Asset::Asset(	const std::string& name,
 				break;
 			default:
 				MLOG("trying to parse unknown primitive type: " << prim.primitiveType)
+				break;
 			}
 		}
 
 		if (!triangleIndices.empty()) {
 			renderInfo.triangles = true;
-			renderInfo.numTriangles = triangleIndices.size();
+			renderInfo.numTriangles = (unsigned int)triangleIndices.size();
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, triangleIndices.size() * sizeof(unsigned int), triangleIndices.data(), GL_STATIC_DRAW);
 		}
 	}

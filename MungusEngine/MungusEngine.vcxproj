@@ -99,7 +99,8 @@ del "$(OutDir)MungusEngine.lib"
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <FunctionLevelLinking>
+      </FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
@@ -116,7 +117,7 @@ del "$(OutDir)MungusEngine.lib"
       <AdditionalDependencies>opengl32.lib;glew32s.lib;glfw3.lib;Gdi32.lib;Shell32.lib;</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>LIBCMT;MSVCRT</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>LIBCMT;</IgnoreSpecificDefaultLibraries>
     </Link>
     <PostBuildEvent>
       <Command>md "$(SolutionDir)bin\$(Configuration)-$(Platform)\Resources"

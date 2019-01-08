@@ -28,7 +28,7 @@ Mungus::Renderer::Renderer(const Application* owner) : owner(owner) {
 	glfwStartup(window);
 	glewStartup();
 	compileShaders(vertexShaders, fragmentShaders);
-};
+}
 
 void inline Mungus::Renderer::setBackground(MungusMath::MVec4 color) {
 	glClearColor(color.x, color.y, color.z, color.w);
@@ -43,6 +43,7 @@ void Mungus::Renderer::renderEntities(const std::unordered_map<unsigned long, st
 			break;
 		default:
 			MLOG("tried to render unknown entity type: " << entity.second)
+			break;
 		}
 	}
 }
@@ -77,6 +78,8 @@ void glfwStartup(GLFWwindow*& win) {
 	glfwSetErrorCallback([](int code, const char* message) {
 		MLOG("glfw error " << code << ": " << message);
 	});
+
+	glfwSetFramebufferSizeCallback(win, [](GLFWwindow* window, int width, int height) {glViewport(0, 0, width, height); });
 }
 
 void glewStartup(void) {

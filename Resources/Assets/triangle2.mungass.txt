@@ -1,0 +1,34 @@
+"actor": {
+	"vertices": [
+		{
+			"posx": -1.0,
+			"posy": -1.0,
+			"posz": 0.0,
+			"posw": 1.0
+		},
+		{
+			"posx": -0.6,
+			"posy": -0.6,
+			"posz": 0.0,
+			"posw": 1.0
+		},
+		{
+			"posx": -0.8,
+			"posy": 0.8,
+			"posz": 0.0,
+			"posw": 1.0
+		}
+	],
+	"primitives": [
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [0, 1, 2],
+			"surfaceNormal": {"dirx": 1.0, "diry": 0.0, "dirz": 0.0},
+			"surfaceColor": {"r": 1.0, "g": 0.5, "b": 0.25, "a": 1.0}
+		}
+	],
+	"shaders": {
+		"vertexShaders": [basic_shader],
+		"fragmentShaders": [basic_shader]
+	}
+}
