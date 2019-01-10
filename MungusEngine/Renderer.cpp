@@ -4,8 +4,6 @@
 #include "Entity.h"
 #include "Asset.h"
 
-#include "MungusMath.h"
-#include "MungusUtil.h"
 
 //////////// internal method declarations //////////////
 

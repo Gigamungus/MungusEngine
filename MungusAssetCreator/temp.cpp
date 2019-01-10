@@ -5,7 +5,6 @@ class MungusAssetCreator : public Mungus::Application {
 public:
 	virtual void startup(void) override {
 		loadAsset(TRIANGLE);
-		loadAsset("triangle2.mungass");
 	}
 
 	virtual void mainLoop(void) override {
@@ -13,10 +12,6 @@ public:
 		if (frameCount() == 0) {
 			const unsigned int firstEntity = createEntity(TRIANGLE);
 		}
-		if (frameCount() == 100) {
-			createEntity("triangle2.mungass");
-		}
-	
 	}
 
 };

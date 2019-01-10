@@ -3,4 +3,4 @@
 #include "Asset.h"
 
 
-Mungus::Actor::Actor(const Mungus::Asset& base) : Entity(base) {}
+Mungus::Actor::Actor(const Mungus::Asset& base, unsigned long id) : Entity(base, id) {}

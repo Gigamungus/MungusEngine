@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "Asset.h"
 
-
-
 const std::unordered_map<std::string, int> Mungus::ParseAssetHelpers::paramCodes = {
 	{
 		{"triangle", MTRIANGLE},

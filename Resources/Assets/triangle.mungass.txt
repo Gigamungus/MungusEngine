@@ -1,30 +1,102 @@
 "actor": {
 	"vertices": [
 		{
-			"posx": 0.0,
-			"posy": 0.0,
+			"posx": -0.5,
+			"posy": -0.5,
 			"posz": 0.0,
 			"posw": 1.0
 		},
 		{
-			"posx": 1.0,
-			"posy": 0.0,
+			"posx": 0.5,
+			"posy": -0.5,
 			"posz": 0.0,
 			"posw": 1.0
 		},
 		{
-			"posx": 1.0,
-			"posy": 1.0,
+			"posx": -0.5,
+			"posy": 0.5,
 			"posz": 0.0,
+			"posw": 1.0
+		},
+		{
+			"posx": 0.5,
+			"posy": 0.5,
+			"posz": 0.0,
+			"posw": 1.0
+		},
+		{
+			"posx": -0.5,
+			"posy": -0.5,
+			"posz": -1.0,
+			"posw": 1.0
+		},
+		{
+			"posx": 0.5,
+			"posy": -0.5,
+			"posz": -1.0,
+			"posw": 1.0
+		},
+		{
+			"posx": -0.5,
+			"posy": 0.5,
+			"posz": -1.0,
+			"posw": 1.0
+		},
+		{
+			"posx": 0.5,
+			"posy": 0.5,
+			"posz": -1.0,
 			"posw": 1.0
 		}
 	],
 	"primitives": [
 		{
 			"primitiveType": triangle,
-			"vertexIndices": [0, 1, 2],
-			"surfaceNormal": {"dirx": 1.0, "diry": 0.0, "dirz": 0.0},
-			"surfaceColor": {"r": 1.0, "g": 0.5, "b": 0.25, "a": 1.0}
+			"vertexIndices": [0, 1, 2]
+		},
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [1, 2, 3]
+		},
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [0, 4, 6]
+		},
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [0, 6, 2]
+		},
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [1, 5, 7]
+		},
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [1, 7, 3]
+		},
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [2, 3, 7]
+		},
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [2, 6, 7]
+		},
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [0, 1, 4]
+		},
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [1, 4, 5]
+		},
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [4, 5, 6]
+		},
+		{
+			"primitiveType": triangle,
+			"vertexIndices": [5, 6, 7]
 		}
 	],
 	"shaders": {

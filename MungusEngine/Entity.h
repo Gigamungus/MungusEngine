@@ -9,10 +9,15 @@ namespace Mungus {
 	class MUNGUS Entity {
 	private:
 		std::string name;
+		unsigned long id;
 		const RenderInfo* renderInfo;
 
+		MungusMath::MMat4 scale;
+		MungusMath::MMat4 orientation;
+		MungusMath::MMat4 position;
+
 	public:
-		Entity(const Mungus::Asset& source);
+		Entity(const Mungus::Asset& source, unsigned long id);
 
 		virtual ~Entity() {}
 

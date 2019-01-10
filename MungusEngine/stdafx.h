@@ -7,8 +7,8 @@
 #include "../Resources/OpenGL/GLEW/include/GL/glew.h"
 #include "../Resources/OpenGL/GLFW/include/GLFW/glfw3.h"
 
-#include "MungusUtil.h"
-#include "MungusMath.h"
+#include "../Resources/MungusLibs/MungusMath.h"
+#include "../Resources/MungusLibs/MungusUtil.h"
 
 #include <iostream>
 #include <string>

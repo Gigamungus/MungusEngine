@@ -9,7 +9,7 @@ namespace Mungus {
 	class MUNGUS Actor : public Entity {
 
 	public:
-		Actor(const Mungus::Asset& base);
+		Actor(const Mungus::Asset& base, unsigned long id);
 		virtual ~Actor() {};
 	};
 }

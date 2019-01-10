@@ -2,8 +2,9 @@
 #include "Entity.h"
 #include "Asset.h"
 
-Mungus::Entity::Entity(const Mungus::Asset& source) :
+Mungus::Entity::Entity(const Mungus::Asset& source, unsigned long id) :
 	name(source.assetName),
+	id(id),
 	renderInfo(&source.renderInfo)
 {}
 

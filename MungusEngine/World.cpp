@@ -13,15 +13,18 @@ void inline Mungus::World::loadAsset(const std::string& title,
 	assets[title] = std::make_shared<Mungus::Asset>(title, vertexShaders, fragmentShaders);
 }
 const unsigned int Mungus::World::createEntity(const std::string & name) {
-	std::shared_ptr<Mungus::Asset> base = assets.at(name);
+	if (assets.find(name) != assets.end()) {
+		std::shared_ptr<Mungus::Asset> base = assets.at(name);
 
-	switch (base->renderInfo.assetType) {
-	case MACTOR:
-		entities[++entityCount] = std::make_shared<Mungus::Actor>(Mungus::Actor(*base));
-		break;
-	default:
-		MLOG("trying to create entity of unknown type: " << name)
-		return 0;
+		switch (base->renderInfo.assetType) {
+		case MACTOR:
+			entities[++entityCount] = std::make_shared<Mungus::Actor>(Mungus::Actor(*base, entityCount));
+			break;
+		default:
+			MLOG("trying to create entity of unknown type: " << name)
+				return 0;
+		}
+		return entityCount;
 	}
-	return entityCount;
+	return 0;
 }

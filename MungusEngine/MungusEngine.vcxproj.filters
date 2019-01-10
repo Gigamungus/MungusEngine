@@ -58,8 +58,8 @@
     <Filter Include="Source Files\Engine\Model\Asset">
       <UniqueIdentifier>{22da6ef6-c92b-493e-accf-425d4a260090}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\CoreItems\util">
-      <UniqueIdentifier>{f38c5291-d83e-4ea2-a438-893e4cfecd22}</UniqueIdentifier>
+    <Filter Include="Resource Files\MungusLibs">
+      <UniqueIdentifier>{cbf939a1-e7a7-439c-be94-8a0208e7afab}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -141,11 +141,11 @@
     <ClInclude Include="Asset.h">
       <Filter>Source Files\Engine\Model\Asset</Filter>
     </ClInclude>
-    <ClInclude Include="MungusUtil.h">
-      <Filter>Source Files\CoreItems\util</Filter>
+    <ClInclude Include="..\Resources\MungusLibs\MungusMath.h">
+      <Filter>Resource Files\MungusLibs</Filter>
     </ClInclude>
-    <ClInclude Include="MungusMath.h">
-      <Filter>Source Files\CoreItems\util</Filter>
+    <ClInclude Include="..\Resources\MungusLibs\MungusUtil.h">
+      <Filter>Resource Files\MungusLibs</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -193,12 +193,6 @@
     </ClCompile>
     <ClCompile Include="Asset.cpp">
       <Filter>Source Files\Engine\Model\Asset</Filter>
-    </ClCompile>
-    <ClCompile Include="MungusUtil.cpp">
-      <Filter>Source Files\CoreItems\util</Filter>
-    </ClCompile>
-    <ClCompile Include="MungusMath.cpp">
-      <Filter>Source Files\CoreItems\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
