@@ -4,25 +4,19 @@
 
 namespace Mungus {
 	class Asset;
-	struct RenderInfo;
 
 	class MUNGUS Entity {
 	private:
-		std::string name;
-		unsigned long id;
-		const RenderInfo* renderInfo;
 
-		MungusMath::MMat4 scale;
+	protected:
 		MungusMath::MMat4 orientation;
-		MungusMath::MMat4 position;
+		MungusMath::MVec3 position;
 
 	public:
-		Entity(const Mungus::Asset& source, unsigned long id);
 
+		Entity();
 		virtual ~Entity() {}
 
-		const std::string inline getName(void) const { return name; }
-		const RenderInfo inline getRenderInfo(void) const;
 	};
 
 }

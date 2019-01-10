@@ -3,6 +3,7 @@
 #include "Actor.h"
 #include "Entity.h"
 #include "Asset.h"
+#include "Camera.h"
 
 
 //////////// internal method declarations //////////////
@@ -33,11 +34,11 @@ void inline Mungus::Renderer::setBackground(MungusMath::MVec4 color) {
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Mungus::Renderer::renderEntities(const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Entity>>& entities) {
-	for (auto entity : entities) {
+void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& actors, const Camera& camera) {
+	for (auto entity : actors) {
 		switch (entity.second->getRenderInfo().assetType) {
 		case MACTOR:
-			renderActor(static_cast<const Mungus::Actor&>(*entity.second));
+			renderActor(*entity.second);
 			break;
 		default:
 			MLOG("tried to render unknown entity type: " << entity.second)

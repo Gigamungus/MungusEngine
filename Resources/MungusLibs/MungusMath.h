@@ -49,11 +49,11 @@ namespace MungusMath {
 			return returnVal;
 		}
 
-		inline MMat4 identity() {
+		inline static MMat4 identity() {
 			return MMat4{1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1};
 		}
 
-		inline MMat4 rotation(float x, float y, float z, float theta) {
+		inline static MMat4 rotation(float x, float y, float z, float theta) {
 			float rTheta =  (M_PI / 180.0f) * theta;
 			float sinTheta = sin(rTheta);
 			float cosTheta = cos(rTheta);
@@ -67,13 +67,13 @@ namespace MungusMath {
 			};
 		}
 
-		inline MMat4 scale(float x, float y, float z) {
+		inline static MMat4 scale(float x, float y, float z) {
 			return MMat4{
 				x, 0, 0, 0, 0, y, 0, 0, 0, 0, z, 0, 0, 0, 0, 1
 			};
 		}
 
-		inline MMat4 translate(float x, float y, float z) {
+		inline static MMat4 translate(float x, float y, float z) {
 			return MMat4{
 				1, 0, 0, x, 0, 1, 0, y, 0, 0, 1, z, 0, 0, 0, 1
 			};

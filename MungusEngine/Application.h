@@ -33,7 +33,7 @@ namespace Mungus {
 		//////////////////// client should IGNORE these ////////////////
 		void inline incrementFrameCount(void);
 		const unsigned int inline createEntity(const std::string& name);
-		void renderEntities(void);
+		void renderActors(void);
 		////////////////////////////////////////////////////////////////
 		///////////////// good luck with your project //////////////////
 	};

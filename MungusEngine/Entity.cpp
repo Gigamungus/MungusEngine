@@ -2,10 +2,10 @@
 #include "Entity.h"
 #include "Asset.h"
 
-Mungus::Entity::Entity(const Mungus::Asset& source, unsigned long id) :
-	name(source.assetName),
-	id(id),
-	renderInfo(&source.renderInfo)
+Mungus::Entity::Entity() :
+	orientation(MungusMath::MMat4::identity()),
+	position({ 0, 0, 0 })
 {}
 
-const Mungus::RenderInfo inline Mungus::Entity::getRenderInfo(void) const { return *renderInfo; }
+
+

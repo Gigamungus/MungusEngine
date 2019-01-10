@@ -159,6 +159,7 @@ del "$(OutDir)MungusEngine.lib"
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Asset.h" />
+    <ClInclude Include="Camera.h" />
     <ClInclude Include="Controller.h" />
     <ClInclude Include="Core.h" />
     <ClInclude Include="Entity.h" />
@@ -166,7 +167,6 @@ del "$(OutDir)MungusEngine.lib"
     <ClInclude Include="Mungus.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Renderer.h" />
-    <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="World.h" />
   </ItemGroup>
   <ItemGroup>
@@ -221,6 +221,7 @@ del "$(OutDir)MungusEngine.lib"
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Asset.cpp" />
+    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Controller.cpp" />
     <ClCompile Include="Entity.cpp" />
     <ClCompile Include="Renderer.cpp" />
@@ -228,7 +229,6 @@ del "$(OutDir)MungusEngine.lib"
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>

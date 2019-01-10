@@ -3,6 +3,7 @@
 #include "Renderer.h"
 #include "World.h"
 #include "Controller.h"
+#include "Camera.h"
 
 #include "MungusMath.h"
 #include "MungusUtil.h"
@@ -55,7 +56,7 @@ void Mungus::Application::run(void) {
 		glfwPollEvents();
 		mainLoop();
 		incrementFrameCount();
-		renderEntities();
+		renderActors();
 		glfwSwapBuffers(renderer->getWindow());
 	}
 	glfwDestroyWindow(renderer->getWindow());
@@ -70,6 +71,6 @@ inline const unsigned int Mungus::Application::createEntity(const std::string & 
 	return world->createEntity(name);
 }
 
-void Mungus::Application::renderEntities(void) {
-	renderer->renderEntities(world->getEntities());
+void Mungus::Application::renderActors(void) {
+	renderer->renderActors(world->getActors(), world->getCamera());
 }

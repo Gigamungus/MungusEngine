@@ -49,12 +49,6 @@
     <Filter Include="Source Files\Engine\Model\Entity">
       <UniqueIdentifier>{48bb1fa9-b539-4127-8cf5-2614c129a827}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Engine\View\VertexBuffer">
-      <UniqueIdentifier>{96fca918-b797-460d-b90c-5d8f0325774c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine\View\Shader">
-      <UniqueIdentifier>{9df79c51-67cd-45d4-9e37-f1e139f6c8c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\Engine\Model\Asset">
       <UniqueIdentifier>{22da6ef6-c92b-493e-accf-425d4a260090}</UniqueIdentifier>
     </Filter>
@@ -74,9 +68,6 @@
     </ClInclude>
     <ClInclude Include="Core.h">
       <Filter>Source Files\CoreItems</Filter>
-    </ClInclude>
-    <ClInclude Include="VertexBuffer.h">
-      <Filter>Source Files\Engine\View\VertexBuffer</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
       <Filter>Source Files\Engine\Model\Entity</Filter>
@@ -147,13 +138,13 @@
     <ClInclude Include="..\Resources\MungusLibs\MungusUtil.h">
       <Filter>Resource Files\MungusLibs</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Source Files\Engine\Model\Entity</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
       <Filter>Source Files\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="VertexBuffer.cpp">
-      <Filter>Source Files\Engine\View\VertexBuffer</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
       <Filter>Source Files\Engine\Model\Entity</Filter>
@@ -193,6 +184,9 @@
     </ClCompile>
     <ClCompile Include="Asset.cpp">
       <Filter>Source Files\Engine\Model\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\Engine\Model\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

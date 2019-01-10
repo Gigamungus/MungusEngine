@@ -5,6 +5,7 @@ namespace Mungus {
 
 	class Application;
 	class Actor;
+	class Camera;
 	class Entity;
 
 
@@ -27,7 +28,7 @@ namespace Mungus {
 		const std::unordered_map<std::string, const unsigned int> inline getVertexShaders(void) const { return vertexShaders; }
 		const std::unordered_map<std::string, const unsigned int> inline getFragmentShaders(void) const { return fragmentShaders; }
 
-		void renderEntities( const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Entity>>& entities);
+		void renderActors( const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& entities, const Camera& camera);
 	};
 
 }
