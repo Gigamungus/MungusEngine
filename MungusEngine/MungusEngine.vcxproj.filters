@@ -55,6 +55,9 @@
     <Filter Include="Resource Files\MungusLibs">
       <UniqueIdentifier>{cbf939a1-e7a7-439c-be94-8a0208e7afab}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine\Model\Entity\Camera">
+      <UniqueIdentifier>{302334e4-cc4d-4720-b771-b3c1d9808ebc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -139,7 +142,7 @@
       <Filter>Resource Files\MungusLibs</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Source Files\Engine\Model\Entity</Filter>
+      <Filter>Source Files\Engine\Model\Entity\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -186,7 +189,7 @@
       <Filter>Source Files\Engine\Model\Asset</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Engine\Model\Entity</Filter>
+      <Filter>Source Files\Engine\Model\Entity\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

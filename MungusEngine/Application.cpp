@@ -19,6 +19,38 @@ const unsigned long Mungus::Application::frameCount(void) const {
 	return world->getFrameCount();
 }
 
+const unsigned long Mungus::Application::setEntityPosition(const unsigned long id, float x, float y, float z) {
+	return world->setEntityPosition(id, x, y, z);
+}
+
+const unsigned long Mungus::Application::scaleEntity(const unsigned long id, float x, float y, float z) {
+	return world->scaleEntity(id, x, y, z);
+}
+
+const unsigned long Mungus::Application::rotateEntity(const unsigned long id, const MungusMath::MVec3 & axis, float angle) {
+	return world->rotateEntity(id, axis, angle);
+}
+
+void Mungus::Application::moveCamera(float x, float y, float z) {
+	world->moveCamera(x, y, z);
+}
+
+void Mungus::Application::rotateCamera(float x, float y, float z, float theta) {
+	world->rotateCamera(x, y, z, theta);
+}
+
+void Mungus::Application::turnCamera(float angle) {
+	world->turnCamera(angle);
+}
+
+void Mungus::Application::pitchCamera(float angle) {
+	world->pitchCamera(angle);
+}
+
+void Mungus::Application::rollCamera(float angle) {
+	world->rollCamera(angle);
+}
+
 ////////////////////////////////////////////
 
 
@@ -67,7 +99,7 @@ void inline Mungus::Application::incrementFrameCount(void) {
 	world->incrementFrameCount();
 }
 
-inline const unsigned int Mungus::Application::createEntity(const std::string & name) {
+inline const unsigned long Mungus::Application::createEntity(const std::string & name) {
 	return world->createEntity(name);
 }
 

@@ -29,6 +29,7 @@ namespace Mungus {
 		const std::unordered_map<std::string, const unsigned int> inline getFragmentShaders(void) const { return fragmentShaders; }
 
 		void renderActors( const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& entities, const Camera& camera);
+		void renderActor(const Mungus::Actor& actor, const MungusMath::MMat4& frameTransformations);
 	};
 
 }

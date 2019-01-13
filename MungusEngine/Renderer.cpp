@@ -1,9 +1,9 @@
 #include "stdafx.h"
+#include "Application.h"
 #include "Renderer.h"
 #include "Actor.h"
-#include "Entity.h"
-#include "Asset.h"
 #include "Camera.h"
+#include "Asset.h"
 
 
 //////////// internal method declarations //////////////
@@ -14,7 +14,6 @@ inline std::string getFileName(const std::string& url);
 const std::string shaderSourceFromUrl(const std::string url);
 const unsigned int compileShader(const std::string shaderSource, const unsigned int& type);
 void compileShaders(std::unordered_map<std::string, const unsigned int>& vertexShaders, std::unordered_map<std::string, const unsigned int>& fragmentShaders);
-void renderActor(const Mungus::Actor& actor);
 
 //////////////end internal method declarations /////////////
 
@@ -35,16 +34,27 @@ void inline Mungus::Renderer::setBackground(MungusMath::MVec4 color) {
 }
 
 void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& actors, const Camera& camera) {
-	for (auto entity : actors) {
-		switch (entity.second->getRenderInfo().assetType) {
-		case MACTOR:
-			renderActor(*entity.second);
-			break;
-		default:
-			MLOG("tried to render unknown entity type: " << entity.second)
-			break;
-		}
-	}
+	MungusMath::MMat4 frameTransformations = camera.perspectiveMatrix(35.0, 1.0, 1.0, 1000.0) * camera.viewMatrix();
+
+	for (auto actor : actors)
+		renderActor(*actor.second, frameTransformations);
+}
+
+void Mungus::Renderer::renderActor(const Mungus::Actor& actor, const MungusMath::MMat4& frameTransformations) {
+	glUseProgram(actor.getRenderInfo().programId);
+	glBindVertexArray(actor.getRenderInfo().VAO);
+
+	MungusMath::MMat4 modelMatrix = actor.modelMatrix();
+
+	MungusMath::MMat4 transformation = frameTransformations * modelMatrix;
+
+	glUniformMatrix4fv(glGetUniformLocation(actor.getRenderInfo().programId, "transformation"), 1, GL_TRUE, (float*)&transformation);
+
+	if (actor.getRenderInfo().triangles)
+		glDrawElements(GL_TRIANGLES, actor.getRenderInfo().numTriangles, GL_UNSIGNED_INT, actor.getRenderInfo().trianglesOffset);
+
+	glUseProgram(0);
+	glBindVertexArray(0);
 }
 
 //////////// end member function implementations
@@ -65,7 +75,7 @@ void glfwStartup(GLFWwindow*& win) {
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
-	win = glfwCreateWindow(1200, 740, "Application", NULL, NULL);
+	win = glfwCreateWindow(700, 700, "Application", NULL, NULL);
 
 	if (win == NULL) {
 		MLOG("error creating glfw window");
@@ -180,16 +190,5 @@ inline std::string getFileName(const std::string& url) {
 	}
 
 	return name.str();
-}
-
-void renderActor(const Mungus::Actor& actor) {
-	glUseProgram(actor.getRenderInfo().programId);
-	glBindVertexArray(actor.getRenderInfo().VAO);
-
-	if (actor.getRenderInfo().triangles)
-		glDrawElements(GL_TRIANGLES, actor.getRenderInfo().numTriangles, GL_UNSIGNED_INT, actor.getRenderInfo().trianglesOffset);
-
-	glUseProgram(0);
-	glBindVertexArray(0);
 }
 //////////////// end internal method implementations /////////////////

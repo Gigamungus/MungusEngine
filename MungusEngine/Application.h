@@ -23,6 +23,14 @@ namespace Mungus {
 		void inline loadAsset(const std::string& assetPath);
 		void inline setBackground(MungusMath::MVec4 color);
 		const unsigned long frameCount(void) const;
+		const unsigned long setEntityPosition(const unsigned long id, float x, float y, float z);
+		const unsigned long scaleEntity(const unsigned long id, float x, float y, float z);
+		const unsigned long rotateEntity(const unsigned long id, const MungusMath::MVec3& axis, float angle);
+		void moveCamera(float x, float y, float z);
+		void rotateCamera(float x, float y, float z, float theta);
+		void turnCamera(float angle);
+		void pitchCamera(float angle);
+		void rollCamera(float angle);
 		/////////////////////////////////////////////////////
 
 		//////// client should override these ///////
@@ -32,7 +40,7 @@ namespace Mungus {
 
 		//////////////////// client should IGNORE these ////////////////
 		void inline incrementFrameCount(void);
-		const unsigned int inline createEntity(const std::string& name);
+		const unsigned long inline createEntity(const std::string& name);
 		void renderActors(void);
 		////////////////////////////////////////////////////////////////
 		///////////////// good luck with your project //////////////////

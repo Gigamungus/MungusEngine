@@ -1,9 +1,12 @@
 #version 420 core
 
 in vec4 position;
-in vec4 color;
+out float depth;
 
+uniform mat4 transformation;
 
 void main(void) {
-	gl_Position = position;
+	vec4 transformedPosition = (transformation * position);
+	gl_Position = transformedPosition;
+	depth = transformedPosition.z / transformedPosition.w;
 }
