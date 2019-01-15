@@ -48,6 +48,10 @@ const unsigned long Mungus::World::rotateEntity(const unsigned long id, const Mu
 	return id;
 }
 
+void Mungus::World::setCameraPosition(float x, float y, float z) {
+	camera->setPosition(MungusMath::MVec3{ x, y, z });
+}
+
 void Mungus::World::moveCamera(float x, float y, float z) {
 	camera->setPosition(MungusMath::MVec3{x, y, z} + camera->getPosition());
 }

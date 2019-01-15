@@ -4,7 +4,7 @@
 
 Mungus::Entity::Entity() :
 	position({ 0, 0, 0 }),
-	orientation(MungusMath::MMat4::identity())
+	orientation({1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1})
 {}
 
 const MungusMath::MVec3 Mungus::Entity::getPosition(void) const {
@@ -30,7 +30,7 @@ void Mungus::Entity::roll(float angle) {
 }
 
 void Mungus::Entity::turn(float angle) {
-	orientation = orientation * MungusMath::MMat4::rotation(0, 1, 0, angle);
+	orientation = MungusMath::MMat4::rotation(0, 1, 0, angle) * orientation;
 }
 
 void Mungus::Entity::setPosition(const MungusMath::MVec3& newPos) {

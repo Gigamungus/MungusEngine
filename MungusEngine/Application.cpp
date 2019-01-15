@@ -8,7 +8,13 @@
 #include "MungusMath.h"
 #include "MungusUtil.h"
 
+void keyCallBack(GLFWwindow* window, int key, int scanCode, int action, int mods);
+
 //////// client call functions /////////////
+void Mungus::Application::setDefaultBindings(void) {
+	glfwSetKeyCallback(renderer->getWindow(), keyCallBack);
+}
+
 void inline Mungus::Application::loadAsset(const std::string& assetPath) {
 	world->loadAsset(assetPath, renderer->getVertexShaders(), renderer->getFragmentShaders());
 }
@@ -29,6 +35,10 @@ const unsigned long Mungus::Application::scaleEntity(const unsigned long id, flo
 
 const unsigned long Mungus::Application::rotateEntity(const unsigned long id, const MungusMath::MVec3 & axis, float angle) {
 	return world->rotateEntity(id, axis, angle);
+}
+
+void Mungus::Application::setCameraPosition(float x, float y, float z) {
+	world->setCameraPosition(x, y, z);
 }
 
 void Mungus::Application::moveCamera(float x, float y, float z) {
@@ -73,7 +83,7 @@ void Mungus::Application::mainLoop(void) {
 //////////////////////////////////////////////////////////////////////////////
 
 
-Mungus::Application::Application(void) : 
+Mungus::Application::Application(void) :
 	world(std::make_shared<Mungus::World>(this)),
 	renderer(std::make_shared<Mungus::Renderer>(this)),
 	controller(std::make_shared<Mungus::Controller>(this))
@@ -105,4 +115,8 @@ inline const unsigned long Mungus::Application::createEntity(const std::string &
 
 void Mungus::Application::renderActors(void) {
 	renderer->renderActors(world->getActors(), world->getCamera());
+}
+
+void keyCallBack(GLFWwindow* window, int key, int scanCode, int action, int mods) {
+	std::cout << key << ": was pressed\n";
 }

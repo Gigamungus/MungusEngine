@@ -7,13 +7,17 @@
 
 namespace MungusMath {
 
+	inline float degToRads(float degrees) {
+		return degrees * (float)(3.1415926535908032384626433 / 180.0);
+	}
+
 	struct MVec3 {
 		float x;
 		float y;
 		float z;
 
 		inline float size(void) const {
-			return sqrt(x * x + y * y + z * z);
+			return sqrtf(x * x + y * y + z * z);
 		}
 
 		inline MVec3 operator+(const MVec3& other) {
@@ -37,7 +41,7 @@ namespace MungusMath {
 		}
 
 		inline static MVec3 normalize(const MVec3& vector) {
-			float size = sqrt(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
+			float size = sqrtf(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
 
 			return MVec3{
 				vector.x / size, vector.y / size, vector.z / size
@@ -139,18 +143,18 @@ namespace MungusMath {
 		}
 
 		inline static MMat4 rotation(float x, float y, float z, float theta) {
-			float dirMag = sqrt((x * x) + (y * y) + (z * z));
+			float dirMag = sqrtf((x * x) + (y * y) + (z * z));
 			x /= dirMag;
 			y /= dirMag;
 			z /= dirMag;
 
 			float rTheta =  (float)(M_PI / 180.0f) * theta;
-			float sinTheta = sin(rTheta);
-			float cosTheta = cos(rTheta);
-			float cosThetaFromOne = 1 - cosTheta;
+			float sinTheta = sinf(rTheta);
+			float cosTheta = cosf(rTheta);
+			float cosThetaFromOne = 1.0f - cosTheta;
 
 			return MMat4{
-				cosTheta + (x * x * cosThetaFromOne),	(x * y * cosThetaFromOne) - z * sinTheta,	(x * z * cosThetaFromOne) + (y * sinTheta),	0,
+				cosTheta + (x * x * cosThetaFromOne),	(x * y * cosThetaFromOne) - (z * sinTheta),	(x * z * cosThetaFromOne) + (y * sinTheta),	0,
 				(y * x * cosThetaFromOne) + (z * sinTheta),	cosTheta + (y * y * cosThetaFromOne),	(y * z * cosThetaFromOne) - (x * sinTheta),	0,
 				(z * x * cosThetaFromOne) - (y * sinTheta),	(z * y * cosThetaFromOne) + (x * sinTheta),	cosTheta + (z * z * cosThetaFromOne),	0,
 				0, 0, 0, 1
@@ -312,7 +316,7 @@ namespace MungusMath {
 		det = m[0] * inv[0] + m[1] * inv[4] + m[2] * inv[8] + m[3] * inv[12];
 
 		if (det != 0)
-			det = 1.0 / det;
+			det = 1.0f / det;
 
 
 		for (i = 0; i < 16; i++)

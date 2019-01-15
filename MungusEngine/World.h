@@ -33,6 +33,7 @@ namespace Mungus {
 		const unsigned long setEntityPosition(const unsigned long id, float x, float y, float z);
 		const unsigned long scaleEntity(const unsigned long id, float x, float y, float z);
 		const unsigned long rotateEntity(const unsigned long id, const MungusMath::MVec3& axis, float angle);
+		void setCameraPosition(float x, float y, float z);
 		void moveCamera(float x, float y, float z);
 		void rotateCamera(float x, float y, float z, float theta);
 		void turnCamera(float angle);

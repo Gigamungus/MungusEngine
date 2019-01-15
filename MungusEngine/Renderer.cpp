@@ -34,7 +34,7 @@ void inline Mungus::Renderer::setBackground(MungusMath::MVec4 color) {
 }
 
 void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& actors, const Camera& camera) {
-	MungusMath::MMat4 frameTransformations = camera.perspectiveMatrix(35.0, 1.0, 1.0, 1000.0) * camera.viewMatrix();
+	MungusMath::MMat4 frameTransformations = camera.perspectiveMatrix(90.0, 1.0, 1.0, 1000.0) * camera.viewMatrix();
 
 	for (auto actor : actors)
 		renderActor(*actor.second, frameTransformations);
