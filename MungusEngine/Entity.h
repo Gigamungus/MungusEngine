@@ -24,6 +24,13 @@ namespace Mungus {
 		void roll(float angle);
 		void turn(float angle);
 
+		const MungusMath::MVec3 forward(void) const;
+		const MungusMath::MVec3 up(void) const;
+		const MungusMath::MVec3 right(void) const;
+		const MungusMath::MVec3	planarForward(void) const;
+		const MungusMath::MVec3 planarUp(void) const;
+		const MungusMath::MVec3	planarRight(void) const;
+
 		void setPosition(const MungusMath::MVec3& newPos);
 	};
 

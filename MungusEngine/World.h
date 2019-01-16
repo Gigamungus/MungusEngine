@@ -33,9 +33,31 @@ namespace Mungus {
 		const unsigned long setEntityPosition(const unsigned long id, float x, float y, float z);
 		const unsigned long scaleEntity(const unsigned long id, float x, float y, float z);
 		const unsigned long rotateEntity(const unsigned long id, const MungusMath::MVec3& axis, float angle);
+
+		const MungusMath::MVec3 getCameraPosition(void) const;
 		void setCameraPosition(float x, float y, float z);
-		void moveCamera(float x, float y, float z);
-		void rotateCamera(float x, float y, float z, float theta);
+		void moveCamera(const MungusMath::MVec3& moveBy);
+
+		const MungusMath::MVec3 getCameraForward(void) const;
+		const MungusMath::MVec3 getCameraUp(void) const;
+		const MungusMath::MVec3 getCameraRight(void) const;
+		const MungusMath::MVec3 getCameraPlanarForward(void) const;
+		const MungusMath::MVec3 getCameraPlanarUp(void) const;
+		const MungusMath::MVec3 getCameraPlanarRight(void) const;
+
+		void setCameraStrafingStatus(int setting);
+		void setCameraAscendingStatus(int setting);
+		void setCameraAdvancingStatus(int setting);
+		void setCameraTurningStatus(int setting);
+		void setCameraPitchingStatus(int setting);
+		void setCameraRollingStatus(int setting);
+
+		float getCameraRotationSpeed() const;
+		void setCameraRotationSpeed(float speed);
+		float getCameraMovementSpeed() const;
+		void setCameraMovementSpeed(float speed);
+
+		void rotateCamera(const MungusMath::MVec3& axis, float theta);
 		void turnCamera(float angle);
 		void pitchCamera(float angle);
 		void rollCamera(float angle);

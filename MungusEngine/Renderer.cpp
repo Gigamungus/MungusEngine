@@ -22,7 +22,7 @@ void compileShaders(std::unordered_map<std::string, const unsigned int>& vertexS
 
 ////////////////// start member function implementations ///////////////
 
-Mungus::Renderer::Renderer(const Application* owner) : owner(owner) {
+Mungus::Renderer::Renderer(const Application* owner) : owner(owner), lastFrameTime(0.0f) {
 	glfwStartup(window);
 	glewStartup();
 	compileShaders(vertexShaders, fragmentShaders);

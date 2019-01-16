@@ -20,12 +20,20 @@ namespace MungusMath {
 			return sqrtf(x * x + y * y + z * z);
 		}
 
+		inline MVec3 operator+(const MVec3& other) const {
+			return MVec3{ x + other.x, y + other.y, z + other.z };
+		}
+
 		inline MVec3 operator+(const MVec3& other) {
 			return MVec3{ x + other.x, y + other.y, z + other.z };
 		}
 
 		inline MVec3 operator-(const MVec3& other) {
 			return MVec3{ x - other.x, y - other.y, z - other.z };
+		}
+
+		inline MVec3 operator*(const float other) const {
+			return MVec3{x * other, y * other, z * other};
 		}
 
 		inline float dot(const MVec3& other) {

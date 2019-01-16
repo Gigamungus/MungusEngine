@@ -17,6 +17,12 @@
 
 #define MACTOR 1
 
+#define MSTATIONARY 0
+#define MCAMERA_FORWARD 1
+#define MCAMERA_REVERSE -1
+#define MPLANAR_FORWARD 2
+#define MPLANAR_REVERSE -2
+
 #define A_KEY 1
 #define B_KEY 1
 #define C_KEY 1

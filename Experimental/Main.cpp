@@ -10,19 +10,24 @@
 #include <stack>
 
 
-void reverseString(std::string* string) {
-	size_t size = string->size();
-	for (size_t i = 0, j = size - 1; i < size / 2; i++, j--) {
-		char tmp = (*string)[i];
-		(*string)[i] = (*string)[j];
-		(*string)[j] = tmp;
-	}
-}
+struct Test {
+	std::vector<float> floats;
+	int i;
+};
 
 int main(void) {
-	std::string str = "1234567890";
-	reverseString(&str);
+	Test test;
 
-	std::cout << str << "\n";
+	std::cout << offsetof(Test, i) << "\n";
+
+	test.floats.push_back(1.0);
+	test.floats.push_back(1.0);
+	test.floats.push_back(1.0);
+	test.floats.push_back(1.0);
+
+
+	std::cout << offsetof(Test, i) << "\n";
+
+
 	std::cin.get();
 }

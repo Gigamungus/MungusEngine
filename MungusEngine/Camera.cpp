@@ -3,36 +3,23 @@
 
 
 Mungus::Camera::Camera() :
-	Mungus::Entity()
+	Mungus::Entity(),
+	rotationSpeed(360.0),
+	movementSpeed(20.0),
+	strafing(MSTATIONARY),
+	advancing(MSTATIONARY),
+	ascending(MSTATIONARY),
+	turning(MSTATIONARY),
+	pitching(MSTATIONARY),
+	rolling(MSTATIONARY)
 	{}
 
 Mungus::Camera::~Camera() {
 
 }
 
-const MungusMath::MMat4 Mungus::Camera::viewMatrix(void) const {/*
-	return MungusMath::inverseMatrix(MungusMath::MMat4::translate(position.x, position.y, position.z) * orientation);*/
-
-
+const MungusMath::MMat4 Mungus::Camera::viewMatrix(void) const {
 	return MungusMath::inverseMatrix(orientation) * MungusMath::MMat4::translate(-position.x, -position.y, -position.z);
-
-	//auto forward4 = orientation * MungusMath::MVec4{ 0, 0, -1, 1 };
-	//auto up4 = orientation * MungusMath::MVec4{ 0, 1, 0, 1 };
-	//auto right4 = orientation * MungusMath::MVec4{ 1, 0, 0, 1 };
-
-	//auto forward = MungusMath::MVec3::normalize(MungusMath::MVec3{ forward4.x, forward4.y, forward4.z });
-	//auto up = MungusMath::MVec3::normalize(MungusMath::MVec3{ up4.x, up4.y, up4.z });
-	//auto right = MungusMath::MVec3::normalize(MungusMath::MVec3{ right4.x, right4.y, right4.z });
-
-
-	//return	MungusMath::MMat4::translate(position.x, position.y, position.z)
-	//		* MungusMath::MMat4{
-	//			right.x,	forward.x,	up.x,	0,
-	//			right.y,	forward.y,	up.y,	0,
-	//			right.z,	forward.z,	up.z,	0,
-	//			0,			0,			0,		1
-	//		} * MungusMath::MMat4::translate(-position.x, -position.y, -position.z);
-
 }
 
 const MungusMath::MMat4 Mungus::Camera::perspectiveMatrix(float angle, float ratio, float near, float far) const {

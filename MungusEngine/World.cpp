@@ -48,16 +48,84 @@ const unsigned long Mungus::World::rotateEntity(const unsigned long id, const Mu
 	return id;
 }
 
+const MungusMath::MVec3 Mungus::World::getCameraPosition(void) const {
+	return camera->getPosition();
+}
+
 void Mungus::World::setCameraPosition(float x, float y, float z) {
 	camera->setPosition(MungusMath::MVec3{ x, y, z });
 }
 
-void Mungus::World::moveCamera(float x, float y, float z) {
-	camera->setPosition(MungusMath::MVec3{x, y, z} + camera->getPosition());
+void Mungus::World::moveCamera(const MungusMath::MVec3& moveBy) {
+	camera->setPosition(camera->getPosition() + moveBy);
 }
 
-void Mungus::World::rotateCamera(float x, float y, float z, float theta) {
-	camera->rotate(MungusMath::MVec3{ x, y, z }, theta);
+const MungusMath::MVec3 Mungus::World::getCameraForward(void) const {
+	return camera->forward();
+}
+
+const MungusMath::MVec3 Mungus::World::getCameraUp(void) const {
+	return camera->up();
+}
+
+const MungusMath::MVec3 Mungus::World::getCameraRight(void) const {
+	return camera->right();
+}
+
+const MungusMath::MVec3 Mungus::World::getCameraPlanarForward(void) const {
+	return camera->planarForward();
+}
+
+const MungusMath::MVec3 Mungus::World::getCameraPlanarUp(void) const {
+	return camera->planarUp();
+}
+
+const MungusMath::MVec3 Mungus::World::getCameraPlanarRight(void) const {
+	return camera->planarRight();
+}
+
+void Mungus::World::setCameraStrafingStatus(int setting) {
+	camera->strafing = setting;
+}
+
+void Mungus::World::setCameraAscendingStatus(int setting) {
+	camera->ascending = setting;
+}
+
+void Mungus::World::setCameraAdvancingStatus(int setting) {
+	camera->advancing = setting;
+}
+
+void Mungus::World::setCameraTurningStatus(int setting) {
+	camera->turning = setting;
+}
+
+void Mungus::World::setCameraPitchingStatus(int setting) {
+	camera->pitching = setting;
+}
+
+void Mungus::World::setCameraRollingStatus(int setting) {
+	camera->rolling = setting;
+}
+
+float Mungus::World::getCameraRotationSpeed() const {
+	return camera->getRotationSpeed();
+}
+
+void Mungus::World::setCameraRotationSpeed(float speed) {
+	camera->setRotationSpeed(speed);
+}
+
+float Mungus::World::getCameraMovementSpeed() const {
+	return camera->getMovementSpeed();
+}
+
+void Mungus::World::setCameraMovementSpeed(float speed) {
+	camera->setMovementSpeed(speed);
+}
+
+void Mungus::World::rotateCamera(const MungusMath::MVec3& axis, float theta) {
+	camera->rotate(axis, theta);
 }
 
 inline const Mungus::Camera Mungus::World::getCamera(void) const {

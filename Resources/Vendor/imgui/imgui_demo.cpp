@@ -3400,7 +3400,7 @@ static void ShowExampleAppPropertyEditor(bool* p_open)
     ImGui::Columns(2);
     ImGui::Separator();
 
-    struct funcs
+    struct bindings
     {
         static void ShowDummyObject(const char* prefix, int uid)
         {
@@ -3445,7 +3445,7 @@ static void ShowExampleAppPropertyEditor(bool* p_open)
 
     // Iterate dummy objects with dummy members (all the same data)
     for (int obj_i = 0; obj_i < 3; obj_i++)
-        funcs::ShowDummyObject("Object", obj_i);
+        bindings::ShowDummyObject("Object", obj_i);
 
     ImGui::Columns(1);
     ImGui::Separator();
