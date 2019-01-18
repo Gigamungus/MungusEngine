@@ -22,7 +22,7 @@ namespace Mungus {
 		const MungusMath::MMat4 viewMatrix(void) const;
 		const MungusMath::MMat4 perspectiveMatrix(float angle, float ratio, float near, float far) const;
 
-		inline float getRotationSpeed(void) const { return rotationSpeed; }
+		const float getRotationSpeed(void) const;
 		inline void setRotationSpeed(float speed) { rotationSpeed = speed; }
 
 		inline float getMovementSpeed(void) const { return movementSpeed; }

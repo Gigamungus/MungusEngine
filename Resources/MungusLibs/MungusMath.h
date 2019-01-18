@@ -7,8 +7,16 @@
 
 namespace MungusMath {
 
+	inline float abs(float number) {
+		return number < 0 ? -number : number;
+	}
+
 	inline float degToRads(float degrees) {
 		return degrees * (float)(3.1415926535908032384626433 / 180.0);
+	}
+
+	inline float radsToDeg(float rad) {
+		return rad * (float)(180.0 / 3.1415926535897932384626433);
 	}
 
 	struct MVec3 {
@@ -36,7 +44,7 @@ namespace MungusMath {
 			return MVec3{x * other, y * other, z * other};
 		}
 
-		inline float dot(const MVec3& other) {
+		inline float dot(const MVec3& other) const {
 			return x * other.x + y * other.y + z * other.z;
 		}
 

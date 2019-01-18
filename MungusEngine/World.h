@@ -52,7 +52,7 @@ namespace Mungus {
 		void setCameraPitchingStatus(int setting);
 		void setCameraRollingStatus(int setting);
 
-		float getCameraRotationSpeed() const;
+		const float getCameraRotationSpeed() const;
 		void setCameraRotationSpeed(float speed);
 		float getCameraMovementSpeed() const;
 		void setCameraMovementSpeed(float speed);

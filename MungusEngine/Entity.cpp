@@ -20,8 +20,19 @@ void Mungus::Entity::rotate(const MungusMath::MVec3 & axis, float angle) {
 }
 
 void Mungus::Entity::pitch(float angle) {
-	auto right = orientation * MungusMath::MVec4{ 1, 0, 0, 1 };
-	orientation = orientation * MungusMath::MMat4::rotation(right.x, right.y, right.z, angle);
+	angle = -angle;
+	auto rightVector = planarRight();
+	float pitchAngle = MungusMath::radsToDeg(acosf(forward().dot(planarUp() * -1)));
+
+	if (0.1f > pitchAngle - angle) {
+		angle = pitchAngle - 0.1f;
+	}
+
+	if (pitchAngle - angle > 179.9f) {
+		angle = pitchAngle - 179.9f;
+	}
+	//if (0.0 < pitchAngle - angle && pitchAngle - angle < 180.0) {
+	orientation = MungusMath::MMat4::rotation(rightVector.x, rightVector.y, rightVector.z, angle) * orientation;
 }
 
 void Mungus::Entity::roll(float angle) {

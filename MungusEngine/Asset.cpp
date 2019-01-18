@@ -85,7 +85,7 @@ Mungus::Asset::Asset(	const std::string& name,
 
 		if (!triangleIndices.empty()) {
 			renderInfo.triangles = true;
-			renderInfo.numTriangles = (unsigned int)triangleIndices.size();
+			renderInfo.numTriangleVertices = (unsigned int)triangleIndices.size();
 			glBufferData(GL_ELEMENT_ARRAY_BUFFER, triangleIndices.size() * sizeof(unsigned int), triangleIndices.data(), GL_STATIC_DRAW);
 		}
 	}

@@ -108,7 +108,7 @@ void Mungus::World::setCameraRollingStatus(int setting) {
 	camera->rolling = setting;
 }
 
-float Mungus::World::getCameraRotationSpeed() const {
+const float Mungus::World::getCameraRotationSpeed() const {
 	return camera->getRotationSpeed();
 }
 

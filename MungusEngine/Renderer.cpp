@@ -34,7 +34,7 @@ void inline Mungus::Renderer::setBackground(MungusMath::MVec4 color) {
 }
 
 void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& actors, const Camera& camera) {
-	MungusMath::MMat4 frameTransformations = camera.perspectiveMatrix(90.0, 1.0, 1.0, 1000.0) * camera.viewMatrix();
+	MungusMath::MMat4 frameTransformations = camera.perspectiveMatrix(90.0, 1.0, 0.001, 1000.0) * camera.viewMatrix();
 
 	for (auto actor : actors)
 		renderActor(*actor.second, frameTransformations);
@@ -51,7 +51,7 @@ void Mungus::Renderer::renderActor(const Mungus::Actor& actor, const MungusMath:
 	glUniformMatrix4fv(glGetUniformLocation(actor.getRenderInfo().programId, "transformation"), 1, GL_TRUE, (float*)&transformation);
 
 	if (actor.getRenderInfo().triangles)
-		glDrawElements(GL_TRIANGLES, actor.getRenderInfo().numTriangles, GL_UNSIGNED_INT, actor.getRenderInfo().trianglesOffset);
+		glDrawElements(GL_TRIANGLES, actor.getRenderInfo().numTriangleVertices, GL_UNSIGNED_INT, actor.getRenderInfo().trianglesOffset);
 
 	glUseProgram(0);
 	glBindVertexArray(0);
@@ -97,15 +97,22 @@ void glewStartup(void) {
 	}
 
 	glEnable(GL_DEBUG_OUTPUT);
-	glDebugMessageCallback([](GLenum source,
+	glDebugMessageCallback([](
+		GLenum source,
 		GLenum type,
 		GLuint id,
 		GLenum severity,
 		GLsizei length,
 		const GLchar *message,
 		const void *userParam)
-	{	std::cout << message << std::endl;	},
+	{	MLOG(message << std::endl)	},
 		NULL);
+
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_BACK);
+
+	/*glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_GEQUAL);*/
 }
 
 void compileShaders(	std::unordered_map<std::string, const unsigned int>& vertexShaders,

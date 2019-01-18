@@ -8,8 +8,10 @@
 #include "MungusMath.h"
 #include "MungusUtil.h"
 
-struct Mungus::KeyFunctions {
+struct Mungus::ActiveBindings {
 	typedef std::function<void(Mungus::Application*, GLFWwindow*, int, int, int, int)> keyLambda;
+	typedef std::function<void(Mungus::Application*, GLFWwindow*, int, int, int)> mouseLambda;
+	typedef std::function<void(Mungus::Application*, GLFWwindow*, double, double)> cursorLambda;
 
 	std::stack<keyLambda>      aBindings = std::stack<keyLambda>();
 	std::stack<keyLambda>      bBindings = std::stack<keyLambda>();
@@ -49,10 +51,19 @@ struct Mungus::KeyFunctions {
 	std::stack<keyLambda>   nineBindings = std::stack<keyLambda>();
 	std::stack<keyLambda> escapeBindings = std::stack<keyLambda>();
 	std::stack<keyLambda>  spaceBindings = std::stack<keyLambda>();
+
+	std::stack<mouseLambda>  lmbBindings = std::stack<mouseLambda>();
+	std::stack<mouseLambda>  rmbBindings = std::stack<mouseLambda>();
+
+	std::stack<cursorLambda> mouseMoveBindings = std::stack<cursorLambda>();
+};
+struct Mungus::CursorLocation {
+	double xpos;
+	double ypos;
 };
 
 //////// client call functions /////////////
-void Mungus::Application::setDefaultBindings(void) {
+void Mungus::Application::setRPGBindings(void) {
 	bindings->aBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
@@ -125,6 +136,50 @@ void Mungus::Application::setDefaultBindings(void) {
 			break;
 		};
 	});
+	bindings->qBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
+		switch (action) {
+		case GLFW_PRESS:
+			app->setCameraStrafingStatus(MPLANAR_REVERSE);
+			break;
+		case GLFW_RELEASE:
+			app->setCameraStrafingStatus(MSTATIONARY);
+			break;
+		default:
+			break;
+		};
+	});
+	bindings->eBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
+		switch (action) {
+		case GLFW_PRESS:
+			app->setCameraStrafingStatus(MPLANAR_FORWARD);
+			break;
+		case GLFW_RELEASE:
+			app->setCameraStrafingStatus(MSTATIONARY);
+			break;
+		default:
+			break;
+		};
+	});
+
+	bindings->lmbBindings.push([](Mungus::Application* app, GLFWwindow* window, int button, int action, int mods) {
+
+		switch (action) {
+		case GLFW_PRESS:
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			app->bindings->mouseMoveBindings.push([](Mungus::Application* app, GLFWwindow* window, double xpos, double ypos) {
+				app->turnCamera((float)(-(app->getLastMouseLocation().xpos - xpos) * app->getCameraRotationSpeed()) / 360.0f);
+				app->pitchCamera((float)(app->getLastMouseLocation().ypos - ypos) * app->getCameraRotationSpeed() / 360.0f);
+			});
+			break;
+		case GLFW_RELEASE:
+			app->bindings->mouseMoveBindings.pop();
+			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			break;
+		default:
+			MLOG("unknown mouse action: " << action)
+			break;
+		}
+	});
 }
 
 const float Mungus::Application::time(void) const{
@@ -143,6 +198,10 @@ void inline Mungus::Application::setBackground(MungusMath::MVec4 color) { render
 
 const unsigned long Mungus::Application::frameCount(void) const {
 	return world->getFrameCount();
+}
+
+const Mungus::CursorLocation Mungus::Application::getLastMouseLocation(void) const {
+	return *lastMouseLocation;
 }
 
 const unsigned long Mungus::Application::setEntityPosition(const unsigned long id, float x, float y, float z) {
@@ -274,17 +333,22 @@ void Mungus::Application::mainLoop(void) {
 Mungus::Application::Application(void) :
 	world(std::make_shared<Mungus::World>(this)),
 	renderer(std::make_shared<Mungus::Renderer>(this)),
-	bindings(std::make_shared<Mungus::KeyFunctions>())
+	bindings(std::make_shared<Mungus::ActiveBindings>()),
+	lastMouseLocation(std::make_shared<Mungus::CursorLocation>())
 {
 	glfwSetWindowUserPointer(renderer->getWindow(), this);
 	glfwSetKeyCallback(renderer->getWindow(), [](GLFWwindow* window, int key, int scanCode, int action, int mods) {
 		(static_cast<Mungus::Application*>(glfwGetWindowUserPointer(window)))->keyCallBack(window, key, scanCode, action, mods);
 	});
+	glfwSetMouseButtonCallback(renderer->getWindow(), [](GLFWwindow* window, int button, int action, int mods) {
+		(static_cast<Mungus::Application*>(glfwGetWindowUserPointer(window)))->mouseCallBack(window, button, action, mods);
+	});
+	glfwSetCursorPosCallback(renderer->getWindow(), [](GLFWwindow* window, double xpos, double ypos) {
+		(static_cast<Mungus::Application*>(glfwGetWindowUserPointer(window)))->cursorCallBack(window, xpos, ypos);
+	});
 }
 
-Mungus::Application::~Application() {
-
-}
+Mungus::Application::~Application() {}
 
 void Mungus::Application::run(void) {
 	while (!glfwWindowShouldClose(renderer->getWindow())) {
@@ -292,6 +356,8 @@ void Mungus::Application::run(void) {
 		mainLoop();
 		incrementFrameCount();
 		updateCameraPosition();
+		updateMouseLocation();
+		glfwSetWindowTitle(renderer->getWindow(), (std::to_string((int)(1 / frameTime())) + " - FPS").c_str());
 		renderer->setLastFrameTime((float)glfwGetTime());
 		renderActors();
 		glfwSwapBuffers(renderer->getWindow());
@@ -436,7 +502,13 @@ void Mungus::Application::updateCameraPosition(void) {
 	}
 }
 
-void Mungus::Application::keyCallBack(GLFWwindow * window, int key, int scanCode, int action, int mods) {
+void Mungus::Application::updateMouseLocation(void) {
+	double xpos, ypos;
+	glfwGetCursorPos(renderer->getWindow(), &xpos, &ypos);
+	*lastMouseLocation = { xpos, ypos };
+}
+
+void Mungus::Application::keyCallBack(GLFWwindow* window, int key, int scanCode, int action, int mods) {
 	switch (key) {
 	case GLFW_KEY_SPACE:
 		if (!bindings->spaceBindings.empty())
@@ -592,5 +664,28 @@ void Mungus::Application::keyCallBack(GLFWwindow * window, int key, int scanCode
 		break;
 	default:
 		MLOG("unrecognized key pressed: " << key)
+		break;
 	}
 }
+
+void Mungus::Application::mouseCallBack(GLFWwindow* window, int button, int action, int mods) {
+	switch (button) {
+	case GLFW_MOUSE_BUTTON_LEFT:
+		if (!bindings->lmbBindings.empty())
+			bindings->lmbBindings.top()(this, window, button, action, mods);
+		break;
+	case GLFW_MOUSE_BUTTON_RIGHT:
+		if (!bindings->rmbBindings.empty())
+			bindings->rmbBindings.top()(this, window, button, action, mods);
+		break;
+	default:
+		MLOG("unrecognized mmouse button pressed: " << button)
+		break;
+	}
+}
+
+void Mungus::Application::cursorCallBack(GLFWwindow * window, double xpos, double ypos) {
+	if (!bindings->mouseMoveBindings.empty())
+		bindings->mouseMoveBindings.top()(this, window, xpos, ypos);
+}
+

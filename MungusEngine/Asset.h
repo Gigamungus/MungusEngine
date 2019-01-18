@@ -8,7 +8,7 @@ namespace Mungus {
 		unsigned int programId = 0;
 		unsigned int VAO = 0;
 		bool triangles = false;
-		unsigned int numTriangles = 0;
+		unsigned int numTriangleVertices = 0;
 		void* trianglesOffset = 0;
 	};
 

@@ -5,19 +5,24 @@ namespace Mungus {
 	class Renderer;
 	class World;
 
-	struct KeyFunctions;
+	struct ActiveBindings;
+	struct CursorLocation;
 
 	class MUNGUS Application {
 	private:
 		void inline incrementFrameCount(void);
 		void renderActors(void);
 		void keyCallBack(GLFWwindow* window, int key, int scanCode, int action, int mods);
+		void mouseCallBack(GLFWwindow* window, int button, int action, int mods);
+		void cursorCallBack(GLFWwindow* window, double xpos, double ypos);
 		void updateCameraPosition(void);
+		void updateMouseLocation(void);
 
 	protected:
 		std::shared_ptr<Mungus::World> world;
 		std::shared_ptr<Mungus::Renderer> renderer;
-		std::shared_ptr<KeyFunctions> bindings;
+		std::shared_ptr<ActiveBindings> bindings;
+		std::shared_ptr<CursorLocation> lastMouseLocation;
 
 	public:
 		Application(void);
@@ -27,10 +32,11 @@ namespace Mungus {
 
 
 		///////////// client can call these ///////////////
-		void setDefaultBindings(void);
+		void setRPGBindings(void);
 		const float time(void) const;
 		const float frameTime(void) const;
 		const unsigned long frameCount(void) const;
+		const CursorLocation getLastMouseLocation(void) const;
 		void inline loadAsset(const std::string& assetPath);
 		void inline setBackground(MungusMath::MVec4 color);
 		const unsigned long inline createEntity(const std::string& name);
