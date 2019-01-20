@@ -58,6 +58,9 @@
     <Filter Include="Source Files\Engine\Model\Entity\Camera">
       <UniqueIdentifier>{302334e4-cc4d-4720-b771-b3c1d9808ebc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Engine\Model\Physics">
+      <UniqueIdentifier>{104830b2-f19b-47c8-b38d-f8d3052c9412}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -144,6 +147,9 @@
     <ClInclude Include="Camera.h">
       <Filter>Source Files\Engine\Model\Entity\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="AABBTree.h">
+      <Filter>Source Files\Engine\Model\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp">
@@ -190,6 +196,9 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Source Files\Engine\Model\Entity\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="AABBTree.cpp">
+      <Filter>Source Files\Engine\Model\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

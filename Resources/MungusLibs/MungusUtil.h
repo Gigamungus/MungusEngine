@@ -57,43 +57,13 @@ namespace MungusUtil {
 		return std::distance(begin, itr);
 	}
 
+	inline float min(float one, float two) {
+		return one < two ? one : two;
+	}
 
-
-	class AABBTree {
-		struct AABBNode {
-			float xpos1;
-			float ypos1;
-			float zpos1;
-
-			float xpos2;
-			float ypos2;
-			float zpos2;
-		};
-
-		AABBNode* root;
-
-
-	public:
-		AABBTree(void) : root(nullptr) {}
-
-		bool intersect(const AABBNode& first, const AABBNode& second) {
-			return	first.xpos2 > second.xpos1 && first.xpos1 < second.xpos2 &&
-					first.ypos2 > second.ypos1 && first.ypos1 < second.ypos2 &&
-					first.zpos2 > second.zpos1 && first.zpos1 < second.zpos2;
-		}
-
-		void insert(AABBNode& node) {
-			if (root == nullptr) {
-				root = &node;
-			}
-			else {
-				AABBNode insertionPoint = *root;
-
-			}
-		}
-
-
-	};
+	inline float max(float one, float two) {
+		return one > two ? one : two;
+	}
 
 }
 

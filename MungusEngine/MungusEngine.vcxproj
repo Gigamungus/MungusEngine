@@ -156,6 +156,7 @@ del "$(OutDir)MungusEngine.lib"
     <ClInclude Include="..\Resources\Vendor\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\Resources\Vendor\imgui\imstb_textedit.h" />
     <ClInclude Include="..\Resources\Vendor\imgui\imstb_truetype.h" />
+    <ClInclude Include="AABBTree.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="Application.h" />
     <ClInclude Include="Asset.h" />
@@ -218,6 +219,7 @@ del "$(OutDir)MungusEngine.lib"
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="AABBTree.cpp" />
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="Asset.cpp" />

@@ -4,13 +4,24 @@
 #include "Camera.h"
 #include "Actor.h"
 #include "Asset.h"
+#include "AABBTree.h"
 
-Mungus::World::World(const Application* owner) : owner(owner), frameCount(0), actorCount(0), camera(std::make_shared<Camera>()) {};
+Mungus::World::World(const Application* owner) :
+	owner(owner),
+	frameCount(0),
+	actorCount(0),
+	camera(std::make_shared<Camera>()),
+	actorsTree(std::make_shared<AABBTree>(&actors))
+{};
 
 void inline Mungus::World::loadAsset(const std::string& title,
 	const std::unordered_map<std::string, const unsigned int>& vertexShaders,
 	const std::unordered_map<std::string, const unsigned int>& fragmentShaders) {
 	assets[title] = std::make_shared<Mungus::Asset>(title, vertexShaders, fragmentShaders);
+}
+
+void Mungus::World::buildActorTree(void) {
+	actorsTree->buildTree();
 }
 
 const unsigned long Mungus::World::createEntity(const std::string & name) {
@@ -19,7 +30,7 @@ const unsigned long Mungus::World::createEntity(const std::string & name) {
 
 		switch (base->renderInfo.assetType) {
 		case MACTOR:
-			actors[++actorCount] = std::make_shared<Mungus::Actor>(Mungus::Actor(*base, actorCount));
+			actors[actorCount] = std::make_shared<Mungus::Actor>(Mungus::Actor(*base, ++actorCount));
 			break;
 		default:
 			MLOG("trying to create entity of unknown type: " << name)
@@ -45,6 +56,21 @@ const unsigned long Mungus::World::scaleEntity(const unsigned long id, float x, 
 const unsigned long Mungus::World::rotateEntity(const unsigned long id, const MungusMath::MVec3 & axis, float angle) {
 	actors.at(id)->rotate(axis, angle);
 	
+	return id;
+}
+
+const unsigned long Mungus::World::turnEntity(const unsigned long id, float angle) {
+	actors.at(id)->turn(angle);
+	return id;
+}
+
+const unsigned long Mungus::World::pitchEntity(const unsigned long id, float angle) {
+	actors.at(id)->pitch(angle);
+	return id;
+}
+
+const unsigned long Mungus::World::rollEntity(const unsigned long id, float angle) {
+	actors.at(id)->roll(angle);
 	return id;
 }
 

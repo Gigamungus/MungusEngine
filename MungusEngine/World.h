@@ -7,6 +7,7 @@ namespace Mungus {
 	class Actor;
 	class Asset;
 	class Camera;
+	class AABBTree;
 
 	class MUNGUS World {
 	private:
@@ -15,6 +16,7 @@ namespace Mungus {
 		unsigned long actorCount;
 		std::unordered_map<std::string, std::shared_ptr<Mungus::Asset>> assets;
 		std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> actors;
+		std::shared_ptr<AABBTree> actorsTree;
 		std::shared_ptr<Camera> camera;
 
 	public:
@@ -28,11 +30,16 @@ namespace Mungus {
 		const Camera inline getCamera(void) const;
 		const inline unsigned long getFrameCount(void) const { return frameCount; }
 		void inline incrementFrameCount(void) { frameCount++; }
+
+		void buildActorTree(void);
 		const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> inline getActors(void) const { return actors; }
 		const unsigned long createEntity(const std::string& name);
 		const unsigned long setEntityPosition(const unsigned long id, float x, float y, float z);
 		const unsigned long scaleEntity(const unsigned long id, float x, float y, float z);
 		const unsigned long rotateEntity(const unsigned long id, const MungusMath::MVec3& axis, float angle);
+		const unsigned long turnEntity(const unsigned long id, float angle);
+		const unsigned long pitchEntity(const unsigned long id, float angle);
+		const unsigned long rollEntity(const unsigned long id, float angle);
 
 		const MungusMath::MVec3 getCameraPosition(void) const;
 		void setCameraPosition(float x, float y, float z);
@@ -61,6 +68,7 @@ namespace Mungus {
 		void turnCamera(float angle);
 		void pitchCamera(float angle);
 		void rollCamera(float angle);
+
 	};
 
 

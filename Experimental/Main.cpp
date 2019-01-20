@@ -10,23 +10,21 @@
 #include <stack>
 
 
-struct Test {
-	std::vector<float> floats;
-	int i;
+struct Thing {
+	Thing* other = nullptr;
 };
 
+void test(void) {
+	Thing thing1 = *new Thing();
+	Thing thing2 = *new Thing();
+
+	thing1.other = &thing2;
+	thing2.other = &thing1;
+}
+
 int main(void) {
-	Test test;
-
-	std::cout << offsetof(Test, i) << "\n";
-
-	test.floats.push_back(1.0);
-	test.floats.push_back(1.0);
-	test.floats.push_back(1.0);
-	test.floats.push_back(1.0);
-
-
-	std::cout << offsetof(Test, i) << "\n";
+	while (true)
+		test();
 
 
 	std::cin.get();

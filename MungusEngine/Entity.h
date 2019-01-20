@@ -5,6 +5,7 @@
 namespace Mungus {
 	class Asset;
 
+	// anything that exists in the world
 	class MUNGUS Entity {
 	private:
 

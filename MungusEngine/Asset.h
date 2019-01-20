@@ -15,8 +15,9 @@ namespace Mungus {
 	class MUNGUS Asset {
 	public:
 		std::string assetName;
-
 		struct RenderInfo renderInfo;
+		MungusMath::MVec3 backHitboxCoord;
+		MungusMath::MVec3 frontHitboxCoord;
 
 		Asset() {};
 		Asset(	const std::string& name,

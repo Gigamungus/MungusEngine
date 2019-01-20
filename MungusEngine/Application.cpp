@@ -216,6 +216,18 @@ const unsigned long Mungus::Application::rotateEntity(const unsigned long id, co
 	return world->rotateEntity(id, axis, angle);
 }
 
+const unsigned long Mungus::Application::turnEntity(const unsigned long id, float angle) {
+	return world->turnEntity(id, angle);
+}
+
+const unsigned long Mungus::Application::pitchEntity(const unsigned long id, float angle) {
+	return world->pitchEntity(id, angle);
+}
+
+const unsigned long Mungus::Application::rollEntity(const unsigned long id, float angle) {
+	return world->rollEntity(id, angle);
+}
+
 const MungusMath::MVec3 Mungus::Application::getCameraPosition(void) const {
 	return world->getCameraPosition();
 }
@@ -319,7 +331,7 @@ void Mungus::Application::startup(void) {
 }
 
 void Mungus::Application::mainLoop(void) {
-	MLOG("client didn't override run method")
+	MLOG("client didn't override mainLoop method")
 }
 
 /////////////////////////////////////////
@@ -354,6 +366,13 @@ void Mungus::Application::run(void) {
 	while (!glfwWindowShouldClose(renderer->getWindow())) {
 		glfwPollEvents();
 		mainLoop();
+		
+		////////// experimental ////////////
+		world->buildActorTree();
+		////////// experimental ////////////
+
+
+
 		incrementFrameCount();
 		updateCameraPosition();
 		updateMouseLocation();

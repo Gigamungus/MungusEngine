@@ -7,6 +7,7 @@ const std::unordered_map<std::string, int> Mungus::ParseAssetHelpers::paramCodes
 		{"actor", MACTOR}
 	}
 };
+
 const std::unordered_set<char> Mungus::ParseAssetHelpers::enclosureOpenings{ '(', '[', '{' };
 const std::unordered_set<char> Mungus::ParseAssetHelpers::enclosureEndings{ ')', ']', '}' };
 const std::unordered_set<char> Mungus::ParseAssetHelpers::nums{ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '-' };
@@ -16,7 +17,9 @@ const std::unordered_set<char> Mungus::ParseAssetHelpers::nums{ '0', '1', '2', '
 Mungus::Asset::Asset(	const std::string& name,
 						const std::unordered_map<std::string, const unsigned int>& vertexShaders,
 						const std::unordered_map<std::string, const unsigned int>& fragmentShaders) :
-	assetName(name)
+	assetName(name),
+	backHitboxCoord({0, 0, 0}),
+	frontHitboxCoord({0, 0, 0})
 {
 	std::string source = MungusUtil::removeAllWhiteSpace(
 		MungusUtil::getTextFromFile(std::filesystem::current_path().string() + "/../resources/assets/" + name + ".txt"));
@@ -54,6 +57,31 @@ Mungus::Asset::Asset(	const std::string& name,
 			vertexDataStream.push_back(Mungus::ParseAssetHelpers::parseFloat(vertexData.at("posy")));
 			vertexDataStream.push_back(Mungus::ParseAssetHelpers::parseFloat(vertexData.at("posz")));
 			vertexDataStream.push_back(Mungus::ParseAssetHelpers::parseFloat(vertexData.at("posw")));
+		}
+
+		for (int i = 0; i < vertexDataStream.size(); i += 4) {
+			float x = vertexDataStream[i];
+			float y = vertexDataStream[i + 1];
+			float z = vertexDataStream[i + 2];
+
+			if (x > frontHitboxCoord.x)
+				frontHitboxCoord.x = x;
+
+			if (y > frontHitboxCoord.y)
+				frontHitboxCoord.y = y;
+
+			if (z > frontHitboxCoord.z)
+				frontHitboxCoord.z = z;
+
+			if (x < backHitboxCoord.x)
+				backHitboxCoord.x = x;
+
+			if (y < backHitboxCoord.y)
+				backHitboxCoord.y = y;
+
+			if (z < backHitboxCoord.z)
+				backHitboxCoord.z = z;
+
 		}
 
 
