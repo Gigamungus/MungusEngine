@@ -22,7 +22,14 @@ void compileShaders(std::unordered_map<std::string, const unsigned int>& vertexS
 
 ////////////////// start member function implementations ///////////////
 
-Mungus::Renderer::Renderer(const Application* owner) : owner(owner), lastFrameTime(0.0f) {
+Mungus::Renderer::Renderer(const Application* owner) :
+	owner(owner),
+	lastFrameTime(0.0f),
+	farRenderDistance(10000000000.0f),
+	nearRenderDistance(0.01f),
+	fieldOfView(90.0f),
+	aspectRatio(1.0f)
+{
 	glfwStartup(window);
 	glewStartup();
 	compileShaders(vertexShaders, fragmentShaders);
@@ -34,7 +41,7 @@ void inline Mungus::Renderer::setBackground(MungusMath::MVec4 color) {
 }
 
 void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& actors, const Camera& camera) {
-	MungusMath::MMat4 frameTransformations = camera.perspectiveMatrix(90.0, 1.0, 0.001, 1000000000000.0) * camera.viewMatrix();
+	MungusMath::MMat4 frameTransformations = camera.perspectiveMatrix(fieldOfView, aspectRatio, nearRenderDistance, farRenderDistance) * camera.viewMatrix();
 
 	for (auto actor : actors)
 		renderActor(*actor.second, frameTransformations);
@@ -55,6 +62,18 @@ void Mungus::Renderer::renderActor(const Mungus::Actor& actor, const MungusMath:
 
 	glUseProgram(0);
 	glBindVertexArray(0);
+}
+
+int Mungus::Renderer::getWindowWidth(void) const {
+	int width;
+	glfwGetWindowSize(window, &width, nullptr);
+	return width;
+}
+
+int Mungus::Renderer::getWindowHeight(void) const {
+	int height;
+	glfwGetWindowSize(window, nullptr, &height);
+	return height;
 }
 
 //////////// end member function implementations

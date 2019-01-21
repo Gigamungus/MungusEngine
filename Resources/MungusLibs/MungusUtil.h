@@ -65,6 +65,14 @@ namespace MungusUtil {
 		return one > two ? one : two;
 	}
 
+	inline float min3(float one, float two, float three) {
+		return (one < two) ? ((one < three) ? one : three) : ((two < three) ? two : three);
+	}
+
+	inline float max3(float one, float two, float three) {
+		return (one > two) ? ((one > three) ? one : three) : ((two > three) ? two : three);
+	}
+
 }
 
 #endif // MUNGUS_UTIL

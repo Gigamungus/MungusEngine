@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "AABBTree.h"
 #include "Actor.h"
+#include "World.h"
 
 
 
@@ -165,6 +166,27 @@ bool Mungus::AABBTree::intersect(const Mungus::HitBox& first, const Mungus::HitB
 		first.rightBound.z > second.leftBound.z && first.leftBound.z < second.rightBound.z;
 }
 
+bool Mungus::AABBTree::intersect(const HitBox & box, const Mungus::Line & line) const {
+	float vecsToLeftX	= (box.leftBound.x  - line.position.x) / line.direction.x;
+	float vecsToLeftY	= (box.leftBound.y  - line.position.y) / line.direction.y;
+	float vecsToLeftZ	= (box.leftBound.z  - line.position.z) / line.direction.z;
+	float vecsToRightX	= (box.rightBound.x - line.position.x) / line.direction.x;
+	float vecsToRightY	= (box.rightBound.y - line.position.y) / line.direction.y;
+	float vecsToRightZ	= (box.rightBound.z - line.position.z) / line.direction.z;
+
+	float minVecsToX = MungusUtil::min(vecsToLeftX, vecsToRightX);
+	float minVecsToY = MungusUtil::min(vecsToLeftY, vecsToRightY);
+	float minVecsToZ = MungusUtil::min(vecsToLeftZ, vecsToRightZ);
+	float maxVecsToX = MungusUtil::max(vecsToLeftX, vecsToRightX);
+	float maxVecsToY = MungusUtil::max(vecsToLeftY, vecsToRightY);
+	float maxVecsToZ = MungusUtil::max(vecsToLeftZ, vecsToRightZ);
+
+	float minVecs = MungusUtil::max3(minVecsToX, minVecsToY, minVecsToZ);
+	float maxVecs = MungusUtil::min3(maxVecsToX, maxVecsToY, maxVecsToZ);
+
+	return minVecs < maxVecs && maxVecs > 0;
+}
+
 float Mungus::AABBTree::surfaceArea(const HitBox & hitBox) const {
 	float xWidth = hitBox.rightBound.x - hitBox.leftBound.x;
 	float yWidth = hitBox.rightBound.y - hitBox.leftBound.y;
@@ -208,4 +230,44 @@ void Mungus::AABBTree::minimizeParentSizes(std::shared_ptr<HitBox> hitBox) {
 		setBoundsFromChildren(current->parent);
 		current = current->parent;
 	}
+}
+
+unsigned long Mungus::AABBTree::findFirstIntersecting(const Mungus::Line & line) {
+	if (root == nullptr || !intersect(*root, line))
+		return 0;
+
+	std::queue<std::shared_ptr<Mungus::HitBox>> intersectingBranches = std::queue<std::shared_ptr<Mungus::HitBox>>();
+	std::vector<unsigned long> intersectingActors;
+
+	intersectingBranches.push(root);
+
+	while (!intersectingBranches.empty()) {
+		if (intersectingBranches.front()->isLeaf()) {
+			intersectingActors.push_back(intersectingBranches.front()->actor);
+		}
+		else {
+			if (intersect(*intersectingBranches.front()->left, line))
+				intersectingBranches.push(intersectingBranches.front()->left);
+
+			if (intersect(*intersectingBranches.front()->right, line))
+				intersectingBranches.push(intersectingBranches.front()->right);
+
+		}
+
+		intersectingBranches.pop();
+	}
+
+	unsigned long closestActor = 0;
+	float closestDistance = std::numeric_limits<float>::infinity();
+
+	for (auto id : intersectingActors) {
+		float actorDistance = (actors->at(id)->getPosition() - line.position).size();
+		if (actorDistance < closestDistance) {
+			closestActor = id;
+			closestDistance = actorDistance;
+		}
+	}
+
+	std::cout << closestActor << "\n";
+	return closestActor;
 }

@@ -169,3 +169,21 @@ void Mungus::World::pitchCamera(float angle) {
 void Mungus::World::rollCamera(float angle) {
 	camera->roll(angle);
 }
+
+void Mungus::World::processLeftClick(const Mungus::CursorLocation& cursorLocation) {
+	int xPosFromCenter = cursorLocation.xpos - (owner->getWindowWidth() / 2);
+	int yPosFromCenter = (owner->getWindowHeight() / 2) - cursorLocation.ypos;
+
+	MungusMath::MVec4 directionVector = camera->getOrientation() * MungusMath::MVec4{
+		sinf((MungusMath::degToRads(owner->getFieldOfView()) * owner->getAspectRatio() * xPosFromCenter) / owner->getWindowWidth()),
+		sinf((MungusMath::degToRads(owner->getFieldOfView()) * yPosFromCenter) / owner->getWindowHeight()),
+		-1, 1
+	};
+
+	MungusMath::MVec3 unitDirectionVector = MungusMath::MVec3::normalize(MungusMath::MVec3{ directionVector.x, directionVector.y, directionVector.z });
+
+	actorsTree->findFirstIntersecting(Mungus::Line{
+		owner->getCameraPosition(),
+		unitDirectionVector
+	});
+}

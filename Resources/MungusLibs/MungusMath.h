@@ -36,6 +36,10 @@ namespace MungusMath {
 			return MVec3{ x + other.x, y + other.y, z + other.z };
 		}
 
+		inline MVec3 operator-(const MVec3& other) const {
+			return MVec3{ x - other.x, y - other.y, z - other.z };
+		}
+
 		inline MVec3 operator-(const MVec3& other) {
 			return MVec3{ x - other.x, y - other.y, z - other.z };
 		}

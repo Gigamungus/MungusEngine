@@ -9,6 +9,12 @@ namespace Mungus {
 	class Camera;
 	class AABBTree;
 
+	struct CursorLocation;
+	struct Line {
+		MungusMath::MVec3 position;
+		MungusMath::MVec3 direction;
+	};
+
 	class MUNGUS World {
 	private:
 		const Application* owner;
@@ -68,6 +74,8 @@ namespace Mungus {
 		void turnCamera(float angle);
 		void pitchCamera(float angle);
 		void rollCamera(float angle);
+
+		void processLeftClick(const CursorLocation& cursorLocation);
 
 	};
 

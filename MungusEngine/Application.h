@@ -6,7 +6,10 @@ namespace Mungus {
 	class World;
 
 	struct ActiveBindings;
-	struct CursorLocation;
+	struct MUNGUS CursorLocation {
+		double xpos;
+		double ypos;
+	};
 
 	class MUNGUS Application {
 	private:
@@ -17,6 +20,7 @@ namespace Mungus {
 		void cursorCallBack(GLFWwindow* window, double xpos, double ypos);
 		void updateCameraPosition(void);
 		void updateMouseLocation(void);
+		float lmbClickTime;
 
 	protected:
 		std::shared_ptr<Mungus::World> world;
@@ -33,12 +37,19 @@ namespace Mungus {
 
 		///////////// client can call these ///////////////
 		void setRPGBindings(void);
+
 		const float time(void) const;
 		const float frameTime(void) const;
 		const unsigned long frameCount(void) const;
 		const CursorLocation getLastMouseLocation(void) const;
+		const float getLMBClickTime(void) const;
+
 		void inline loadAsset(const std::string& assetPath);
+
 		void inline setBackground(MungusMath::MVec4 color);
+		int getWindowWidth(void) const;
+		int getWindowHeight(void) const;
+
 		const unsigned long inline createEntity(const std::string& name);
 		const unsigned long setEntityPosition(const unsigned long id, float x, float y, float z);
 		const unsigned long scaleEntity(const unsigned long id, float x, float y, float z);
@@ -46,6 +57,7 @@ namespace Mungus {
 		const unsigned long turnEntity(const unsigned long id, float angle);
 		const unsigned long pitchEntity(const unsigned long id, float angle);
 		const unsigned long rollEntity(const unsigned long id, float angle);
+		void processLeftClick(CursorLocation clickLocation);
 
 			////////////////// camera functions/////////////
 			const MungusMath::MVec3 getCameraPosition(void) const;
@@ -76,6 +88,20 @@ namespace Mungus {
 			void setCameraPitchingStatus(int setting);
 			void setCameraRollingStatus(int setting);
 			//////////// end camera functions /////////////
+
+			//////////// renderer functions ///////////////
+
+			float getNearRenderDistance(void) const;
+			float getFarRenderDistance(void) const;
+			float getFieldOfView(void) const;
+			float getAspectRatio(void) const;
+
+			void setNearRenderDistance(float nearRenderDistance);
+			void setFarRenderDistance(float farRenderDistance);
+			void setFieldOfView(float fieldOfView);
+			void setAspectRatio(float aspectRatio);
+
+			//////////end renderer functions ///////////////
 
 		////////////////// end client call functions //////////////////
 

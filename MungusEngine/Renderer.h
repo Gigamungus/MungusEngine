@@ -17,6 +17,10 @@ namespace Mungus {
 		std::unordered_map<std::string, const unsigned int> vertexShaders;
 		std::unordered_map<std::string, const unsigned int> fragmentShaders;
 		float lastFrameTime;
+		float nearRenderDistance;
+		float farRenderDistance;
+		float fieldOfView;
+		float aspectRatio;
 
 	public:
 		Renderer(const Application* owner);
@@ -33,6 +37,19 @@ namespace Mungus {
 		void renderActor(const Mungus::Actor& actor, const MungusMath::MMat4& frameTransformations);
 		inline const float getLastFrameTime(void) const { return lastFrameTime; };
 		inline void setLastFrameTime(float lastFrameTime) { this->lastFrameTime = lastFrameTime; }
+
+		inline float getNearRenderDistance(void) const { return nearRenderDistance; }
+		inline float getFarRenderDistance(void) const { return farRenderDistance; }
+		inline float getFieldOfView(void) const { return fieldOfView; }
+		inline float getAspectRatio(void) const { return aspectRatio; }
+
+		inline void setNearRenderDistance(float nearRenderDistance) { this->nearRenderDistance = nearRenderDistance; }
+		inline void setFarRenderDistance(float farRenderDistance) { this->farRenderDistance = farRenderDistance; }
+		inline void setFieldOfView(float fieldOfView) { this->fieldOfView = fieldOfView; }
+		inline void setAspectRatio(float aspectRatio) { this->aspectRatio = aspectRatio; }
+
+		int getWindowWidth(void) const;
+		int getWindowHeight(void) const;
 	};
 
 }

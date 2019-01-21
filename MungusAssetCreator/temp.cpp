@@ -21,7 +21,7 @@ public:
 		setEntityPosition(newEntity, ((2 * (i % 10)) + (25 * (i / 100))) % 250, 0.0, (2 * ((i / 10)) % 20) + (int)(25 * (i / 1000)));
 		entities.push_back(newEntity);
 		
-		for (auto entity : entities) {
+		/*for (auto entity : entities) {
 			if (entity % 3 == 0) {
 				turnEntity(entity, entity);
 			}
@@ -30,7 +30,7 @@ public:
 
 			if (entity % 3 == 2)
 				rollEntity(entity, entity);
-		}
+		}*/
 	}
 
 };

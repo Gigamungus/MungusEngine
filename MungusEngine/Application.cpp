@@ -55,11 +55,10 @@ struct Mungus::ActiveBindings {
 	std::stack<mouseLambda>  lmbBindings = std::stack<mouseLambda>();
 	std::stack<mouseLambda>  rmbBindings = std::stack<mouseLambda>();
 
+	std::stack<mouseLambda>  leftClickBindings = std::stack<mouseLambda>();
+	std::stack<mouseLambda> rightClickBindings = std::stack<mouseLambda>();
+
 	std::stack<cursorLambda> mouseMoveBindings = std::stack<cursorLambda>();
-};
-struct Mungus::CursorLocation {
-	double xpos;
-	double ypos;
 };
 
 //////// client call functions /////////////
@@ -171,14 +170,19 @@ void Mungus::Application::setRPGBindings(void) {
 				app->pitchCamera((float)(app->getLastMouseLocation().ypos - ypos) * app->getCameraRotationSpeed() / 360.0f);
 			});
 			break;
-		case GLFW_RELEASE:
+		case GLFW_RELEASE: {
 			app->bindings->mouseMoveBindings.pop();
 			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 			break;
+		}
 		default:
 			MLOG("unknown mouse action: " << action)
 			break;
 		}
+	});
+
+	bindings->leftClickBindings.push([](Mungus::Application* app, GLFWwindow* window, int button, int action, int mods) {
+		app->processLeftClick(app->getLastMouseLocation());
 	});
 }
 
@@ -196,12 +200,24 @@ void inline Mungus::Application::loadAsset(const std::string& assetPath) {
 
 void inline Mungus::Application::setBackground(MungusMath::MVec4 color) { renderer->setBackground(color); }
 
+int Mungus::Application::getWindowWidth(void) const {
+	return renderer->getWindowWidth();
+}
+
+int Mungus::Application::getWindowHeight(void) const {
+	return renderer->getWindowHeight();
+}
+
 const unsigned long Mungus::Application::frameCount(void) const {
 	return world->getFrameCount();
 }
 
 const Mungus::CursorLocation Mungus::Application::getLastMouseLocation(void) const {
 	return *lastMouseLocation;
+}
+
+const float Mungus::Application::getLMBClickTime(void) const {
+	return lmbClickTime;
 }
 
 const unsigned long Mungus::Application::setEntityPosition(const unsigned long id, float x, float y, float z) {
@@ -226,6 +242,10 @@ const unsigned long Mungus::Application::pitchEntity(const unsigned long id, flo
 
 const unsigned long Mungus::Application::rollEntity(const unsigned long id, float angle) {
 	return world->rollEntity(id, angle);
+}
+
+void Mungus::Application::processLeftClick(CursorLocation clickLocation) {
+	world->processLeftClick(clickLocation);
 }
 
 const MungusMath::MVec3 Mungus::Application::getCameraPosition(void) const {
@@ -320,6 +340,38 @@ void Mungus::Application::setCameraRollingStatus(int setting) {
 	world->setCameraPitchingStatus(setting);
 }
 
+float Mungus::Application::getNearRenderDistance(void) const {
+	return renderer->getNearRenderDistance();
+}
+
+float Mungus::Application::getFarRenderDistance(void) const {
+	return renderer->getFarRenderDistance();
+}
+
+float Mungus::Application::getFieldOfView(void) const {
+	return renderer->getFieldOfView();
+}
+
+float Mungus::Application::getAspectRatio(void) const {
+	return renderer->getAspectRatio();
+}
+
+void Mungus::Application::setNearRenderDistance(float nearRenderDistance) {
+	renderer->setNearRenderDistance(nearRenderDistance);
+}
+
+void Mungus::Application::setFarRenderDistance(float farRenderDistance) {
+	renderer->setFarRenderDistance(farRenderDistance);
+}
+
+void Mungus::Application::setFieldOfView(float fieldOfView) {
+	renderer->setFieldOfView(fieldOfView);
+}
+
+void Mungus::Application::setAspectRatio(float aspectRatio) {
+	renderer->setAspectRatio(aspectRatio);
+}
+
 ////////////////////////////////////////////
 
 
@@ -346,7 +398,8 @@ Mungus::Application::Application(void) :
 	world(std::make_shared<Mungus::World>(this)),
 	renderer(std::make_shared<Mungus::Renderer>(this)),
 	bindings(std::make_shared<Mungus::ActiveBindings>()),
-	lastMouseLocation(std::make_shared<Mungus::CursorLocation>())
+	lastMouseLocation(std::make_shared<Mungus::CursorLocation>()),
+	lmbClickTime(0)
 {
 	glfwSetWindowUserPointer(renderer->getWindow(), this);
 	glfwSetKeyCallback(renderer->getWindow(), [](GLFWwindow* window, int key, int scanCode, int action, int mods) {
@@ -690,6 +743,16 @@ void Mungus::Application::keyCallBack(GLFWwindow* window, int key, int scanCode,
 void Mungus::Application::mouseCallBack(GLFWwindow* window, int button, int action, int mods) {
 	switch (button) {
 	case GLFW_MOUSE_BUTTON_LEFT:
+		if (action == GLFW_PRESS)
+			lmbClickTime = time();
+
+		if (action == GLFW_RELEASE) {
+			float lmbHeldDownTime = time() - lmbClickTime;
+			if (lmbHeldDownTime < 0.2f) {
+				bindings->leftClickBindings.top()(this, window, button, action, mods);
+			}
+		}
+
 		if (!bindings->lmbBindings.empty())
 			bindings->lmbBindings.top()(this, window, button, action, mods);
 		break;
