@@ -25,7 +25,7 @@ void compileShaders(std::unordered_map<std::string, const unsigned int>& vertexS
 Mungus::Renderer::Renderer(const Application* owner) :
 	owner(owner),
 	lastFrameTime(0.0f),
-	farRenderDistance(10000000000.0f),
+	farRenderDistance(10000000.0f),
 	nearRenderDistance(0.01f),
 	fieldOfView(90.0f),
 	aspectRatio(1.0f)

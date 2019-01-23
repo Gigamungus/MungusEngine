@@ -7,7 +7,7 @@ class MungusAssetCreator : public Mungus::Application {
 public:
 	virtual void startup(void) override {
 		setRPGBindings();
-		loadAsset(CUBE);
+		loadAsset("cube.mungass");
 		setCameraMovementSpeed(10);
 		setCameraRotationSpeed(180);
 	}

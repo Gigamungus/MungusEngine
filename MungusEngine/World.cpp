@@ -171,14 +171,28 @@ void Mungus::World::rollCamera(float angle) {
 }
 
 void Mungus::World::processLeftClick(const Mungus::CursorLocation& cursorLocation) {
-	int xPosFromCenter = cursorLocation.xpos - (owner->getWindowWidth() / 2);
-	int yPosFromCenter = (owner->getWindowHeight() / 2) - cursorLocation.ypos;
+	float fov = owner->getFieldOfView();
+	float farDist = owner->getFarRenderDistance();
+	float aspectRatio = owner->getAspectRatio();
+	const MungusMath::MMat4 orientation = camera->getOrientation();
 
-	MungusMath::MVec4 directionVector = camera->getOrientation() * MungusMath::MVec4{
-		sinf((MungusMath::degToRads(owner->getFieldOfView()) * owner->getAspectRatio() * xPosFromCenter) / owner->getWindowWidth()),
-		sinf((MungusMath::degToRads(owner->getFieldOfView()) * yPosFromCenter) / owner->getWindowHeight()),
-		-1, 1
+	float screenWidth = (float)owner->getWindowWidth();
+	float screenHeight = (float)owner->getWindowHeight();
+
+	float farWidth = 2 * farDist * aspectRatio * tanf(MungusMath::degToRads(fov / 2.0f));
+	float farHeight = 2 * farDist * tanf(MungusMath::degToRads(fov / 2.0f));
+
+	float x = 2 * ((cursorLocation.xpos - (screenWidth / 2)) / screenWidth);
+	float y = 2 * (((screenHeight / 2) - cursorLocation.ypos) / screenHeight);
+
+
+	MungusMath::MVec4 directionVector = orientation * MungusMath::MVec4{
+		x * farWidth / 2,
+		y * farHeight / 2,
+		-farDist,
+		1.0f
 	};
+
 
 	MungusMath::MVec3 unitDirectionVector = MungusMath::MVec3::normalize(MungusMath::MVec3{ directionVector.x, directionVector.y, directionVector.z });
 

@@ -10,22 +10,12 @@
 #include <stack>
 
 
-struct Thing {
-	Thing* other = nullptr;
-};
-
-void test(void) {
-	Thing thing1 = *new Thing();
-	Thing thing2 = *new Thing();
-
-	thing1.other = &thing2;
-	thing2.other = &thing1;
+void test(const std::string& str) {
+	std::cout << str << "\n";
 }
 
 int main(void) {
-	while (true)
-		test();
-
+	test("cube.mungass");
 
 	std::cin.get();
 }

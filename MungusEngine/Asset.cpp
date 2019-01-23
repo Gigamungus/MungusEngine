@@ -84,6 +84,10 @@ Mungus::Asset::Asset(	const std::string& name,
 
 		}
 
+		float diff = frontHitboxCoord.z - MungusMath::abs(backHitboxCoord.z);
+		frontHitboxCoord.z -= diff;
+		backHitboxCoord.z -= diff;
+
 
 		glBufferData(GL_ARRAY_BUFFER, vertexDataStream.size() * sizeof(float), vertexDataStream.data(), GL_STATIC_DRAW);
 		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), 0);
