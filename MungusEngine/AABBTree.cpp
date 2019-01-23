@@ -38,8 +38,10 @@ void Mungus::AABBTree::insert(unsigned long entityId) {
 	std::shared_ptr<HitBox> parent = root;
 
 	while (!current->isLeaf()) {
+		float leftSurfaceArea = surfaceArea(*current->left);
+		float rightSurfaceArea = surfaceArea(*current->right);
 
-		if (hypotheticalSurfaceArea(*current->left, *actorBox) < hypotheticalSurfaceArea(*current->right, *actorBox)) {
+		if (hypotheticalSurfaceArea(*current->left, *actorBox) - leftSurfaceArea < hypotheticalSurfaceArea(*current->right, *actorBox) - rightSurfaceArea) {
 			parent = current;
 			current = current->left;
 		}
@@ -240,8 +242,9 @@ unsigned long Mungus::AABBTree::findFirstIntersecting(const Mungus::Line & line)
 	std::vector<unsigned long> intersectingActors;
 
 	intersectingBranches.push(root);
-
+	int j = 0;
 	while (!intersectingBranches.empty()) {
+		j++;
 		if (intersectingBranches.front()->isLeaf()) {
 			intersectingActors.push_back(intersectingBranches.front()->actor);
 		}
@@ -256,7 +259,7 @@ unsigned long Mungus::AABBTree::findFirstIntersecting(const Mungus::Line & line)
 
 		intersectingBranches.pop();
 	}
-
+	std::cout << j << " searches\n";
 	unsigned long closestActor = 0;
 	float closestDistance = std::numeric_limits<float>::infinity();
 
