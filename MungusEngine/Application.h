@@ -36,7 +36,7 @@ namespace Mungus {
 
 
 		///////////// client can call these ///////////////
-		void setRPGBindings(void);
+		void setNoClipBindings(void);
 
 		const float time(void) const;
 		const float frameTime(void) const;

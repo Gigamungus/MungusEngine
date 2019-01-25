@@ -62,7 +62,7 @@ struct Mungus::ActiveBindings {
 };
 
 //////// client call functions /////////////
-void Mungus::Application::setRPGBindings(void) {
+void Mungus::Application::setNoClipBindings(void) {
 	bindings->aBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
@@ -221,11 +221,11 @@ const float Mungus::Application::getLMBClickTime(void) const {
 }
 
 const unsigned long Mungus::Application::setEntityPosition(const unsigned long id, float x, float y, float z) {
-	return world->setEntityPosition(id, x, y, z);
+	return world->setEntityPosition(id, MungusMath::MVec3{ x, y, z });
 }
 
 const unsigned long Mungus::Application::scaleEntity(const unsigned long id, float x, float y, float z) {
-	return world->scaleEntity(id, x, y, z);
+	return world->scaleEntity(id, MungusMath::MVec3{ x, y, z });
 }
 
 const unsigned long Mungus::Application::rotateEntity(const unsigned long id, const MungusMath::MVec3 & axis, float angle) {
@@ -341,35 +341,35 @@ void Mungus::Application::setCameraRollingStatus(int setting) {
 }
 
 float Mungus::Application::getNearRenderDistance(void) const {
-	return renderer->getNearRenderDistance();
+	return world->getCamera().getNearRenderDistance();
 }
 
 float Mungus::Application::getFarRenderDistance(void) const {
-	return renderer->getFarRenderDistance();
+	return world->getCamera().getFarRenderDistance();
 }
 
 float Mungus::Application::getFieldOfView(void) const {
-	return renderer->getFieldOfView();
+	return world->getCamera().getFieldOfView();
 }
 
 float Mungus::Application::getAspectRatio(void) const {
-	return renderer->getAspectRatio();
+	return world->getCamera().getAspectRatio();
 }
 
 void Mungus::Application::setNearRenderDistance(float nearRenderDistance) {
-	renderer->setNearRenderDistance(nearRenderDistance);
+	world->getCamera().setNearRenderDistance(nearRenderDistance);
 }
 
 void Mungus::Application::setFarRenderDistance(float farRenderDistance) {
-	renderer->setFarRenderDistance(farRenderDistance);
+	world->getCamera().setFarRenderDistance(farRenderDistance);
 }
 
 void Mungus::Application::setFieldOfView(float fieldOfView) {
-	renderer->setFieldOfView(fieldOfView);
+	world->getCamera().setFieldOfView(fieldOfView);
 }
 
 void Mungus::Application::setAspectRatio(float aspectRatio) {
-	renderer->setAspectRatio(aspectRatio);
+	world->getCamera().setAspectRatio(aspectRatio);
 }
 
 ////////////////////////////////////////////
@@ -411,6 +411,11 @@ Mungus::Application::Application(void) :
 	glfwSetCursorPosCallback(renderer->getWindow(), [](GLFWwindow* window, double xpos, double ypos) {
 		(static_cast<Mungus::Application*>(glfwGetWindowUserPointer(window)))->cursorCallBack(window, xpos, ypos);
 	});
+
+	glfwSetFramebufferSizeCallback(renderer->getWindow(), [](GLFWwindow* window, int width, int height) {
+		glViewport(0, 0, width, height);
+		(static_cast<Mungus::Application*>(glfwGetWindowUserPointer(window)))->setAspectRatio((float)height / (float)width);
+	});
 }
 
 Mungus::Application::~Application() {}
@@ -419,12 +424,6 @@ void Mungus::Application::run(void) {
 	while (!glfwWindowShouldClose(renderer->getWindow())) {
 		glfwPollEvents();
 		mainLoop();
-		
-		////////// experimental ////////////
-		world->buildActorTree();
-		////////// experimental ////////////
-
-
 
 		incrementFrameCount();
 		updateCameraPosition();

@@ -19,9 +19,7 @@ namespace Mungus {
 	private:
 		const Application* owner;
 		unsigned long frameCount;
-		unsigned long actorCount;
 		std::unordered_map<std::string, std::shared_ptr<Mungus::Asset>> assets;
-		std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> actors;
 		std::shared_ptr<AABBTree> actorsTree;
 		std::shared_ptr<Camera> camera;
 
@@ -34,14 +32,14 @@ namespace Mungus {
 								const std::unordered_map<std::string, const unsigned int>& fragmentShaders);
 
 		const Camera inline getCamera(void) const;
+		Camera getCamera(void);
 		const inline unsigned long getFrameCount(void) const { return frameCount; }
 		void inline incrementFrameCount(void) { frameCount++; }
 
-		void buildActorTree(void);
-		const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> inline getActors(void) const { return actors; }
+		const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> inline getActors(void) const;
 		const unsigned long createEntity(const std::string& name);
-		const unsigned long setEntityPosition(const unsigned long id, float x, float y, float z);
-		const unsigned long scaleEntity(const unsigned long id, float x, float y, float z);
+		const unsigned long setEntityPosition(const unsigned long id, const MungusMath::MVec3& position);
+		const unsigned long scaleEntity(const unsigned long id, const MungusMath::MVec3& scale);
 		const unsigned long rotateEntity(const unsigned long id, const MungusMath::MVec3& axis, float angle);
 		const unsigned long turnEntity(const unsigned long id, float angle);
 		const unsigned long pitchEntity(const unsigned long id, float angle);

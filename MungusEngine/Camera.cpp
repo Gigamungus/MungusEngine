@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "Camera.h"
+#include "Actor.h"
+#include "AABBTree.h"
 
 
 Mungus::Camera::Camera() :
@@ -11,7 +13,11 @@ Mungus::Camera::Camera() :
 	ascending(MSTATIONARY),
 	turning(MSTATIONARY),
 	pitching(MSTATIONARY),
-	rolling(MSTATIONARY)
+	rolling(MSTATIONARY),
+	farRenderDistance(10000000.0f),
+	nearRenderDistance(0.01f),
+	fieldOfView(90.0f),
+	aspectRatio(1)
 	{}
 
 Mungus::Camera::~Camera() {}
@@ -20,16 +26,16 @@ const MungusMath::MMat4 Mungus::Camera::viewMatrix(void) const {
 	return MungusMath::inverseMatrix(orientation) * MungusMath::MMat4::translate(-position.x, -position.y, -position.z);
 }
 
-const MungusMath::MMat4 Mungus::Camera::perspectiveMatrix(float angle, float ratio, float near, float far) const {
+const MungusMath::MMat4 Mungus::Camera::perspectiveMatrix() const {
 	MungusMath::MMat4 perspectiveMat = MungusMath::MMat4::identity();
-	float cotanHalfAngle = 1 / tanf(MungusMath::degToRads(angle) / 2.0f);
+	float cotanHalfAngle = 1 / tanf(MungusMath::degToRads(fieldOfView) / 2.0f);
 
 
-	perspectiveMat[0][0] = (ratio * cotanHalfAngle);
+	perspectiveMat[0][0] = (aspectRatio * cotanHalfAngle);
 	perspectiveMat[1][1] = cotanHalfAngle;
-	perspectiveMat[2][2] = (far + near) / (far - near);
+	perspectiveMat[2][2] = (farRenderDistance + nearRenderDistance) / (farRenderDistance - nearRenderDistance);
 	perspectiveMat[3][2] = -1;
-	perspectiveMat[2][3] = (2 * far * near) / (far - near);
+	perspectiveMat[2][3] = (2 * farRenderDistance * nearRenderDistance) / (farRenderDistance - nearRenderDistance);
 	perspectiveMat[3][3] = 0;
 
 	return perspectiveMat;
@@ -37,4 +43,22 @@ const MungusMath::MMat4 Mungus::Camera::perspectiveMatrix(float angle, float rat
 
 const float Mungus::Camera::getRotationSpeed(void) const {
 	return rotationSpeed;
+}
+
+bool Mungus::Camera::visible(const Actor& actor) const {
+	std::shared_ptr<Mungus::HitBox> hitBox = actor.getHitBox();
+	MungusMath::MVec3 relativeActorPosition = actor.getPosition() - position;
+	float radius = hitBox->radius();
+	MungusMath::MVec3 cameraForward = forward();
+	MungusMath::MVec3 cameraRight = right();
+	MungusMath::MVec3 cameraUp = up();
+
+	return (
+		   cameraForward.dot(relativeActorPosition) + nearRenderDistance + radius > 0
+		&& (cameraForward * -1.0f).dot(relativeActorPosition) + farRenderDistance + radius > 0
+		&& (MungusMath::rotateAboutAxis(cameraRight, cameraUp, -fieldOfView / (2 * aspectRatio)).dot(relativeActorPosition)) + radius > 0
+		&& (MungusMath::rotateAboutAxis(cameraRight * -1.0f, cameraUp, fieldOfView / (2 * aspectRatio)).dot(relativeActorPosition)) + radius > 0
+		&& (MungusMath::rotateAboutAxis(cameraUp, cameraRight, fieldOfView / 2).dot(relativeActorPosition)) + radius > 0
+		&& (MungusMath::rotateAboutAxis(cameraUp * -1.0f, cameraRight, -fieldOfView / 2).dot(relativeActorPosition)) + radius > 0
+	);
 }

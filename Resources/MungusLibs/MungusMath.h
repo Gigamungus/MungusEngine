@@ -64,6 +64,10 @@ namespace MungusMath {
 			};
 		}
 
+		inline MVec3 projectOnto(const MVec3& projection) {
+			return projection * (this->dot(projection) / projection.dot(projection));
+		}
+
 		inline static MVec3 normalize(const MVec3& vector) {
 			float size = sqrtf(vector.x * vector.x + vector.y * vector.y + vector.z * vector.z);
 
@@ -364,6 +368,13 @@ namespace MungusMath {
 		return MVec3{ rotated.x, rotated.y, rotated.z };
 	}
 
+	inline float pointDistance(const MVec3& point1, const MVec3& point2) {
+		return abs((point1 - point2).size());
+	}
+
+	inline MVec3 normalFromPoints(const MVec3& point1, const MVec3& point2, const MVec3& point3) {
+		return MVec3::normalize((point2 - point1).cross(point3 - point1));
+	}
 }
 
 #endif // MUNGUS_MATH

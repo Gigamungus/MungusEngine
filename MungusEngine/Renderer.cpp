@@ -4,6 +4,7 @@
 #include "Actor.h"
 #include "Camera.h"
 #include "Asset.h"
+#include "AABBTree.h"
 
 
 //////////// internal method declarations //////////////
@@ -24,11 +25,7 @@ void compileShaders(std::unordered_map<std::string, const unsigned int>& vertexS
 
 Mungus::Renderer::Renderer(const Application* owner) :
 	owner(owner),
-	lastFrameTime(0.0f),
-	farRenderDistance(10000000.0f),
-	nearRenderDistance(0.01f),
-	fieldOfView(90.0f),
-	aspectRatio(1.0f)
+	lastFrameTime(0.0f)
 {
 	glfwStartup(window);
 	glewStartup();
@@ -41,10 +38,20 @@ void inline Mungus::Renderer::setBackground(MungusMath::MVec4 color) {
 }
 
 void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& actors, const Camera& camera) {
-	MungusMath::MMat4 frameTransformations = camera.perspectiveMatrix(fieldOfView, aspectRatio, nearRenderDistance, farRenderDistance) * camera.viewMatrix();
+	MungusMath::MMat4 frameTransformations = camera.perspectiveMatrix() * camera.viewMatrix();
+
+	std::vector<std::shared_ptr<Mungus::Actor>> sortedActors = std::vector<std::shared_ptr<Mungus::Actor>>();
 
 	for (auto actor : actors)
-		renderActor(*actor.second, frameTransformations);
+		if (camera.visible(*actor.second))
+			sortedActors.push_back(actor.second);
+
+	std::sort(sortedActors.begin(), sortedActors.end(), [&](const std::shared_ptr<Mungus::Actor> obj1, std::shared_ptr<Mungus::Actor> obj2) {
+		return MungusMath::pointDistance(camera.getPosition(), obj1->getPosition()) > MungusMath::pointDistance(camera.getPosition(), obj2->getPosition());
+	});
+
+	for (auto actor : sortedActors)
+		renderActor(*actor, frameTransformations);
 }
 
 void Mungus::Renderer::renderActor(const Mungus::Actor& actor, const MungusMath::MMat4& frameTransformations) {
@@ -106,8 +113,6 @@ void glfwStartup(GLFWwindow*& win) {
 	glfwSetErrorCallback([](int code, const char* message) {
 		MLOG("glfw error " << code << ": " << message);
 	});
-
-	glfwSetFramebufferSizeCallback(win, [](GLFWwindow* window, int width, int height) {glViewport(0, 0, width, height); });
 }
 
 void glewStartup(void) {
@@ -128,7 +133,7 @@ void glewStartup(void) {
 		NULL);
 
 	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	glCullFace(GL_FRONT);
 
 	/*glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_GEQUAL);*/

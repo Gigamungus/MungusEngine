@@ -2,11 +2,17 @@
 #include "Entity.h"
 
 namespace Mungus {
-	
+	class Actor;
+
 	class Camera : public Entity {
 	private:
 		float rotationSpeed;
 		float movementSpeed;
+
+		float nearRenderDistance;
+		float farRenderDistance;
+		float fieldOfView;
+		float aspectRatio;
 
 	public:
 		int strafing;
@@ -20,7 +26,7 @@ namespace Mungus {
 		virtual ~Camera();
 
 		const MungusMath::MMat4 viewMatrix(void) const;
-		const MungusMath::MMat4 perspectiveMatrix(float angle, float ratio, float near, float far) const;
+		const MungusMath::MMat4 perspectiveMatrix() const;
 
 		const float getRotationSpeed(void) const;
 		inline void setRotationSpeed(float speed) { rotationSpeed = speed; }
@@ -29,6 +35,17 @@ namespace Mungus {
 		inline void setMovementSpeed(float speed) { movementSpeed = speed; }
 
 
+		inline float getNearRenderDistance(void) const { return nearRenderDistance; }
+		inline float getFarRenderDistance(void) const { return farRenderDistance; }
+		inline float getFieldOfView(void) const { return fieldOfView; }
+		inline float getAspectRatio(void) const { return aspectRatio; }
+
+		inline void setNearRenderDistance(float nearRenderDistance) { this->nearRenderDistance = nearRenderDistance; }
+		inline void setFarRenderDistance(float farRenderDistance) { this->farRenderDistance = farRenderDistance; }
+		inline void setFieldOfView(float fieldOfView) { this->fieldOfView = fieldOfView; }
+		inline void setAspectRatio(float aspectRatio) { std::cout << aspectRatio << "\n"; this->aspectRatio = aspectRatio; }
+
+		bool visible(const Actor& actor) const;
 	};
 
 }

@@ -2,36 +2,29 @@
 #include "AABBTree.h"
 #include "Actor.h"
 #include "World.h"
+#include "Asset.h"
 
 
 
-Mungus::AABBTree::AABBTree(std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>* actors) :
-	actors(actors),
-	root(nullptr)
+Mungus::AABBTree::AABBTree() :
+	root(nullptr),
+	actorCount(0)
 {}
 
 Mungus::AABBTree::~AABBTree() {}
 
-void Mungus::AABBTree::buildTree(void) {
-	emptyTree();
-
-	for (auto actor : *actors) {
-		insert(actor.first);
-	}
-}
-
 void Mungus::AABBTree::emptyTree(void) {
-	for (auto actor : *actors) {
+	for (auto actor : actors) {
 		remove(actor.first);
 	}
 }
 
-void Mungus::AABBTree::insert(unsigned long entityId) {
-	std::shared_ptr<HitBox> actorBox = actors->at(entityId)->getHitBox();
+unsigned long Mungus::AABBTree::insert(unsigned long actorId) {
+	std::shared_ptr<HitBox> actorBox = actors.at(actorId)->getHitBox();
 
 	if (root == nullptr) {
 		root = actorBox;
-		return;
+		return actorId;
 	}
 
 	std::shared_ptr<HitBox> current = root;
@@ -73,31 +66,39 @@ void Mungus::AABBTree::insert(unsigned long entityId) {
 	setBoundsFromChildren(newBranch);
 	minimizeParentSizes(newBranch);
 
+	return actorId;
 }
 
-void Mungus::AABBTree::remove(unsigned long entityId) {
+unsigned long Mungus::AABBTree::insert(std::shared_ptr<Mungus::Asset> base) {
+	actors[actorCount] = std::make_shared<Mungus::Actor>(Mungus::Actor(*base, ++actorCount));
+
+	return insert(actorCount);
+}
+
+void Mungus::AABBTree::remove(unsigned long actorId) {
 	if (root == nullptr) {
-		MLOG("tried to remove entity from tree when tree was empty: " << entityId)
+		MLOG("tried to remove entity from tree when tree was empty: " << actorId)
 		return;
 	}
 
-	std::shared_ptr<HitBox> actorBox = actors->at(entityId)->getHitBox();
+	std::shared_ptr<HitBox> actorBox = actors.at(actorId)->getHitBox();
 
 	std::queue<std::shared_ptr<Mungus::HitBox>> collidors = std::queue<std::shared_ptr<Mungus::HitBox>>();
 	collidors.push(root);
 
-	while (!collidors.empty() && collidors.front()->actor != entityId) {
-		if (intersect(*actorBox, *collidors.front()->left))
-			collidors.push(collidors.front()->left);
+	while (!collidors.empty() && collidors.front()->actor != actorId) {
+		if (!collidors.front()->isLeaf()) {
+			if (intersect(*actorBox, *collidors.front()->left))
+				collidors.push(collidors.front()->left);
 
-		if (intersect(*actorBox, *collidors.front()->right))
-			collidors.push(collidors.front()->right);
-
+			if (intersect(*actorBox, *collidors.front()->right))
+				collidors.push(collidors.front()->right);
+		}
 		collidors.pop();
 	}
 
 	if (collidors.empty()) {
-		MLOG("tried to remove entity from AABBTree that was not present: " << entityId)
+		MLOG("tried to remove entity from AABBTree that was not present: " << actorId)
 	}
 
 	else {
@@ -264,7 +265,7 @@ unsigned long Mungus::AABBTree::findFirstIntersecting(const Mungus::Line & line)
 	float closestDistance = std::numeric_limits<float>::infinity();
 
 	for (auto id : intersectingActors) {
-		float actorDistance = (actors->at(id)->getPosition() - line.position).size();
+		float actorDistance = (actors.at(id)->getPosition() - line.position).size();
 		if (actorDistance < closestDistance) {
 			closestActor = id;
 			closestDistance = actorDistance;
@@ -273,4 +274,44 @@ unsigned long Mungus::AABBTree::findFirstIntersecting(const Mungus::Line & line)
 
 	std::cout << closestActor << "\n";
 	return closestActor;
+}
+
+const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> Mungus::AABBTree::getActors(void) const {
+	return actors;
+}
+
+void Mungus::AABBTree::setActorPosition(unsigned long id, const MungusMath::MVec3 & position) {
+	remove(id);
+	actors.at(id)->setPosition(position);
+	insert(id);
+}
+
+void Mungus::AABBTree::scaleActor(unsigned long id, const MungusMath::MVec3 & scale) {
+	remove(id);
+	actors.at(id)->scaleBy(scale.x, scale.y, scale.z);
+	insert(id);
+}
+
+void Mungus::AABBTree::rotateActor(unsigned long id, const MungusMath::MVec3 & axis, float angle) {
+	remove(id);
+	actors.at(id)->rotate(axis, angle);
+	insert(id);
+}
+
+void Mungus::AABBTree::turnActor(unsigned long id, float angle) {
+	remove(id);
+	actors.at(id)->turn(angle);
+	insert(id);
+}
+
+void Mungus::AABBTree::pitchActor(unsigned long id, float angle) {
+	remove(id);
+	actors.at(id)->pitch(angle);
+	insert(id);
+}
+
+void Mungus::AABBTree::rollActor(unsigned long id, float angle) {
+	remove(id);
+	actors.at(id)->roll(angle);
+	insert(id);
 }

@@ -23,7 +23,13 @@ const Mungus::RenderInfo inline Mungus::Actor::getRenderInfo(void) const {
 }
 
 inline const std::shared_ptr<Mungus::HitBox> Mungus::Actor::getHitBox(void) const {
-	return std::make_shared<Mungus::HitBox>(Mungus::HitBox{id, nullptr, nullptr, nullptr, (backHitboxCoord * scale) + position, (frontHitboxCoord * scale) + position});
+	return std::make_shared<Mungus::HitBox>(Mungus::HitBox{
+		id,
+		nullptr,
+		nullptr,
+		nullptr,
+		(backHitboxCoord * scale) + position, (frontHitboxCoord * scale) + position
+	});
 }
 
 void Mungus::Actor::scaleBy(float x, float y, float z) {
