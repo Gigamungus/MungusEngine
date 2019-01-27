@@ -10,10 +10,6 @@ namespace Mungus {
 	class AABBTree;
 
 	struct CursorLocation;
-	struct Line {
-		MungusMath::MVec3 position;
-		MungusMath::MVec3 direction;
-	};
 
 	class MUNGUS World {
 	private:
@@ -32,7 +28,7 @@ namespace Mungus {
 								const std::unordered_map<std::string, const unsigned int>& fragmentShaders);
 
 		const Camera inline getCamera(void) const;
-		Camera getCamera(void);
+		Camera& getCamera(void);
 		const inline unsigned long getFrameCount(void) const { return frameCount; }
 		void inline incrementFrameCount(void) { frameCount++; }
 
@@ -73,7 +69,9 @@ namespace Mungus {
 		void pitchCamera(float angle);
 		void rollCamera(float angle);
 
-		void processLeftClick(const CursorLocation& cursorLocation);
+		MungusMath::Line getRayFromCursorLocation(const CursorLocation& cursorLocation, float windowWidth, float windowHeight) const;
+
+		unsigned long findFirstIntersecting(const MungusMath::Line& line);
 
 	};
 

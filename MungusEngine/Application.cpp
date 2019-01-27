@@ -9,9 +9,9 @@
 #include "MungusUtil.h"
 
 struct Mungus::ActiveBindings {
-	typedef std::function<void(Mungus::Application*, GLFWwindow*, int, int, int, int)> keyLambda;
-	typedef std::function<void(Mungus::Application*, GLFWwindow*, int, int, int)> mouseLambda;
-	typedef std::function<void(Mungus::Application*, GLFWwindow*, double, double)> cursorLambda;
+	typedef std::function<void(Mungus::Application*, int, int, int, int)> keyLambda;
+	typedef std::function<void(Mungus::Application*, int, int, int)> mouseLambda;
+	typedef std::function<void(Mungus::Application*, double, double)> cursorLambda;
 
 	std::stack<keyLambda>      aBindings = std::stack<keyLambda>();
 	std::stack<keyLambda>      bBindings = std::stack<keyLambda>();
@@ -63,7 +63,7 @@ struct Mungus::ActiveBindings {
 
 //////// client call functions /////////////
 void Mungus::Application::setNoClipBindings(void) {
-	bindings->aBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
+	bindings->aBindings.push([](Mungus::Application* app, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
 			app->setCameraTurningStatus(MPLANAR_REVERSE);
@@ -75,7 +75,7 @@ void Mungus::Application::setNoClipBindings(void) {
 			break;
 		};
 	});
-	bindings->dBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
+	bindings->dBindings.push([](Mungus::Application* app, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
 			app->setCameraTurningStatus(MPLANAR_FORWARD);
@@ -87,7 +87,7 @@ void Mungus::Application::setNoClipBindings(void) {
 			break;
 		};
 	});
-	bindings->wBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
+	bindings->wBindings.push([](Mungus::Application* app, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
 			app->setCameraAdvancingStatus(MPLANAR_FORWARD);
@@ -99,7 +99,7 @@ void Mungus::Application::setNoClipBindings(void) {
 			break;
 		};
 	});
-	bindings->sBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
+	bindings->sBindings.push([](Mungus::Application* app, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
 			app->setCameraAdvancingStatus(MPLANAR_REVERSE);
@@ -111,7 +111,7 @@ void Mungus::Application::setNoClipBindings(void) {
 			break;
 		};
 	});
-	bindings->spaceBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
+	bindings->spaceBindings.push([](Mungus::Application* app, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
 			app->setCameraAscendingStatus(MPLANAR_FORWARD);
@@ -123,7 +123,7 @@ void Mungus::Application::setNoClipBindings(void) {
 			break;
 		};
 	});
-	bindings->xBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
+	bindings->xBindings.push([](Mungus::Application* app, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
 			app->setCameraAscendingStatus(MPLANAR_REVERSE);
@@ -135,7 +135,7 @@ void Mungus::Application::setNoClipBindings(void) {
 			break;
 		};
 	});
-	bindings->qBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
+	bindings->qBindings.push([](Mungus::Application* app, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
 			app->setCameraStrafingStatus(MPLANAR_REVERSE);
@@ -147,7 +147,7 @@ void Mungus::Application::setNoClipBindings(void) {
 			break;
 		};
 	});
-	bindings->eBindings.push([](Mungus::Application* app, GLFWwindow* window, int key, int scanCode, int action, int mods) {
+	bindings->eBindings.push([](Mungus::Application* app, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
 			app->setCameraStrafingStatus(MPLANAR_FORWARD);
@@ -160,19 +160,19 @@ void Mungus::Application::setNoClipBindings(void) {
 		};
 	});
 
-	bindings->lmbBindings.push([](Mungus::Application* app, GLFWwindow* window, int button, int action, int mods) {
+	bindings->lmbBindings.push([](Mungus::Application* app, int button, int action, int mods) {
 
 		switch (action) {
 		case GLFW_PRESS:
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-			app->bindings->mouseMoveBindings.push([](Mungus::Application* app, GLFWwindow* window, double xpos, double ypos) {
+			app->disableCursor();
+			app->bindings->mouseMoveBindings.push([](Mungus::Application* app, double xpos, double ypos) {
 				app->turnCamera((float)(-(app->getLastMouseLocation().xpos - xpos) * app->getCameraRotationSpeed()) / 360.0f);
 				app->pitchCamera((float)(app->getLastMouseLocation().ypos - ypos) * app->getCameraRotationSpeed() / 360.0f);
 			});
 			break;
 		case GLFW_RELEASE: {
 			app->bindings->mouseMoveBindings.pop();
-			glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			app->enableCursor();
 			break;
 		}
 		default:
@@ -181,8 +181,12 @@ void Mungus::Application::setNoClipBindings(void) {
 		}
 	});
 
-	bindings->leftClickBindings.push([](Mungus::Application* app, GLFWwindow* window, int button, int action, int mods) {
-		app->processLeftClick(app->getLastMouseLocation());
+	bindings->leftClickBindings.push([](Mungus::Application* app, int button, int action, int mods) {
+		app->setPrimarySelection(app->findFirstIntersectingWithRay(app->getRayFromCursorLocation(app->getLastMouseLocation())));
+	}); 
+
+	bindings->rightClickBindings.push([](Mungus::Application* app, int button, int action, int mods) {
+		std::cout << "right clicked\n";
 	});
 }
 
@@ -206,6 +210,18 @@ int Mungus::Application::getWindowWidth(void) const {
 
 int Mungus::Application::getWindowHeight(void) const {
 	return renderer->getWindowHeight();
+}
+
+void Mungus::Application::disableCursor(void) const {
+	glfwSetInputMode(renderer->getWindow(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void Mungus::Application::enableCursor(void) const {
+	glfwSetInputMode(renderer->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
+unsigned long Mungus::Application::findFirstIntersectingWithRay(const MungusMath::Line & line) {
+	return world->findFirstIntersecting(line);
 }
 
 const unsigned long Mungus::Application::frameCount(void) const {
@@ -242,10 +258,6 @@ const unsigned long Mungus::Application::pitchEntity(const unsigned long id, flo
 
 const unsigned long Mungus::Application::rollEntity(const unsigned long id, float angle) {
 	return world->rollEntity(id, angle);
-}
-
-void Mungus::Application::processLeftClick(CursorLocation clickLocation) {
-	world->processLeftClick(clickLocation);
 }
 
 const MungusMath::MVec3 Mungus::Application::getCameraPosition(void) const {
@@ -340,6 +352,10 @@ void Mungus::Application::setCameraRollingStatus(int setting) {
 	world->setCameraPitchingStatus(setting);
 }
 
+MungusMath::Line Mungus::Application::getRayFromCursorLocation(const CursorLocation & cursorLocation) const {
+	return world->getRayFromCursorLocation(cursorLocation, (float)getWindowWidth(), (float)getWindowHeight());
+}
+
 float Mungus::Application::getNearRenderDistance(void) const {
 	return world->getCamera().getNearRenderDistance();
 }
@@ -399,7 +415,9 @@ Mungus::Application::Application(void) :
 	renderer(std::make_shared<Mungus::Renderer>(this)),
 	bindings(std::make_shared<Mungus::ActiveBindings>()),
 	lastMouseLocation(std::make_shared<Mungus::CursorLocation>()),
-	lmbClickTime(0)
+	lmbClickTime(0),
+	rmbClickTime(0),
+	primarySelection(0)
 {
 	glfwSetWindowUserPointer(renderer->getWindow(), this);
 	glfwSetKeyCallback(renderer->getWindow(), [](GLFWwindow* window, int key, int scanCode, int action, int mods) {
@@ -576,162 +594,162 @@ void Mungus::Application::updateCameraPosition(void) {
 void Mungus::Application::updateMouseLocation(void) {
 	double xpos, ypos;
 	glfwGetCursorPos(renderer->getWindow(), &xpos, &ypos);
-	*lastMouseLocation = { xpos, ypos };
+	*lastMouseLocation = { (float)xpos, (float)ypos };
 }
 
 void Mungus::Application::keyCallBack(GLFWwindow* window, int key, int scanCode, int action, int mods) {
 	switch (key) {
 	case GLFW_KEY_SPACE:
 		if (!bindings->spaceBindings.empty())
-			bindings->spaceBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->spaceBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_A:
 		if (!bindings->aBindings.empty())
-			bindings->aBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->aBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_B:
 		if (!bindings->bBindings.empty())
-			bindings->bBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->bBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_C:
 		if (!bindings->cBindings.empty())
-			bindings->cBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->cBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_D:
 		if (!bindings->dBindings.empty())
-			bindings->dBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->dBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_E:
 		if (!bindings->eBindings.empty())
-			bindings->eBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->eBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_F:
 		if (!bindings->fBindings.empty())
-			bindings->fBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->fBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_G:
 		if (!bindings->gBindings.empty())
-			bindings->gBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->gBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_H:
 		if (!bindings->hBindings.empty())
-			bindings->hBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->hBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_I:
 		if (!bindings->iBindings.empty())
-			bindings->iBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->iBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_J:
 		if (!bindings->jBindings.empty())
-			bindings->jBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->jBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_K:
 		if (!bindings->kBindings.empty())
-			bindings->kBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->kBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_L:
 		if (!bindings->lBindings.empty())
-			bindings->lBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->lBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_M:
 		if (!bindings->mBindings.empty())
-			bindings->mBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->mBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_N:
 		if (!bindings->nBindings.empty())
-			bindings->nBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->nBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_O:
 		if (!bindings->oBindings.empty())
-			bindings->oBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->oBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_P:
 		if (!bindings->pBindings.empty())
-			bindings->pBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->pBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_Q:
 		if (!bindings->qBindings.empty())
-			bindings->qBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->qBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_R:
 		if (!bindings->rBindings.empty())
-			bindings->rBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->rBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_S:
 		if (!bindings->sBindings.empty())
-			bindings->sBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->sBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_T:
 		if (!bindings->tBindings.empty())
-			bindings->tBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->tBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_U:
 		if (!bindings->uBindings.empty())
-			bindings->uBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->uBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_V:
 		if (!bindings->vBindings.empty())
-			bindings->vBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->vBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_W:
 		if (!bindings->wBindings.empty())
-			bindings->wBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->wBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_X:
 		if (!bindings->xBindings.empty())
-			bindings->xBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->xBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_Y:
 		if (!bindings->yBindings.empty())
-			bindings->yBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->yBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_Z:
 		if (!bindings->zBindings.empty())
-			bindings->zBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->zBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_0:
 		if (!bindings->zeroBindings.empty())
-			bindings->zeroBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->zeroBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_1:
 		if (!bindings->oneBindings.empty())
-			bindings->oneBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->oneBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_2:
 		if (!bindings->twoBindings.empty())
-			bindings->twoBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->twoBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_3:
 		if (!bindings->threeBindings.empty())
-			bindings->threeBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->threeBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_4:
 		if (!bindings->fourBindings.empty())
-			bindings->fourBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->fourBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_5:
 		if (!bindings->fiveBindings.empty())
-			bindings->fiveBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->fiveBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_6:
 		if (!bindings->sixBindings.empty())
-			bindings->sixBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->sixBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_7:
 		if (!bindings->sevenBindings.empty())
-			bindings->sevenBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->sevenBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_8:
 		if (!bindings->eightBindings.empty())
-			bindings->eightBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->eightBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_9:
 		if (!bindings->nineBindings.empty())
-			bindings->nineBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->nineBindings.top()(this, key, scanCode, action, mods);
 		break;
 	case GLFW_KEY_ESCAPE:
 		if (!bindings->escapeBindings.empty())
-			bindings->escapeBindings.top()(this, window, key, scanCode, action, mods);
+			bindings->escapeBindings.top()(this, key, scanCode, action, mods);
 		break;
 	default:
 		MLOG("unrecognized key pressed: " << key)
@@ -748,16 +766,26 @@ void Mungus::Application::mouseCallBack(GLFWwindow* window, int button, int acti
 		if (action == GLFW_RELEASE) {
 			float lmbHeldDownTime = time() - lmbClickTime;
 			if (lmbHeldDownTime < 0.2f) {
-				bindings->leftClickBindings.top()(this, window, button, action, mods);
+				bindings->leftClickBindings.top()(this, button, action, mods);
 			}
 		}
 
 		if (!bindings->lmbBindings.empty())
-			bindings->lmbBindings.top()(this, window, button, action, mods);
+			bindings->lmbBindings.top()(this, button, action, mods);
 		break;
 	case GLFW_MOUSE_BUTTON_RIGHT:
+		if (action == GLFW_PRESS)
+			rmbClickTime = time();
+
+		if (action == GLFW_RELEASE) {
+			float rmbHeldDownTime = time() - rmbClickTime;
+			if (rmbHeldDownTime < 0.2f) {
+				bindings->rightClickBindings.top()(this, button, action, mods);
+			}
+		}
+
 		if (!bindings->rmbBindings.empty())
-			bindings->rmbBindings.top()(this, window, button, action, mods);
+			bindings->rmbBindings.top()(this, button, action, mods);
 		break;
 	default:
 		MLOG("unrecognized mmouse button pressed: " << button)
@@ -767,6 +795,6 @@ void Mungus::Application::mouseCallBack(GLFWwindow* window, int button, int acti
 
 void Mungus::Application::cursorCallBack(GLFWwindow * window, double xpos, double ypos) {
 	if (!bindings->mouseMoveBindings.empty())
-		bindings->mouseMoveBindings.top()(this, window, xpos, ypos);
+		bindings->mouseMoveBindings.top()(this, xpos, ypos);
 }
 

@@ -20,6 +20,7 @@ void Mungus::AABBTree::emptyTree(void) {
 }
 
 unsigned long Mungus::AABBTree::insert(unsigned long actorId) {
+
 	std::shared_ptr<HitBox> actorBox = actors.at(actorId)->getHitBox();
 
 	if (root == nullptr) {
@@ -169,7 +170,7 @@ bool Mungus::AABBTree::intersect(const Mungus::HitBox& first, const Mungus::HitB
 		first.rightBound.z > second.leftBound.z && first.leftBound.z < second.rightBound.z;
 }
 
-bool Mungus::AABBTree::intersect(const HitBox & box, const Mungus::Line & line) const {
+bool Mungus::AABBTree::intersect(const HitBox & box, const MungusMath::Line & line) const {
 	float vecsToLeftX	= (box.leftBound.x  - line.position.x) / line.direction.x;
 	float vecsToLeftY	= (box.leftBound.y  - line.position.y) / line.direction.y;
 	float vecsToLeftZ	= (box.leftBound.z  - line.position.z) / line.direction.z;
@@ -235,7 +236,7 @@ void Mungus::AABBTree::minimizeParentSizes(std::shared_ptr<HitBox> hitBox) {
 	}
 }
 
-unsigned long Mungus::AABBTree::findFirstIntersecting(const Mungus::Line & line) {
+unsigned long Mungus::AABBTree::findFirstIntersecting(const MungusMath::Line& line) {
 	if (root == nullptr || !intersect(*root, line))
 		return 0;
 
@@ -243,9 +244,9 @@ unsigned long Mungus::AABBTree::findFirstIntersecting(const Mungus::Line & line)
 	std::vector<unsigned long> intersectingActors;
 
 	intersectingBranches.push(root);
-	int j = 0;
+
 	while (!intersectingBranches.empty()) {
-		j++;
+
 		if (intersectingBranches.front()->isLeaf()) {
 			intersectingActors.push_back(intersectingBranches.front()->actor);
 		}
@@ -260,7 +261,7 @@ unsigned long Mungus::AABBTree::findFirstIntersecting(const Mungus::Line & line)
 
 		intersectingBranches.pop();
 	}
-	std::cout << j << " searches\n";
+
 	unsigned long closestActor = 0;
 	float closestDistance = std::numeric_limits<float>::infinity();
 
@@ -271,8 +272,7 @@ unsigned long Mungus::AABBTree::findFirstIntersecting(const Mungus::Line & line)
 			closestDistance = actorDistance;
 		}
 	}
-
-	std::cout << closestActor << "\n";
+	
 	return closestActor;
 }
 

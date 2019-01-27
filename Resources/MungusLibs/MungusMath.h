@@ -203,6 +203,11 @@ namespace MungusMath {
 
 	};
 
+	struct Line {
+		MungusMath::MVec3 position;
+		MungusMath::MVec3 direction;
+	};
+
 	inline MMat4 lookatMatrix(const MVec3& position, const MVec3& direction, const MVec3& trueUp) {
 		MVec3 forward = MVec3::normalize(direction);
 		MVec3 right = MVec3::normalize(trueUp.cross(forward));

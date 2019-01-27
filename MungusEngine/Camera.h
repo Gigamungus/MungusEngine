@@ -4,6 +4,8 @@
 namespace Mungus {
 	class Actor;
 
+	struct CursorLocation;
+
 	class Camera : public Entity {
 	private:
 		float rotationSpeed;
@@ -33,6 +35,8 @@ namespace Mungus {
 
 		inline float getMovementSpeed(void) const { return movementSpeed; }
 		inline void setMovementSpeed(float speed) { movementSpeed = speed; }
+
+		MungusMath::Line getRayFromCursorLocation(const CursorLocation& cursorLocation, float windowWidth, float windowHeight) const;
 
 
 		inline float getNearRenderDistance(void) const { return nearRenderDistance; }

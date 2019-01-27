@@ -156,7 +156,7 @@ inline const Mungus::Camera Mungus::World::getCamera(void) const {
 	return *camera;
 }
 
-inline Mungus::Camera Mungus::World::getCamera(void) {
+inline Mungus::Camera& Mungus::World::getCamera(void) {
 	return *camera;
 }
 
@@ -172,34 +172,10 @@ void Mungus::World::rollCamera(float angle) {
 	camera->roll(angle);
 }
 
-void Mungus::World::processLeftClick(const Mungus::CursorLocation& cursorLocation) {
-	float fov = owner->getFieldOfView();
-	float farDist = owner->getFarRenderDistance();
-	float aspectRatio = owner->getAspectRatio();
-	const MungusMath::MMat4 orientation = camera->getOrientation();
+MungusMath::Line Mungus::World::getRayFromCursorLocation(const CursorLocation & cursorLocation, float windowWidth, float windowHeight) const {
+	return camera->getRayFromCursorLocation(cursorLocation, windowWidth, windowHeight);
+}
 
-	float screenWidth = (float)owner->getWindowWidth();
-	float screenHeight = (float)owner->getWindowHeight();
-
-	float farWidth = 2 * farDist * aspectRatio * tanf(MungusMath::degToRads(fov / 2.0f));
-	float farHeight = 2 * farDist * tanf(MungusMath::degToRads(fov / 2.0f));
-
-	float x = 2 * ((cursorLocation.xpos - (screenWidth / 2)) / screenWidth);
-	float y = 2 * (((screenHeight / 2) - cursorLocation.ypos) / screenHeight);
-
-
-	MungusMath::MVec4 directionVector = orientation * MungusMath::MVec4{
-		x * farWidth / 2,
-		y * farHeight / 2,
-		-farDist,
-		1.0f
-	};
-
-
-	MungusMath::MVec3 unitDirectionVector = MungusMath::MVec3::normalize(MungusMath::MVec3{ directionVector.x, directionVector.y, directionVector.z });
-
-	actorsTree->findFirstIntersecting(Mungus::Line{
-		owner->getCameraPosition(),
-		unitDirectionVector
-	});
+unsigned long Mungus::World::findFirstIntersecting(const MungusMath::Line & line) {
+	return actorsTree->findFirstIntersecting(line);
 }

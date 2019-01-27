@@ -4,7 +4,6 @@
 
 std::vector<unsigned int> entities = std::vector<unsigned int>();
 
-int i = 0;
 
 class MungusAssetCreator : public Mungus::Application {
 public:
@@ -13,31 +12,29 @@ public:
 		loadAsset("cube.mungass");
 		setCameraMovementSpeed(10);
 		setCameraRotationSpeed(180);
+
+		for (int i = 0; i < 1000; i++) {
+			unsigned int newEntity = createEntity(CUBE);
+			setEntityPosition(newEntity, ((2 * (i % 10)) + (25 * (i / 1000))) % 250, (2 * ((i % 1000) / 100)), (2 * ((i / 10)) % 20) + (int)(25 * (i / 10000)));
+			entities.push_back(newEntity);
+		}
 	}
 
 	virtual void mainLoop(void) override {
 		setBackground(MungusMath::MVec4{ 0.45f, 0.55f, 0.60f, 1.00f });
 		
-		float f = frameTime() * 360;
+		std::cout << getPrimarySelection() << "\n";
 		
-		for (int j = 0; j < f; j++) {
-			unsigned int newEntity = createEntity(CUBE);
-			setEntityPosition(newEntity, ((2 * (i % 10)) + (25 * (i / 1000))) % 250, (2 * ((i % 1000) / 100)), (2 * ((i / 10)) % 20) + (int)(25 * (i / 10000)));
-			/*setEntityPosition(newEntity, ((float)rand() / (float)RAND_MAX) * 100, ((float)rand() / (float)RAND_MAX) * 100, ((float)rand() / (float)RAND_MAX) * 100);
-			entities.push_back(newEntity);*/
-			i++;
-		}
-		
-		/*for (auto entity : entities) {
+		for (auto entity : entities) {
 			if (entity % 3 == 0) {
-				turnEntity(entity, entity);
+				turnEntity(entity, 3);
 			}
 			if (entity % 3 == 1)
-				pitchEntity(entity, entity);
+				rotateEntity(entity, {1, 0, 0}, 3);
 
 			if (entity % 3 == 2)
-				rollEntity(entity, entity);
-		}*/
+				rollEntity(entity, 3);
+		}
 	}
 
 };

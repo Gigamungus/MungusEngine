@@ -5,7 +5,6 @@ namespace Mungus {
 
 	class Actor;
 	class Asset;
-	struct Line;
 
 	struct HitBox {
 		unsigned long actor;
@@ -41,7 +40,7 @@ namespace Mungus {
 		void remove(unsigned long entityId);
 		
 		bool intersect(const HitBox& first, const HitBox& second) const;
-		bool intersect(const HitBox& box, const Mungus::Line& line) const;
+		bool intersect(const HitBox& box, const MungusMath::Line& line) const;
 		float surfaceArea(const HitBox& hitBox) const;
 		float hypotheticalSurfaceArea(const HitBox& firstHitBox, const HitBox& secondHitBox) const;
 
@@ -49,7 +48,7 @@ namespace Mungus {
 
 		void minimizeParentSizes(std::shared_ptr<HitBox> hitBox);
 
-		unsigned long findFirstIntersecting(const Line& line);
+		unsigned long findFirstIntersecting(const MungusMath::Line& line);
 
 		const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> getActors(void) const;
 

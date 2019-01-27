@@ -7,8 +7,8 @@ namespace Mungus {
 
 	struct ActiveBindings;
 	struct MUNGUS CursorLocation {
-		double xpos;
-		double ypos;
+		float xpos;
+		float ypos;
 	};
 
 	class MUNGUS Application {
@@ -21,6 +21,8 @@ namespace Mungus {
 		void updateCameraPosition(void);
 		void updateMouseLocation(void);
 		float lmbClickTime;
+		float rmbClickTime;
+		unsigned long primarySelection;
 
 	protected:
 		std::shared_ptr<Mungus::World> world;
@@ -50,6 +52,14 @@ namespace Mungus {
 		int getWindowWidth(void) const;
 		int getWindowHeight(void) const;
 
+		void disableCursor(void) const;
+		void enableCursor(void) const;
+
+		unsigned long getPrimarySelection(void) const { return primarySelection; }
+		void setPrimarySelection(unsigned long newSelection) { primarySelection = newSelection; }
+
+		unsigned long findFirstIntersectingWithRay(const MungusMath::Line& line);
+
 		const unsigned long inline createEntity(const std::string& name);
 		const unsigned long setEntityPosition(const unsigned long id, float x, float y, float z);
 		const unsigned long scaleEntity(const unsigned long id, float x, float y, float z);
@@ -57,7 +67,6 @@ namespace Mungus {
 		const unsigned long turnEntity(const unsigned long id, float angle);
 		const unsigned long pitchEntity(const unsigned long id, float angle);
 		const unsigned long rollEntity(const unsigned long id, float angle);
-		void processLeftClick(CursorLocation clickLocation);
 
 			////////////////// camera functions/////////////
 			const MungusMath::MVec3 getCameraPosition(void) const;
@@ -87,6 +96,8 @@ namespace Mungus {
 			void setCameraTurningStatus(int setting);
 			void setCameraPitchingStatus(int setting);
 			void setCameraRollingStatus(int setting);
+
+			MungusMath::Line getRayFromCursorLocation(const CursorLocation& cursorLocation) const;
 			//////////// end camera functions /////////////
 
 			//////////// renderer functions ///////////////

@@ -23,12 +23,51 @@ const Mungus::RenderInfo inline Mungus::Actor::getRenderInfo(void) const {
 }
 
 inline const std::shared_ptr<Mungus::HitBox> Mungus::Actor::getHitBox(void) const {
+	std::vector<MungusMath::MVec4> corners = std::vector<MungusMath::MVec4>();
+	
+	corners.push_back(MungusMath::MVec4{ backHitboxCoord.x, backHitboxCoord.y, -backHitboxCoord.z, 0 });
+	corners.push_back(MungusMath::MVec4{ frontHitboxCoord.x, backHitboxCoord.y, -backHitboxCoord.z, 0 });
+	corners.push_back(MungusMath::MVec4{ backHitboxCoord.x, backHitboxCoord.y, -frontHitboxCoord.z, 0 });
+	corners.push_back(MungusMath::MVec4{ frontHitboxCoord.x, backHitboxCoord.y, -frontHitboxCoord.z, 0 });
+	corners.push_back(MungusMath::MVec4{ backHitboxCoord.x, frontHitboxCoord.y, -backHitboxCoord.z, 0 });
+	corners.push_back(MungusMath::MVec4{ frontHitboxCoord.x, frontHitboxCoord.y, -backHitboxCoord.z, 0 });
+	corners.push_back(MungusMath::MVec4{ backHitboxCoord.x, frontHitboxCoord.y, -frontHitboxCoord.z, 0 });
+	corners.push_back(MungusMath::MVec4{ frontHitboxCoord.x, frontHitboxCoord.y, -frontHitboxCoord.z, 0 });
+
+	float lowx = std::numeric_limits<float>().infinity();
+	float lowy = std::numeric_limits<float>().infinity();
+	float lowz = std::numeric_limits<float>().infinity();
+	float highx = -std::numeric_limits<float>().infinity();
+	float highy = -std::numeric_limits<float>().infinity();
+	float highz = -std::numeric_limits<float>().infinity();
+
+	for (auto& corner : corners) {
+		corner = getOrientation() * corner;
+
+		if (corner.x < lowx)
+			lowx = corner.x;
+		else if (corner.x > highx)
+			highx = corner.x;
+
+		if (corner.y < lowy)
+			lowy = corner.y;
+		else if (corner.y > highy)
+			highy = corner.y;
+
+		if (corner.z < lowz)
+			lowz = corner.z;
+		else if (corner.z > highz)
+			highz = corner.z;
+	}
+
+
+
 	return std::make_shared<Mungus::HitBox>(Mungus::HitBox{
 		id,
 		nullptr,
 		nullptr,
 		nullptr,
-		(backHitboxCoord * scale) + position, (frontHitboxCoord * scale) + position
+		(MungusMath::MVec3{lowx, lowy, lowz} *scale) + getPosition(), (MungusMath::MVec3{highx, highy, highz} *scale) + getPosition()
 	});
 }
 

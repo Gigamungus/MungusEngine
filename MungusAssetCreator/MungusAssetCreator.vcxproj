@@ -95,7 +95,7 @@ xcopy "$(SolutionDir)Resources\Mungus\lib\MungusEngine.lib" "$(SolutionDir)Mungu
 xcopy "$(SolutionDir)Resources\Mungus\lib\MungusEngine.dll" "$(SolutionDir)MungusAssetCreator\bin\$(Configuration)-$(Platform)\Application" /y
 xcopy "$(SolutionDir)Resources\Mungus\lib\MungusEngine.lib" "$(SolutionDir)MungusAssetCreator\bin\$(Configuration)-$(Platform)\Application" /y
 
-xcopy "$(SolutionDir)Resources\*" "$(SolutionDir)MungusAssetCreator\bin\Debug-x64\Resources\" /i /s /y</Command>
+xcopy "$(SolutionDir)Resources\*" "$(SolutionDir)MungusAssetCreator\bin\$(Configuration)-$(Platform)\Resources\" /i /s /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
