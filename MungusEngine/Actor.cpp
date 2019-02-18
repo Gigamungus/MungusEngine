@@ -2,27 +2,33 @@
 #include "Actor.h"
 #include "Asset.h"
 #include "AABBTree.h"
+#include "VAO.h"
+#include "Shader.h"
 
 
 Mungus::Actor::Actor(const Mungus::Asset& source, unsigned long id) :
-	name(source.assetName),
 	id(id),
-	renderInfo(&source.renderInfo),
+	source(source),
 	scale({1.0f, 1.0f, 1.0f}),
 	physicsEnabled(false),
-	backHitboxCoord(source.backHitboxCoord),
-	frontHitboxCoord(source.frontHitboxCoord)
+	currentAnimation("nullAnimation"),
+	animationFrame(0)
 {}
+
+const std::string Mungus::Actor::getName(void) const {
+	return source.assetName;
+}
 
 const MungusMath::MVec3& Mungus::Actor::getScale(void) const {
 	return scale;
 }
 
-const Mungus::RenderInfo inline Mungus::Actor::getRenderInfo(void) const {
-	return *renderInfo;
-}
-
 inline const std::shared_ptr<Mungus::HitBox> Mungus::Actor::getHitBox(void) const {
+	json currentHitBox = source.hitboxCoords[currentAnimation]["frame"][animationFrame];
+
+	MungusMath::MVec3 backHitboxCoord{ currentHitBox["min"]["x"], currentHitBox["min"]["y"], currentHitBox["min"]["z"] };
+	MungusMath::MVec3 frontHitboxCoord{ currentHitBox["max"]["x"], currentHitBox["max"]["y"], currentHitBox["max"]["z"] };
+
 	std::vector<MungusMath::MVec4> corners = std::vector<MungusMath::MVec4>();
 	
 	corners.push_back(MungusMath::MVec4{ backHitboxCoord.x, backHitboxCoord.y, -backHitboxCoord.z, 0 });
@@ -69,6 +75,18 @@ inline const std::shared_ptr<Mungus::HitBox> Mungus::Actor::getHitBox(void) cons
 		nullptr,
 		(MungusMath::MVec3{lowx, lowy, lowz} *scale) + getPosition(), (MungusMath::MVec3{highx, highy, highz} *scale) + getPosition()
 	});
+}
+
+unsigned long Mungus::Actor::getVAOId(void) const {
+	return source.vao->getId();
+}
+
+unsigned long Mungus::Actor::getProgramId(void) const {
+	return source.program->getId();
+}
+
+int Mungus::Actor::numTriangleVertices(void) const {
+	return source.vao->getNumTriangleVertices();
 }
 
 void Mungus::Actor::scaleBy(float x, float y, float z) {

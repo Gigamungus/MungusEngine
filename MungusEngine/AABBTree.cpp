@@ -5,7 +5,6 @@
 #include "Asset.h"
 
 
-
 Mungus::AABBTree::AABBTree() :
 	root(nullptr),
 	actorCount(0)

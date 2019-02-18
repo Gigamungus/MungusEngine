@@ -46,7 +46,7 @@ namespace Mungus {
 		const CursorLocation getLastMouseLocation(void) const;
 		const float getLMBClickTime(void) const;
 
-		void inline loadAsset(const std::string& assetPath);
+		void inline loadActor(const std::string& actorName);
 
 		void inline setBackground(MungusMath::MVec4 color);
 		int getWindowWidth(void) const;
@@ -60,7 +60,7 @@ namespace Mungus {
 
 		unsigned long findFirstIntersectingWithRay(const MungusMath::Line& line);
 
-		const unsigned long inline createEntity(const std::string& name);
+		const unsigned long inline createActor(const std::string& name);
 		const unsigned long setEntityPosition(const unsigned long id, float x, float y, float z);
 		const unsigned long scaleEntity(const unsigned long id, float x, float y, float z);
 		const unsigned long rotateEntity(const unsigned long id, const MungusMath::MVec3& axis, float angle);

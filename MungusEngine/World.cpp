@@ -5,6 +5,7 @@
 #include "Actor.h"
 #include "Asset.h"
 #include "AABBTree.h"
+#include "Shader.h"
 
 Mungus::World::World(const Application* owner) :
 	owner(owner),
@@ -13,28 +14,20 @@ Mungus::World::World(const Application* owner) :
 	actorsTree(std::make_shared<Mungus::AABBTree>())
 {};
 
-void inline Mungus::World::loadAsset(const std::string& title,
-	const std::unordered_map<std::string, const unsigned int>& vertexShaders,
-	const std::unordered_map<std::string, const unsigned int>& fragmentShaders) {
-	assets[title] = std::make_shared<Mungus::Asset>(title, vertexShaders, fragmentShaders);
+void inline Mungus::World::loadActor(const std::string& title,
+	const std::unordered_map<std::string, Shader>& programs) {
+	assets[title] = std::make_shared<Mungus::Asset>(title, programs);
 }
 
 inline const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> Mungus::World::getActors(void) const {
 	return actorsTree->getActors();
 }
 
-const unsigned long Mungus::World::createEntity(const std::string & name) {
+const unsigned long Mungus::World::createActor(const std::string & name) {
 	if (assets.find(name) != assets.end()) {
 		std::shared_ptr<Mungus::Asset> base = assets.at(name);
 
-		switch (base->renderInfo.assetType) {
-		case MACTOR:
-			return actorsTree->insert(base);
-			break;
-		default:
-			MLOG("trying to create entity of unknown type: " << name)
-				return 0;
-		}
+		return actorsTree->insert(base);
 	}
 	return 0;
 }

@@ -28,38 +28,56 @@
     <Filter Include="Resource Files\Vendor\ImGUI">
       <UniqueIdentifier>{a6400ae6-f071-4e2f-ac32-418dde9b3a40}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files\Shaders">
-      <UniqueIdentifier>{9e6bb597-c31f-4df6-b571-a364e4a5530a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files\CoreItems">
       <UniqueIdentifier>{d4b4cbf4-c873-4e2a-9d70-792de0f2f4bc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Engine">
       <UniqueIdentifier>{65cdbe7c-6caa-48bd-b138-d6a561df13da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Engine\Model">
-      <UniqueIdentifier>{3497693f-a6d0-47c3-8bfc-6dd8a15b78b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine\View">
-      <UniqueIdentifier>{af0f7472-ef45-4092-a89b-289a0c8c392e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine\Controller">
-      <UniqueIdentifier>{a4a3d30d-3a4f-4f40-93b2-9c5bf9c959cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine\Model\Entity">
-      <UniqueIdentifier>{48bb1fa9-b539-4127-8cf5-2614c129a827}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Engine\Model\Asset">
-      <UniqueIdentifier>{22da6ef6-c92b-493e-accf-425d4a260090}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\MungusLibs">
       <UniqueIdentifier>{cbf939a1-e7a7-439c-be94-8a0208e7afab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Engine\Model\Entity\Camera">
+    <Filter Include="Source Files\Engine\AssetCreator">
+      <UniqueIdentifier>{ab99ff6d-a40f-4d56-9fd6-56a2ee3ccf4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\MVC">
+      <UniqueIdentifier>{423378ed-b772-4eef-9d0a-3baadec9df20}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\MVC\View">
+      <UniqueIdentifier>{af0f7472-ef45-4092-a89b-289a0c8c392e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\MVC\Model">
+      <UniqueIdentifier>{3497693f-a6d0-47c3-8bfc-6dd8a15b78b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\MVC\Model\Entity">
+      <UniqueIdentifier>{48bb1fa9-b539-4127-8cf5-2614c129a827}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\MVC\Model\Entity\Camera">
       <UniqueIdentifier>{302334e4-cc4d-4720-b771-b3c1d9808ebc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Engine\Model\Physics">
+    <Filter Include="Source Files\Engine\MVC\Model\Physics">
       <UniqueIdentifier>{104830b2-f19b-47c8-b38d-f8d3052c9412}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\MVC\Controller">
+      <UniqueIdentifier>{a4a3d30d-3a4f-4f40-93b2-9c5bf9c959cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\AssetCreator\Asset">
+      <UniqueIdentifier>{22da6ef6-c92b-493e-accf-425d4a260090}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Engine\AssetCreator\GLObjects">
+      <UniqueIdentifier>{db73a8e5-877e-4a48-82b9-cb2b0005bf7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Vendor\JSON">
+      <UniqueIdentifier>{d1461410-cb13-48e6-908f-41249c416aaa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Assets">
+      <UniqueIdentifier>{5a264b79-8b3d-4f8c-8508-3fd47ba9e0b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Assets\Actors">
+      <UniqueIdentifier>{cd214b0d-27fc-4f37-a6ab-8c40d396e0ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Assets\Shaders">
+      <UniqueIdentifier>{f58c92a7-e0a2-41de-8f45-5c0d2bdacec2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -76,7 +94,7 @@
       <Filter>Source Files\CoreItems</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Source Files\Engine\Model\Entity</Filter>
+      <Filter>Source Files\Engine\MVC\Model\Entity</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Source Files\CoreItems</Filter>
@@ -112,16 +130,16 @@
       <Filter>Resource Files\OpenGL\GLFW</Filter>
     </ClInclude>
     <ClInclude Include="Actor.h">
-      <Filter>Source Files\Engine\Model\Entity</Filter>
+      <Filter>Source Files\Engine\MVC\Model\Entity</Filter>
     </ClInclude>
     <ClInclude Include="World.h">
-      <Filter>Source Files\Engine\Model</Filter>
+      <Filter>Source Files\Engine\MVC\Model</Filter>
     </ClInclude>
     <ClInclude Include="Controller.h">
-      <Filter>Source Files\Engine\Controller</Filter>
+      <Filter>Source Files\Engine\MVC\Controller</Filter>
     </ClInclude>
     <ClInclude Include="Renderer.h">
-      <Filter>Source Files\Engine\View</Filter>
+      <Filter>Source Files\Engine\MVC\View</Filter>
     </ClInclude>
     <ClInclude Include="..\Resources\OpenGL\GLEW\include\GL\wglew.h">
       <Filter>Resource Files\OpenGL\GLEW</Filter>
@@ -136,7 +154,7 @@
       <Filter>Resource Files\OpenGL\GLEW</Filter>
     </ClInclude>
     <ClInclude Include="Asset.h">
-      <Filter>Source Files\Engine\Model\Asset</Filter>
+      <Filter>Source Files\Engine\AssetCreator\Asset</Filter>
     </ClInclude>
     <ClInclude Include="..\Resources\MungusLibs\MungusMath.h">
       <Filter>Resource Files\MungusLibs</Filter>
@@ -145,10 +163,28 @@
       <Filter>Resource Files\MungusLibs</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Source Files\Engine\Model\Entity\Camera</Filter>
+      <Filter>Source Files\Engine\MVC\Model\Entity\Camera</Filter>
     </ClInclude>
     <ClInclude Include="AABBTree.h">
-      <Filter>Source Files\Engine\Model\Physics</Filter>
+      <Filter>Source Files\Engine\MVC\Model\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="VAO.h">
+      <Filter>Source Files\Engine\AssetCreator\GLObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Resources\Vendor\JSON\json.hpp">
+      <Filter>Resource Files\Vendor\JSON</Filter>
+    </ClInclude>
+    <ClInclude Include="VBO.h">
+      <Filter>Source Files\Engine\AssetCreator\GLObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="VLO.h">
+      <Filter>Source Files\Engine\AssetCreator\GLObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Source Files\Engine\AssetCreator\GLObjects</Filter>
+    </ClInclude>
+    <ClInclude Include="IBO.h">
+      <Filter>Source Files\Engine\AssetCreator\GLObjects</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -156,7 +192,7 @@
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Entity.cpp">
-      <Filter>Source Files\Engine\Model\Entity</Filter>
+      <Filter>Source Files\Engine\MVC\Model\Entity</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files\CoreItems</Filter>
@@ -180,33 +216,48 @@
       <Filter>Resource Files\Vendor\ImGUI</Filter>
     </ClCompile>
     <ClCompile Include="Actor.cpp">
-      <Filter>Source Files\Engine\Model\Entity</Filter>
+      <Filter>Source Files\Engine\MVC\Model\Entity</Filter>
     </ClCompile>
     <ClCompile Include="World.cpp">
-      <Filter>Source Files\Engine\Model</Filter>
+      <Filter>Source Files\Engine\MVC\Model</Filter>
     </ClCompile>
     <ClCompile Include="Controller.cpp">
-      <Filter>Source Files\Engine\Controller</Filter>
+      <Filter>Source Files\Engine\MVC\Controller</Filter>
     </ClCompile>
     <ClCompile Include="Renderer.cpp">
-      <Filter>Source Files\Engine\View</Filter>
+      <Filter>Source Files\Engine\MVC\View</Filter>
     </ClCompile>
     <ClCompile Include="Asset.cpp">
-      <Filter>Source Files\Engine\Model\Asset</Filter>
+      <Filter>Source Files\Engine\AssetCreator\Asset</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Engine\Model\Entity\Camera</Filter>
+      <Filter>Source Files\Engine\MVC\Model\Entity\Camera</Filter>
     </ClCompile>
     <ClCompile Include="AABBTree.cpp">
-      <Filter>Source Files\Engine\Model\Physics</Filter>
+      <Filter>Source Files\Engine\MVC\Model\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="VAO.cpp">
+      <Filter>Source Files\Engine\AssetCreator\GLObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="VBO.cpp">
+      <Filter>Source Files\Engine\AssetCreator\GLObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="VLO.cpp">
+      <Filter>Source Files\Engine\AssetCreator\GLObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Source Files\Engine\AssetCreator\GLObjects</Filter>
+    </ClCompile>
+    <ClCompile Include="IBO.cpp">
+      <Filter>Source Files\Engine\AssetCreator\GLObjects</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Resources\Shaders\basic_shader.vertexshader.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="..\Resources\Shaders\basic_shader.fragmentshader.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
+    <Text Include="..\Resources\Assets\Actors\cube.mungass.txt">
+      <Filter>Resource Files\Assets\Actors</Filter>
+    </Text>
+    <Text Include="..\Resources\Assets\Shaders\basic_shader.mungass.txt">
+      <Filter>Resource Files\Assets\Shaders</Filter>
+    </Text>
   </ItemGroup>
 </Project>

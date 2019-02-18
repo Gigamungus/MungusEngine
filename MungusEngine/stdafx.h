@@ -7,6 +7,9 @@
 #include "../Resources/OpenGL/GLEW/include/GL/glew.h"
 #include "../Resources/OpenGL/GLFW/include/GLFW/glfw3.h"
 
+#include "../Resources/Vendor/JSON/json.hpp"
+using json = nlohmann::json;
+
 #include "../Resources/MungusLibs/MungusMath.h"
 #include "../Resources/MungusLibs/MungusUtil.h"
 

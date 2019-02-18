@@ -4,6 +4,7 @@
 #include "World.h"
 #include "Controller.h"
 #include "Camera.h"
+#include "Shader.h"
 
 #include "MungusMath.h"
 #include "MungusUtil.h"
@@ -198,8 +199,8 @@ const float Mungus::Application::frameTime(void) const {
 	return time() - renderer->getLastFrameTime();
 }
 
-void inline Mungus::Application::loadAsset(const std::string& assetPath) {
-	world->loadAsset(assetPath, renderer->getVertexShaders(), renderer->getFragmentShaders());
+void inline Mungus::Application::loadActor(const std::string& actorName) {
+	world->loadActor(actorName, renderer->getPrograms());
 }
 
 void inline Mungus::Application::setBackground(MungusMath::MVec4 color) { renderer->setBackground(color); }
@@ -441,7 +442,10 @@ Mungus::Application::~Application() {}
 void Mungus::Application::run(void) {
 	while (!glfwWindowShouldClose(renderer->getWindow())) {
 		glfwPollEvents();
+
+
 		mainLoop();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		incrementFrameCount();
 		updateCameraPosition();
@@ -459,8 +463,8 @@ void inline Mungus::Application::incrementFrameCount(void) {
 	world->incrementFrameCount();
 }
 
-inline const unsigned long Mungus::Application::createEntity(const std::string & name) {
-	return world->createEntity(name);
+inline const unsigned long Mungus::Application::createActor(const std::string & name) {
+	return world->createActor(name);
 }
 
 void Mungus::Application::renderActors(void) {

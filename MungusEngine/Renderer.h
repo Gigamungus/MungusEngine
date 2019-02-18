@@ -7,15 +7,14 @@ namespace Mungus {
 	class Actor;
 	class Camera;
 	class Entity;
-
+	class Shader;
 
 	class MUNGUS Renderer {
 	private:
 		const Application* owner;
 		GLFWwindow* window;
 
-		std::unordered_map<std::string, const unsigned int> vertexShaders;
-		std::unordered_map<std::string, const unsigned int> fragmentShaders;
+		std::unordered_map<std::string, Shader> programs;
 		float lastFrameTime;
 
 	public:
@@ -23,11 +22,10 @@ namespace Mungus {
 		~Renderer() {};
 
 		void inline setBackground(MungusMath::MVec4 color);
-		
 
 		GLFWwindow* getWindow() const { return window; }
-		const std::unordered_map<std::string, const unsigned int> inline getVertexShaders(void) const { return vertexShaders; }
-		const std::unordered_map<std::string, const unsigned int> inline getFragmentShaders(void) const { return fragmentShaders; }
+		const std::unordered_map<std::string, Shader> inline getPrograms(void) const { return programs; }
+
 
 		void renderActors( const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& entities, const Camera& camera);
 		void renderActor(const Mungus::Actor& actor, const MungusMath::MMat4& frameTransformations);

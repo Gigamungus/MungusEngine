@@ -9,13 +9,21 @@
 #include <unordered_map>
 #include <stack>
 
+#include "../Resources/Vendor/JSON/json.hpp"
+#include "../Resources/MungusLibs/MungusUtil.h"
 
-void test(const std::string& str) {
-	std::cout << str << "\n";
-}
+
+
+
+using json = nlohmann::json;
 
 int main(void) {
-	test("cube.mungass");
+
+	char test[100];
+	int* test2 = (int*)&test[50];
+	*test2 = 10000;
+
+	
 
 	std::cin.get();
 }

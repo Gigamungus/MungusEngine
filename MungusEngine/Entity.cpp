@@ -16,7 +16,7 @@ const MungusMath::MMat4 Mungus::Entity::getOrientation(void) const {
 }
 
 void Mungus::Entity::rotate(const MungusMath::MVec3 & axis, float angle) {
-	orientation = orientation * MungusMath::MMat4::rotation(axis.x, axis.y, axis.z, angle);
+	orientation = orientation * MungusMath::MMat4::rotation(axis.x, axis.y, -axis.z, angle);
 }
 
 void Mungus::Entity::pitch(float angle) {

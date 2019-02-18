@@ -1,0 +1,12 @@
+{
+   "type":"program",
+   "title":"basic_shader",
+   "vertexAttributes":[
+      {"posx":"float"},
+      {"posy":"float"},
+      {"posz":"float"}
+   ],
+   "vertexShader":"#version 420 core\nin float posx;\nin float posy;\nin float posz;\nout float depth;\nuniform mat4 transformation;\nvoid main(void) {\nvec4 position = {posx, posy, posz, 1.0};\nvec4 transformedPosition = transformation * position;\ngl_Position = transformedPosition;\ndepth = transformedPosition.z;\n}\n",
+
+   "fragmentShader":"#version 420 core\nin float depth;\nout vec4 color;\nvoid main(){\ncolor = vec4( 1- (-depth / 50), 0.0, (-depth / 50), 1.0);\n}\n"
+}

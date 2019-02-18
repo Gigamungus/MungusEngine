@@ -53,6 +53,20 @@ namespace MungusUtil {
 		return stream.str();
 	}
 
+	inline std::vector<std::string> splitString(std::string str, const std::string& delimiter) {
+		std::vector<std::string> values;
+
+		unsigned long long pos = 0;
+
+		while ((pos = str.find(delimiter)) != std::string::npos) {
+			values.push_back(str.substr(0, pos));
+			str.erase(0, pos + delimiter.length());
+		}
+		std::cout << str << std::endl;
+
+		return values;
+	}
+
 	inline long long getStringIteratorIndex(const std::string::iterator& begin, const std::string::iterator& itr) {
 		return std::distance(begin, itr);
 	}

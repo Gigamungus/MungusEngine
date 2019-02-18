@@ -14,7 +14,7 @@ namespace Mungus {
 		MungusMath::MMat4 orientation;
 
 	public:
-		Entity();
+		Entity(void);
 		virtual ~Entity() {}
 
 		const MungusMath::MVec3 getPosition(void) const;

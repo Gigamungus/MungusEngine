@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "Asset.h"
 #include "AABBTree.h"
+#include "Shader.h"
 
 
 //////////// internal method declarations //////////////
@@ -13,8 +14,7 @@ void glfwStartup(GLFWwindow*& win);
 void glewStartup(void);
 inline std::string getFileName(const std::string& url);
 const std::string shaderSourceFromUrl(const std::string url);
-const unsigned int compileShader(const std::string shaderSource, const unsigned int& type);
-void compileShaders(std::unordered_map<std::string, const unsigned int>& vertexShaders, std::unordered_map<std::string, const unsigned int>& fragmentShaders);
+void compileShaders(std::unordered_map<std::string, Mungus::Shader>& programs);
 
 //////////////end internal method declarations /////////////
 
@@ -29,12 +29,11 @@ Mungus::Renderer::Renderer(const Application* owner) :
 {
 	glfwStartup(window);
 	glewStartup();
-	compileShaders(vertexShaders, fragmentShaders);
+	compileShaders(programs);
 }
 
 void inline Mungus::Renderer::setBackground(MungusMath::MVec4 color) {
 	glClearColor(color.x, color.y, color.z, color.w);
-	glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& actors, const Camera& camera) {
@@ -42,30 +41,40 @@ void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std:
 
 	std::vector<std::shared_ptr<Mungus::Actor>> sortedActors = std::vector<std::shared_ptr<Mungus::Actor>>();
 
-	for (auto actor : actors)
-		if (camera.visible(*actor.second))
+	for (auto actor : actors) {
+		if (camera.visible(*actor.second)) {
 			sortedActors.push_back(actor.second);
-
+		}
+	}
+/*
 	std::sort(sortedActors.begin(), sortedActors.end(), [&](const std::shared_ptr<Mungus::Actor> obj1, std::shared_ptr<Mungus::Actor> obj2) {
 		return MungusMath::pointDistance(camera.getPosition(), obj1->getPosition()) > MungusMath::pointDistance(camera.getPosition(), obj2->getPosition());
-	});
+	});*/
 
-	for (auto actor : sortedActors)
+	for (auto actor : sortedActors) {
 		renderActor(*actor, frameTransformations);
+	}
 }
 
 void Mungus::Renderer::renderActor(const Mungus::Actor& actor, const MungusMath::MMat4& frameTransformations) {
-	glUseProgram(actor.getRenderInfo().programId);
-	glBindVertexArray(actor.getRenderInfo().VAO);
+	int progId = actor.getProgramId();
+	int vaoId = actor.getVAOId();
+	int numTriangVertices = actor.numTriangleVertices();
+
+	glUseProgram(progId);
+	glBindVertexArray(vaoId);
 
 	MungusMath::MMat4 modelMatrix = actor.modelMatrix();
 
 	MungusMath::MMat4 transformation = frameTransformations * modelMatrix;
 
-	glUniformMatrix4fv(glGetUniformLocation(actor.getRenderInfo().programId, "transformation"), 1, GL_TRUE, (float*)&transformation);
+	glUniformMatrix4fv(glGetUniformLocation(progId, "transformation"), 1, GL_TRUE, (float*)&transformation);
 
-	if (actor.getRenderInfo().triangles)
-		glDrawElements(GL_TRIANGLES, actor.getRenderInfo().numTriangleVertices, GL_UNSIGNED_INT, actor.getRenderInfo().trianglesOffset);
+	glDrawElements(
+		GL_TRIANGLES,
+		numTriangVertices,
+		GL_UNSIGNED_INT,
+		NULL);
 
 	glUseProgram(0);
 	glBindVertexArray(0);
@@ -97,7 +106,7 @@ void glfwStartup(GLFWwindow*& win) {
 
 
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 4);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
@@ -135,13 +144,15 @@ void glewStartup(void) {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 
-	/*glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_GEQUAL);*/
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LEQUAL);
+	glDepthRange(1.0f, 0.0f);
+
 }
 
-void compileShaders(	std::unordered_map<std::string, const unsigned int>& vertexShaders,
-						std::unordered_map<std::string, const unsigned int>& fragmentShaders) {
-	std::vector<std::string> urls{ std::filesystem::current_path().string() + "/../resources/shaders" };
+void compileShaders(std::unordered_map<std::string, Mungus::Shader>& programs) {
+	std::vector<std::string> urls{ std::filesystem::current_path().string() + "/../resources/assets/shaders" };
 
 	while (urls.size() > 0) {
 		std::string url = urls.back();
@@ -152,49 +163,13 @@ void compileShaders(	std::unordered_map<std::string, const unsigned int>& vertex
 				urls.push_back(subFile.path().string());
 			}
 		}
-		else if (url.find(".shader") != std::string::npos) {
-			std::string fileName = getFileName(std::filesystem::path(url).filename().string());
-			if (url.find(".vertexshader") != std::string::npos) {
-				if (vertexShaders.find(fileName) != vertexShaders.end()) {
-					MLOG("trying to recompile shader: " + fileName);
-				}
-				else {
-					vertexShaders.insert(std::make_pair(fileName, compileShader(shaderSourceFromUrl(url), GL_VERTEX_SHADER)));
-				}
-			}
-			else if (url.find(".fragmentshader") != std::string::npos) {
-				if (fragmentShaders.find(fileName) != fragmentShaders.end()) {
-					MLOG("trying to recompile shader: " + fileName);
-				}
-				else {
-					fragmentShaders.insert(std::make_pair(fileName, compileShader(shaderSourceFromUrl(url), GL_FRAGMENT_SHADER)));
-				}
-			}
-			else {
-				MLOG("trying to add unsupported shader type: " + url);
+		else {
+			json shaderSource = json::parse(MungusUtil::getTextFromFile(url));
+			if (shaderSource["type"].get<std::string>() == "program") {
+				programs.insert(std::make_pair(shaderSource["title"], Mungus::Shader(shaderSource)));
 			}
 		}
 	}
-}
-
-const unsigned int compileShader(const std::string shaderSource, const unsigned int& type) {
-	unsigned int shader = glCreateShader(type);
-	const char* shaderSourceString = shaderSource.c_str();
-
-	glShaderSource(shader, 1, &shaderSourceString, NULL);
-	glCompileShader(shader);
-
-	int compileStatus;
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &compileStatus);
-	if (compileStatus != GL_TRUE) {
-		int log_length = 0;
-		char message[1024];
-		glGetShaderInfoLog(shader, 1024, &log_length, message);
-		MLOG("failed to compile shader: " << message);
-		MLOG(shaderSource);
-	} 
-
-	return shader;
 }
 
 const std::string shaderSourceFromUrl(const std::string url) {

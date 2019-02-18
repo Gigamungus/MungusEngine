@@ -208,6 +208,12 @@ namespace MungusMath {
 		MungusMath::MVec3 direction;
 	};
 
+	struct Triangle {
+		MVec3 point1;
+		MVec3 point2;
+		MVec3 point3;
+	};
+
 	inline MMat4 lookatMatrix(const MVec3& position, const MVec3& direction, const MVec3& trueUp) {
 		MVec3 forward = MVec3::normalize(direction);
 		MVec3 right = MVec3::normalize(trueUp.cross(forward));
@@ -379,6 +385,30 @@ namespace MungusMath {
 
 	inline MVec3 normalFromPoints(const MVec3& point1, const MVec3& point2, const MVec3& point3) {
 		return MVec3::normalize((point2 - point1).cross(point3 - point1));
+	}
+
+	inline float signedTetrahedronVolume(const MVec3& point1, const MVec3& point2, const MVec3& point3, const MVec3& point4) {
+		return (1.0 / 6.0) * ((point2 - point1).cross(point3 - point1).dot(point4 - point1));
+	}
+
+	inline bool intersectLineTriangle(const Triangle& triangle, const Line& line) {
+		MVec3 direction = MVec3::normalize(line.direction);
+		MVec3 farPositiveLinePoint = line.position + (direction * 1000);
+		MVec3 farNegativeLinePoint = line.position - (direction * 1000);
+
+		return (
+			signedTetrahedronVolume(farPositiveLinePoint, triangle.point1, triangle.point2, triangle.point3) /
+			signedTetrahedronVolume(farNegativeLinePoint, triangle.point1, triangle.point2, triangle.point3) < 0
+			) && 
+			(
+			signedTetrahedronVolume(farPositiveLinePoint, farNegativeLinePoint, triangle.point1, triangle.point2) > 0 ? (
+				signedTetrahedronVolume(farPositiveLinePoint, farNegativeLinePoint, triangle.point2, triangle.point3) > 0 &&
+				signedTetrahedronVolume(farPositiveLinePoint, farNegativeLinePoint, triangle.point3, triangle.point1) > 0
+			) : (
+				signedTetrahedronVolume(farPositiveLinePoint, farNegativeLinePoint, triangle.point2, triangle.point3) < 0 &&
+				signedTetrahedronVolume(farPositiveLinePoint, farNegativeLinePoint, triangle.point3, triangle.point1) < 0
+			));
+
 	}
 }
 
