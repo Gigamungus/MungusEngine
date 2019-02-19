@@ -46,14 +46,43 @@ void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std:
 			sortedActors.push_back(actor.second);
 		}
 	}
-/*
+
+	int lkj = 1 + 1;
+	std::cout << sortedActors.size() << "\n";
+
 	std::sort(sortedActors.begin(), sortedActors.end(), [&](const std::shared_ptr<Mungus::Actor> obj1, std::shared_ptr<Mungus::Actor> obj2) {
-		return MungusMath::pointDistance(camera.getPosition(), obj1->getPosition()) > MungusMath::pointDistance(camera.getPosition(), obj2->getPosition());
-	});*/
+		int progId1 = obj1->getProgramId();
+		int progId2 = obj2->getProgramId();
+		if (progId1 != progId2) {
+			return progId1 - progId2;
+		}
+
+		int vaoId1 = obj1->getVAOId();
+		int vaoId2 = obj2->getVAOId();
+		if (vaoId1 != vaoId2) {
+			return vaoId1 - vaoId2;
+		}
+
+		return 0;
+	});
+
+	int progId = 0;
+	int vaoId = 0;
 
 	for (auto actor : sortedActors) {
+		if (actor->getProgramId() != progId) {
+			progId = actor->getProgramId();
+			glUseProgram(progId);
+		}
+		if (actor->getVAOId() != vaoId) {
+			vaoId = actor->getVAOId();
+			glBindVertexArray(vaoId);
+		}
 		renderActor(*actor, frameTransformations);
 	}
+
+	glBindVertexArray(0);
+	glUseProgram(0);
 }
 
 void Mungus::Renderer::renderActor(const Mungus::Actor& actor, const MungusMath::MMat4& frameTransformations) {
@@ -61,8 +90,8 @@ void Mungus::Renderer::renderActor(const Mungus::Actor& actor, const MungusMath:
 	int vaoId = actor.getVAOId();
 	int numTriangVertices = actor.numTriangleVertices();
 
-	glUseProgram(progId);
-	glBindVertexArray(vaoId);
+	//glUseProgram(progId);
+	//glBindVertexArray(vaoId);
 
 	MungusMath::MMat4 modelMatrix = actor.modelMatrix();
 
@@ -76,8 +105,8 @@ void Mungus::Renderer::renderActor(const Mungus::Actor& actor, const MungusMath:
 		GL_UNSIGNED_INT,
 		NULL);
 
-	glUseProgram(0);
-	glBindVertexArray(0);
+	//glUseProgram(0);
+	//glBindVertexArray(0);
 }
 
 int Mungus::Renderer::getWindowWidth(void) const {

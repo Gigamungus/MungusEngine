@@ -34,7 +34,7 @@ unsigned long Mungus::AABBTree::insert(unsigned long actorId) {
 		float leftSurfaceArea = surfaceArea(*current->left);
 		float rightSurfaceArea = surfaceArea(*current->right);
 
-		if (hypotheticalSurfaceArea(*current->left, *actorBox) - leftSurfaceArea < hypotheticalSurfaceArea(*current->right, *actorBox) - rightSurfaceArea) {
+		if (hypotheticalSurfaceArea(*current->left, *actorBox) - leftSurfaceArea > hypotheticalSurfaceArea(*current->right, *actorBox) - rightSurfaceArea) {
 			parent = current;
 			current = current->left;
 		}

@@ -5,9 +5,11 @@
 #ifdef _DEBUG
 #define MLOG(x) std::cout << x << "\n";
 #define MASSERT(x, y) if (!(x)) {MLOG(y)}
+#define REPEAT(x, y) x; for (int i = 0; i < y; i++) { x } 
 #else
 #define MLOG(x)
 #define MASSERT(x, y)
+#define REPEAT(x, y) x
 #endif
 
 

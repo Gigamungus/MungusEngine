@@ -22,9 +22,13 @@ public:
 		MungusMath::MVec3 position = MungusMath::MVec3({ 0.25, 0.25, 0 }) + (direction * 1000.0f);
 
 
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 2000; i++) {
+			if (i % 100 == 0) {
+				std::cout << i << "\n";
+			}
 			unsigned int newEntity = createActor(CUBE);
-			setEntityPosition(newEntity, ((2 * (i % 10)) + (25 * (i / 1000))) % 250, (2 * ((i % 1000) / 100)), (2 * ((i / 10)) % 20) + (int)(25 * (i / 10000)));
+			//setEntityPosition(newEntity, ((2 * (i % 10)) + (25 * (i / 1000))) % 250, (2 * ((i % 1000) / 100)), (2 * ((i / 10)) % 20) + (int)(25 * (i / 10000)));
+			setEntityPosition(newEntity, 0, 0, i * 2);
 			entities.push_back(newEntity);
 		}
 	}
@@ -32,9 +36,9 @@ public:
 	virtual void mainLoop(void) override {
 		setBackground(MungusMath::MVec4{ 0.45f, 0.55f, 0.60f, 1.00f });
 
-		std::cout << getPrimarySelection() << "\n";
+		//std::cout << getPrimarySelection() << "\n";
 		
-		for (auto entity : entities) {
+		/*for (auto entity : entities) {
 			if (entity % 3 == 0) {
 				turnEntity(entity, 3);
 			}
@@ -43,7 +47,7 @@ public:
 
 			if (entity % 3 == 2)
 				rollEntity(entity, 3);
-		}
+		}*/
 	}
 
 };

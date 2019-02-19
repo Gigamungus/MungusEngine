@@ -24,13 +24,13 @@ const MungusMath::MVec3& Mungus::Actor::getScale(void) const {
 }
 
 inline const std::shared_ptr<Mungus::HitBox> Mungus::Actor::getHitBox(void) const {
-	json currentHitBox = source.hitboxCoords[currentAnimation]["frame"][animationFrame];
+	std::vector<float> coords = source.getHitboxCoords(currentAnimation, animationFrame);
 
-	MungusMath::MVec3 backHitboxCoord{ currentHitBox["min"]["x"], currentHitBox["min"]["y"], currentHitBox["min"]["z"] };
-	MungusMath::MVec3 frontHitboxCoord{ currentHitBox["max"]["x"], currentHitBox["max"]["y"], currentHitBox["max"]["z"] };
+	MungusMath::MVec3 backHitboxCoord{ coords[0], coords[1], coords[2] };
+	MungusMath::MVec3 frontHitboxCoord{ coords[3], coords[4], coords[5] };
 
 	std::vector<MungusMath::MVec4> corners = std::vector<MungusMath::MVec4>();
-	
+
 	corners.push_back(MungusMath::MVec4{ backHitboxCoord.x, backHitboxCoord.y, -backHitboxCoord.z, 0 });
 	corners.push_back(MungusMath::MVec4{ frontHitboxCoord.x, backHitboxCoord.y, -backHitboxCoord.z, 0 });
 	corners.push_back(MungusMath::MVec4{ backHitboxCoord.x, backHitboxCoord.y, -frontHitboxCoord.z, 0 });
@@ -66,15 +66,15 @@ inline const std::shared_ptr<Mungus::HitBox> Mungus::Actor::getHitBox(void) cons
 			highz = corner.z;
 	}
 
-
-
-	return std::make_shared<Mungus::HitBox>(Mungus::HitBox{
+	std::shared_ptr<Mungus::HitBox> hitBox = std::make_shared<Mungus::HitBox>(Mungus::HitBox{
 		id,
 		nullptr,
 		nullptr,
 		nullptr,
 		(MungusMath::MVec3{lowx, lowy, lowz} *scale) + getPosition(), (MungusMath::MVec3{highx, highy, highz} *scale) + getPosition()
-	});
+		});
+
+	return hitBox;
 }
 
 unsigned long Mungus::Actor::getVAOId(void) const {

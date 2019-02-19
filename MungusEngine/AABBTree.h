@@ -20,8 +20,8 @@ namespace Mungus {
 
 		inline float radius(void) const {
 			return MungusMath::MVec3{
-				(rightBound.x - leftBound.x) / 2, (rightBound.y - leftBound.y) / 2, (rightBound.z - leftBound.z) / 2
-			}.size();
+				(rightBound.x - leftBound.x), (rightBound.y - leftBound.y), (rightBound.z - leftBound.z)
+			}.size() / 2;
 		}
 	};
 

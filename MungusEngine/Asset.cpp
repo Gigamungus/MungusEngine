@@ -7,7 +7,8 @@ Mungus::Asset::Asset(	const std::string& name,
 						const std::unordered_map<std::string, Shader>& programs) :
 	assetName(name),
 	vao(nullptr),
-	program(nullptr)
+	program(nullptr),
+	hitboxCoords(std::unordered_map<std::string, std::vector<std::vector<float>>>())
 {
 	json actorJSON = json::parse(
 		MungusUtil::getTextFromFile(std::filesystem::current_path().string() + "/../resources/assets/actors/" + name + ".mungass.txt"));
@@ -16,7 +17,15 @@ Mungus::Asset::Asset(	const std::string& name,
 	json vertices = actorJSON["vertices"];
 	json primitives = actorJSON["primitives"];
 
-	vao = std::make_shared<VAO>(*program, vertices, primitives);
+	for (auto& [key, value] : actorJSON["animations"].items()) {
+		std::string name = key;
+		std::vector<std::vector<float>> points = value["vertexExtremes"];
+		hitboxCoords.insert(std::make_pair(name, points));
+	}
 
-	hitboxCoords = actorJSON["vertexExtremes"];
+	vao = std::make_shared<VAO>(*program, vertices, primitives);
+}
+
+const std::vector<float>& Mungus::Asset::getHitboxCoords(const std::string & animation, unsigned int frame) const {
+	return hitboxCoords.at(animation)[frame];
 }
