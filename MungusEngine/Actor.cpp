@@ -6,8 +6,7 @@
 #include "Shader.h"
 
 
-Mungus::Actor::Actor(const Mungus::Asset& source, unsigned long id) :
-	id(id),
+Mungus::Actor::Actor(const Mungus::Asset& source) :
 	source(source),
 	scale({1.0f, 1.0f, 1.0f}),
 	physicsEnabled(false),
@@ -23,7 +22,7 @@ const MungusMath::MVec3& Mungus::Actor::getScale(void) const {
 	return scale;
 }
 
-inline const std::shared_ptr<Mungus::HitBox> Mungus::Actor::getHitBox(void) const {
+inline const std::shared_ptr<Mungus::BoundingBox> Mungus::Actor::getBoundingBox(void) const {
 	std::vector<float> coords = source.getHitboxCoords(currentAnimation, animationFrame);
 
 	MungusMath::MVec3 backHitboxCoord{ coords[0], coords[1], coords[2] };
@@ -66,13 +65,11 @@ inline const std::shared_ptr<Mungus::HitBox> Mungus::Actor::getHitBox(void) cons
 			highz = corner.z;
 	}
 
-	std::shared_ptr<Mungus::HitBox> hitBox = std::make_shared<Mungus::HitBox>(Mungus::HitBox{
+	std::shared_ptr<Mungus::BoundingBox> hitBox = std::make_shared<Mungus::BoundingBox>(
 		id,
-		nullptr,
-		nullptr,
-		nullptr,
-		(MungusMath::MVec3{lowx, lowy, lowz} *scale) + getPosition(), (MungusMath::MVec3{highx, highy, highz} *scale) + getPosition()
-		});
+		(MungusMath::MVec3{lowx, lowy, lowz} * scale) + getPosition(),
+		(MungusMath::MVec3{highx, highy, highz} *scale) + getPosition()
+	);
 
 	return hitBox;
 }

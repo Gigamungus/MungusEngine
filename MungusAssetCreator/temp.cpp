@@ -26,9 +26,9 @@ public:
 			if (i % 100 == 0) {
 				std::cout << i << "\n";
 			}
-			unsigned int newEntity = createActor(CUBE);
-			//setEntityPosition(newEntity, ((2 * (i % 10)) + (25 * (i / 1000))) % 250, (2 * ((i % 1000) / 100)), (2 * ((i / 10)) % 20) + (int)(25 * (i / 10000)));
-			setEntityPosition(newEntity, 0, 0, i * 2);
+			unsigned int newEntity = createActor(CUBE, MungusMath::MVec3(0, 0, i * 2));
+			setEntityPosition(newEntity, ((2 * (i % 10)) + (25 * (i / 1000))) % 250, (2 * ((i % 1000) / 100)), (2 * ((i / 10)) % 20) + (int)(25 * (i / 10000)));
+			//setEntityPosition(newEntity, 0, 0, i * 2);
 			entities.push_back(newEntity);
 		}
 	}
@@ -38,7 +38,7 @@ public:
 
 		//std::cout << getPrimarySelection() << "\n";
 		
-		/*for (auto entity : entities) {
+		for (auto entity : entities) {
 			if (entity % 3 == 0) {
 				turnEntity(entity, 3);
 			}
@@ -47,7 +47,7 @@ public:
 
 			if (entity % 3 == 2)
 				rollEntity(entity, 3);
-		}*/
+		}
 	}
 
 };

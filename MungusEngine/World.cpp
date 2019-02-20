@@ -11,7 +11,7 @@ Mungus::World::World(const Application* owner) :
 	owner(owner),
 	frameCount(0),
 	camera(std::make_shared<Camera>()),
-	actorsTree(std::make_shared<Mungus::AABBTree>())
+	actorsTree(std::make_shared<Mungus::AABBTree<Actor>>())
 {};
 
 void inline Mungus::World::loadActor(const std::string& title,
@@ -23,11 +23,13 @@ inline const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> M
 	return actorsTree->getActors();
 }
 
-const unsigned long Mungus::World::createActor(const std::string & name) {
+const unsigned long Mungus::World::createActor(const std::string & name, const MungusMath::MVec3 & initialPosition) {
 	if (assets.find(name) != assets.end()) {
 		std::shared_ptr<Mungus::Asset> base = assets.at(name);
+		std::shared_ptr<Mungus::Actor> newActor = std::make_shared<Mungus::Actor>(*base);
+		newActor->setPosition(initialPosition);
 
-		return actorsTree->insert(base);
+		return actorsTree->insert(newActor);
 	}
 	return 0;
 }

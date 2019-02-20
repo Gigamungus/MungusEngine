@@ -24,6 +24,9 @@ namespace MungusMath {
 		float y;
 		float z;
 
+		MVec3() {}
+		MVec3(float x, float y, float z) : x(x), y(y), z(z) {}
+
 		inline float size(void) const {
 			return sqrtf(x * x + y * y + z * z);
 		}

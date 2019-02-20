@@ -71,7 +71,7 @@ MungusMath::Line Mungus::Camera::getRayFromCursorLocation(const Mungus::CursorLo
 }
 
 bool Mungus::Camera::visible(const Actor& actor) const {
-	std::shared_ptr<Mungus::HitBox> hitBox = actor.getHitBox();
+	std::shared_ptr<Mungus::BoundingBox> hitBox = actor.getBoundingBox();
 	
 	MungusMath::MVec3 relativeActorPosition = actor.getPosition() - position;
 	

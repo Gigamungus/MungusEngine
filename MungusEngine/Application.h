@@ -59,8 +59,7 @@ namespace Mungus {
 		void setPrimarySelection(unsigned long newSelection) { primarySelection = newSelection; }
 
 		unsigned long findFirstIntersectingWithRay(const MungusMath::Line& line);
-
-		const unsigned long inline createActor(const std::string& name);
+		const unsigned long inline createActor(const std::string& name, const MungusMath::MVec3& initialPosition = MungusMath::MVec3{0, 0, 0});
 		const unsigned long setEntityPosition(const unsigned long id, float x, float y, float z);
 		const unsigned long scaleEntity(const unsigned long id, float x, float y, float z);
 		const unsigned long rotateEntity(const unsigned long id, const MungusMath::MVec3& axis, float angle);

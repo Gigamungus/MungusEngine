@@ -7,7 +7,7 @@ namespace Mungus {
 	class Actor;
 	class Asset;
 	class Camera;
-	class AABBTree;
+	template<typename T> class AABBTree;
 	class Shader;
 
 	struct CursorLocation;
@@ -17,7 +17,7 @@ namespace Mungus {
 		const Application* owner;
 		unsigned long frameCount;
 		std::unordered_map<std::string, std::shared_ptr<Mungus::Asset>> assets;
-		std::shared_ptr<AABBTree> actorsTree;
+		std::shared_ptr<AABBTree<Actor>> actorsTree;
 		std::shared_ptr<Camera> camera;
 
 	public:
@@ -33,7 +33,7 @@ namespace Mungus {
 		void inline incrementFrameCount(void) { frameCount++; }
 
 		const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> inline getActors(void) const;
-		const unsigned long createActor(const std::string& name);
+		const unsigned long createActor(const std::string& name, const MungusMath::MVec3& initialPosition);
 		const unsigned long setEntityPosition(const unsigned long id, const MungusMath::MVec3& position);
 		const unsigned long scaleEntity(const unsigned long id, const MungusMath::MVec3& scale);
 		const unsigned long rotateEntity(const unsigned long id, const MungusMath::MVec3& axis, float angle);

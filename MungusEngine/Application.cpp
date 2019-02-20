@@ -463,8 +463,8 @@ void inline Mungus::Application::incrementFrameCount(void) {
 	world->incrementFrameCount();
 }
 
-inline const unsigned long Mungus::Application::createActor(const std::string & name) {
-	return world->createActor(name);
+inline const unsigned long Mungus::Application::createActor(const std::string & name, const MungusMath::MVec3 & initialPosition) {
+	return world->createActor(name, initialPosition);
 }
 
 void Mungus::Application::renderActors(void) {

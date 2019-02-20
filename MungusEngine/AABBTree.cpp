@@ -5,36 +5,45 @@
 #include "Asset.h"
 
 
-Mungus::AABBTree::AABBTree() :
+template<typename T>
+Mungus::AABBTree<T>::AABBTree() :
 	root(nullptr),
-	actorCount(0)
+	numElements(0),
+	nextId(0)
 {}
 
-Mungus::AABBTree::~AABBTree() {}
+template<typename T>
+Mungus::AABBTree<T>::~AABBTree() {
+	emptyTree();
+}
 
-void Mungus::AABBTree::emptyTree(void) {
-	for (auto actor : actors) {
+template<typename T>
+void Mungus::AABBTree<T>::emptyTree(void) {
+	for (auto actor : elements) {
 		remove(actor.first);
 	}
 }
 
-unsigned long Mungus::AABBTree::insert(unsigned long actorId) {
+template<typename T>
+unsigned long Mungus::AABBTree<T>::insert(unsigned long elementId) {
 
-	std::shared_ptr<HitBox> actorBox = actors.at(actorId)->getHitBox();
+	std::shared_ptr<BoundingBox> boundingBox = elements.at(elementId)->getBoundingBox();
+	boundingBox->elementId = elementId;
 
 	if (root == nullptr) {
-		root = actorBox;
-		return actorId;
+		root = boundingBox;
+		return elementId;
 	}
 
-	std::shared_ptr<HitBox> current = root;
-	std::shared_ptr<HitBox> parent = root;
+	std::shared_ptr<BoundingBox> current = root;
+	std::shared_ptr<BoundingBox> parent = root;
 
 	while (!current->isLeaf()) {
-		float leftSurfaceArea = surfaceArea(*current->left);
-		float rightSurfaceArea = surfaceArea(*current->right);
+		float leftSurfaceArea = surfaceArea(current->left);
+		float rightSurfaceArea = surfaceArea(current->right);
 
-		if (hypotheticalSurfaceArea(*current->left, *actorBox) - leftSurfaceArea > hypotheticalSurfaceArea(*current->right, *actorBox) - rightSurfaceArea) {
+		if (hypotheticalSurfaceArea(current->left, boundingBox) - leftSurfaceArea <
+			hypotheticalSurfaceArea(current->right, boundingBox) - rightSurfaceArea) {
 			parent = current;
 			current = current->left;
 		}
@@ -42,13 +51,18 @@ unsigned long Mungus::AABBTree::insert(unsigned long actorId) {
 			parent = current;
 			current = current->right;
 		}
-
 	}
 
-	std::shared_ptr<HitBox> newBranch = std::make_shared<HitBox>(Mungus::HitBox{ 0, parent, current, actorBox });
-
-	newBranch->left->parent = newBranch;
-	newBranch->right->parent = newBranch;
+	std::shared_ptr<BoundingBox> newBranch = std::make_shared<BoundingBox>();
+	
+	{
+		newBranch->parent = parent;
+		newBranch->left = current;
+		newBranch->right = boundingBox;
+		newBranch->left->parent = newBranch;
+		newBranch->right->parent = newBranch;
+		setBoundsFromChildren(newBranch);
+	}
 
 	if (parent == root && current == parent) {
 		root = newBranch;
@@ -60,33 +74,32 @@ unsigned long Mungus::AABBTree::insert(unsigned long actorId) {
 			parent->left = newBranch;
 		else
 			parent->right = newBranch;
-
 	}
 
-	setBoundsFromChildren(newBranch);
-	minimizeParentSizes(newBranch);
+	restoreAwesomeness(newBranch);
 
-	return actorId;
+	return elementId;
 }
 
-unsigned long Mungus::AABBTree::insert(std::shared_ptr<Mungus::Asset> base) {
-	actors[actorCount] = std::make_shared<Mungus::Actor>(Mungus::Actor(*base, ++actorCount));
-
-	return insert(actorCount);
+template<typename T>
+unsigned long Mungus::AABBTree<T>::insert(std::shared_ptr<T> element) {
+	elements[++nextId] = element;
+	return insert(nextId);
 }
 
-void Mungus::AABBTree::remove(unsigned long actorId) {
+template<typename T>
+void Mungus::AABBTree<T>::remove(unsigned long actorId) {
 	if (root == nullptr) {
 		MLOG("tried to remove entity from tree when tree was empty: " << actorId)
 		return;
 	}
 
-	std::shared_ptr<HitBox> actorBox = actors.at(actorId)->getHitBox();
+	std::shared_ptr<BoundingBox> actorBox = elements.at(actorId)->getBoundingBox();
 
-	std::queue<std::shared_ptr<Mungus::HitBox>> collidors = std::queue<std::shared_ptr<Mungus::HitBox>>();
+	std::queue<std::shared_ptr<Mungus::BoundingBox>> collidors = std::queue<std::shared_ptr<Mungus::BoundingBox>>();
 	collidors.push(root);
 
-	while (!collidors.empty() && collidors.front()->actor != actorId) {
+	while (!collidors.empty() && collidors.front()->elementId != actorId) {
 		if (!collidors.front()->isLeaf()) {
 			if (intersect(*actorBox, *collidors.front()->left))
 				collidors.push(collidors.front()->left);
@@ -102,15 +115,15 @@ void Mungus::AABBTree::remove(unsigned long actorId) {
 	}
 
 	else {
-		std::shared_ptr<Mungus::HitBox> node = collidors.front();
-		std::shared_ptr<Mungus::HitBox> leafToMove = nullptr;
+		std::shared_ptr<Mungus::BoundingBox> node = collidors.front();
+		std::shared_ptr<Mungus::BoundingBox> leafToMove = nullptr;
 
 		// node is root, empty tree
 		if (node->parent == nullptr)
 			root = nullptr;
 
 		// node is child of root, replace root with its other child
-		else if (node->parent->parent == nullptr) {
+		else if (node->parent->isRoot()) {
 			if (node == node->parent->left) {
 				root->left = nullptr;
 				root = root->right;
@@ -158,18 +171,20 @@ void Mungus::AABBTree::remove(unsigned long actorId) {
 		}
 
 		if (leafToMove != nullptr) {
-			minimizeParentSizes(leafToMove);
+			restoreAwesomeness(leafToMove);
 		}
 	}
 }
 
-bool Mungus::AABBTree::intersect(const Mungus::HitBox& first, const Mungus::HitBox& second) const {
+template<typename T>
+bool Mungus::AABBTree<T>::intersect(const Mungus::BoundingBox& first, const Mungus::BoundingBox& second) const {
 	return first.rightBound.x > second.leftBound.x && first.leftBound.x < second.rightBound.x &&
 		first.rightBound.y > second.leftBound.y && first.leftBound.y < second.rightBound.y &&
 		first.rightBound.z > second.leftBound.z && first.leftBound.z < second.rightBound.z;
 }
 
-bool Mungus::AABBTree::intersect(const HitBox & box, const MungusMath::Line & line) const {
+template<typename T>
+bool Mungus::AABBTree<T>::intersect(const BoundingBox & box, const MungusMath::Line & line) const {
 	float vecsToLeftX	= (box.leftBound.x  - line.position.x) / line.direction.x;
 	float vecsToLeftY	= (box.leftBound.y  - line.position.y) / line.direction.y;
 	float vecsToLeftZ	= (box.leftBound.z  - line.position.z) / line.direction.z;
@@ -190,21 +205,24 @@ bool Mungus::AABBTree::intersect(const HitBox & box, const MungusMath::Line & li
 	return minVecs < maxVecs && maxVecs > 0;
 }
 
-float Mungus::AABBTree::surfaceArea(const HitBox & hitBox) const {
-	float xWidth = hitBox.rightBound.x - hitBox.leftBound.x;
-	float yWidth = hitBox.rightBound.y - hitBox.leftBound.y;
-	float zWidth = hitBox.rightBound.z - hitBox.leftBound.z;
+template<typename T>
+float Mungus::AABBTree<T>::surfaceArea(std::shared_ptr<BoundingBox> boundingBox) const {
+	float xWidth = boundingBox->rightBound.x - boundingBox->leftBound.x;
+	float yWidth = boundingBox->rightBound.y - boundingBox->leftBound.y;
+	float zWidth = boundingBox->rightBound.z - boundingBox->leftBound.z;
 	return 2 * ((xWidth * yWidth) + (xWidth * zWidth) + (yWidth * zWidth));
 }
 
-float Mungus::AABBTree::hypotheticalSurfaceArea(const HitBox& firstHitBox, const HitBox& secondHitBox) const {
-	float xWidth = MungusUtil::max(firstHitBox.rightBound.x, secondHitBox.rightBound.x) - MungusUtil::min(firstHitBox.leftBound.x, secondHitBox.leftBound.x);
-	float yWidth = MungusUtil::max(firstHitBox.rightBound.y, secondHitBox.rightBound.y) - MungusUtil::min(firstHitBox.leftBound.y, secondHitBox.leftBound.y);
-	float zWidth = MungusUtil::max(firstHitBox.rightBound.z, secondHitBox.rightBound.z) - MungusUtil::min(firstHitBox.leftBound.z, secondHitBox.leftBound.z);
+template<typename T>
+float Mungus::AABBTree<T>::hypotheticalSurfaceArea(std::shared_ptr<BoundingBox> bBox1, std::shared_ptr<BoundingBox> bBox2) const {
+	float xWidth = MungusUtil::max(bBox1->rightBound.x, bBox2->rightBound.x) - MungusUtil::min(bBox1->leftBound.x, bBox2->leftBound.x);
+	float yWidth = MungusUtil::max(bBox1->rightBound.y, bBox2->rightBound.y) - MungusUtil::min(bBox1->leftBound.y, bBox2->leftBound.y);
+	float zWidth = MungusUtil::max(bBox1->rightBound.z, bBox2->rightBound.z) - MungusUtil::min(bBox1->leftBound.z, bBox2->leftBound.z);
 	return 2 * ((xWidth * yWidth) + (xWidth * zWidth) + (yWidth * zWidth));
 }
 
-void Mungus::AABBTree::setBoundsFromChildren(std::shared_ptr<HitBox> hitBox) {
+template<typename T>
+void Mungus::AABBTree<T>::setBoundsFromChildren(std::shared_ptr<BoundingBox> hitBox) {
 	if (!hitBox->isLeaf()) {
 
 		hitBox->leftBound = MungusMath::MVec3{
@@ -226,28 +244,20 @@ void Mungus::AABBTree::setBoundsFromChildren(std::shared_ptr<HitBox> hitBox) {
 	}
 }
 
-void Mungus::AABBTree::minimizeParentSizes(std::shared_ptr<HitBox> hitBox) {
-	std::shared_ptr<HitBox> current = hitBox;
-
-	while (current->parent != nullptr) {
-		setBoundsFromChildren(current->parent);
-		current = current->parent;
-	}
-}
-
-unsigned long Mungus::AABBTree::findFirstIntersecting(const MungusMath::Line& line) {
+template<typename T>
+unsigned long Mungus::AABBTree<T>::findFirstIntersecting(const MungusMath::Line& line) {
 	if (root == nullptr || !intersect(*root, line))
 		return 0;
 
-	std::queue<std::shared_ptr<Mungus::HitBox>> intersectingBranches = std::queue<std::shared_ptr<Mungus::HitBox>>();
+	std::queue<std::shared_ptr<Mungus::BoundingBox>> intersectingBranches = std::queue<std::shared_ptr<Mungus::BoundingBox>>();
 	std::vector<unsigned long> intersectingActors;
 
 	intersectingBranches.push(root);
-
+	int i = 0;
 	while (!intersectingBranches.empty()) {
-
+		i++;
 		if (intersectingBranches.front()->isLeaf()) {
-			intersectingActors.push_back(intersectingBranches.front()->actor);
+			intersectingActors.push_back(intersectingBranches.front()->elementId);
 		}
 		else {
 			if (intersect(*intersectingBranches.front()->left, line))
@@ -265,52 +275,139 @@ unsigned long Mungus::AABBTree::findFirstIntersecting(const MungusMath::Line& li
 	float closestDistance = std::numeric_limits<float>::infinity();
 
 	for (auto id : intersectingActors) {
-		float actorDistance = (actors.at(id)->getPosition() - line.position).size();
+		float actorDistance = (elements.at(id)->getPosition() - line.position).size();
 		if (actorDistance < closestDistance) {
 			closestActor = id;
 			closestDistance = actorDistance;
 		}
 	}
-	
+
+	std::cout << "searched " << i << " items to find item: " << closestActor << "\n";
 	return closestActor;
 }
 
-const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> Mungus::AABBTree::getActors(void) const {
-	return actors;
+template<typename T>
+const std::unordered_map<unsigned long, std::shared_ptr<T>> Mungus::AABBTree<T>::getActors(void) const {
+	return elements;
 }
 
-void Mungus::AABBTree::setActorPosition(unsigned long id, const MungusMath::MVec3 & position) {
+template<typename T>
+void Mungus::AABBTree<T>::setActorPosition(unsigned long id, const MungusMath::MVec3 & position) {
 	remove(id);
-	actors.at(id)->setPosition(position);
+	elements.at(id)->setPosition(position);
 	insert(id);
 }
 
-void Mungus::AABBTree::scaleActor(unsigned long id, const MungusMath::MVec3 & scale) {
+template<typename T>
+void Mungus::AABBTree<T>::scaleActor(unsigned long id, const MungusMath::MVec3 & scale) {
 	remove(id);
-	actors.at(id)->scaleBy(scale.x, scale.y, scale.z);
+	elements.at(id)->scaleBy(scale.x, scale.y, scale.z);
 	insert(id);
 }
 
-void Mungus::AABBTree::rotateActor(unsigned long id, const MungusMath::MVec3 & axis, float angle) {
+template<typename T>
+void Mungus::AABBTree<T>::rotateActor(unsigned long id, const MungusMath::MVec3 & axis, float angle) {
 	remove(id);
-	actors.at(id)->rotate(axis, angle);
+	elements.at(id)->rotate(axis, angle);
 	insert(id);
 }
 
-void Mungus::AABBTree::turnActor(unsigned long id, float angle) {
+template<typename T>
+void Mungus::AABBTree<T>::turnActor(unsigned long id, float angle) {
 	remove(id);
-	actors.at(id)->turn(angle);
+	elements.at(id)->turn(angle);
 	insert(id);
 }
 
-void Mungus::AABBTree::pitchActor(unsigned long id, float angle) {
+template<typename T>
+void Mungus::AABBTree<T>::pitchActor(unsigned long id, float angle) {
 	remove(id);
-	actors.at(id)->pitch(angle);
+	elements.at(id)->pitch(angle);
 	insert(id);
 }
 
-void Mungus::AABBTree::rollActor(unsigned long id, float angle) {
+template<typename T>
+void Mungus::AABBTree<T>::rollActor(unsigned long id, float angle) {
 	remove(id);
-	actors.at(id)->roll(angle);
+	elements.at(id)->roll(angle);
 	insert(id);
+}
+
+template<class T>
+void Mungus::AABBTree<T>::restoreAwesomeness(std::shared_ptr<Mungus::BoundingBox> badNode) {
+	while (badNode != nullptr) {
+		if (!badNode->isLeaf()) {
+			fixBoxHeight(badNode);
+			setBoundsFromChildren(badNode);
+			balanceNode(badNode);
+		}
+		badNode = badNode->parent;
+	}
+	while (root->parent != nullptr) {
+		root = root->parent;
+	}
+}
+
+template<class T>
+void Mungus::AABBTree<T>::fixBoxHeight(std::shared_ptr<Mungus::BoundingBox> badNode) {
+	if (badNode != nullptr) {
+		int left = getBoxHeight(badNode->left);
+		int right = getBoxHeight(badNode->right);
+		badNode->height = left > right ? left + 1 : right + 1;
+	}
+}
+
+template<class T>
+int Mungus::AABBTree<T>::getBoxHeight(std::shared_ptr<Mungus::BoundingBox> node) const {
+	return node == nullptr ? -1 : node->height;
+}
+
+template<typename T>
+void Mungus::AABBTree<T>::balanceNode(std::shared_ptr<Mungus::BoundingBox> badNode) {
+	if (badNode != nullptr) {
+		std::shared_ptr<Mungus::BoundingBox> rightNode = badNode->right;
+		std::shared_ptr<Mungus::BoundingBox> leftNode = badNode->left;
+
+		// check case 1/2
+		if (getBoxHeight(leftNode) - getBoxHeight(rightNode) > 1) {
+			// case 2, swap to case 1
+			if (getBoxHeight(leftNode->right) > getBoxHeight(leftNode->left)) {
+				leftNode->swapChildren();
+			}
+			// now case 1
+			badNode->setParentsChildTo(leftNode);
+			badNode->left = leftNode->right;
+			leftNode->right = badNode;
+			leftNode->parent = badNode->parent;
+			badNode->parent = leftNode;
+			badNode->left->parent = badNode;
+
+			setBoundsFromChildren(badNode);
+			setBoundsFromChildren(leftNode);
+
+			fixBoxHeight(badNode);
+			fixBoxHeight(leftNode);
+		}
+
+		// check case 3/4
+		if (getBoxHeight(rightNode) - getBoxHeight(leftNode) > 1) {
+			// case 3, swap to case 4
+			if (getBoxHeight(rightNode->left) > getBoxHeight(rightNode->right)) {
+				rightNode->swapChildren();
+			}
+			// now case 4
+			badNode->setParentsChildTo(rightNode);
+			badNode->right = rightNode->left;
+			rightNode->left = badNode;
+			rightNode->parent = badNode->parent;
+			badNode->parent = rightNode;
+			badNode->right->parent = badNode;
+
+			setBoundsFromChildren(badNode);
+			setBoundsFromChildren(rightNode);
+
+			fixBoxHeight(badNode);
+			fixBoxHeight(rightNode);
+		}
+	}
 }

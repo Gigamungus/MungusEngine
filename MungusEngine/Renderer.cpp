@@ -47,9 +47,6 @@ void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std:
 		}
 	}
 
-	int lkj = 1 + 1;
-	std::cout << sortedActors.size() << "\n";
-
 	std::sort(sortedActors.begin(), sortedActors.end(), [&](const std::shared_ptr<Mungus::Actor> obj1, std::shared_ptr<Mungus::Actor> obj2) {
 		int progId1 = obj1->getProgramId();
 		int progId2 = obj2->getProgramId();
