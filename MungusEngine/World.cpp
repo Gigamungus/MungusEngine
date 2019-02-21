@@ -23,6 +23,10 @@ inline const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> M
 	return actorsTree->getActors();
 }
 
+inline std::vector<std::shared_ptr<Mungus::Actor>> Mungus::World::getVisibleActors(void) const {
+	return actorsTree->getVisibleElements(getCamera());
+}
+
 const unsigned long Mungus::World::createActor(const std::string & name, const MungusMath::MVec3 & initialPosition) {
 	if (assets.find(name) != assets.end()) {
 		std::shared_ptr<Mungus::Asset> base = assets.at(name);

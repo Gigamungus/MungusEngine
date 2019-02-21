@@ -33,6 +33,7 @@ namespace Mungus {
 		void inline incrementFrameCount(void) { frameCount++; }
 
 		const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> inline getActors(void) const;
+		std::vector<std::shared_ptr<Mungus::Actor>> inline getVisibleActors(void) const;
 		const unsigned long createActor(const std::string& name, const MungusMath::MVec3& initialPosition);
 		const unsigned long setEntityPosition(const unsigned long id, const MungusMath::MVec3& position);
 		const unsigned long scaleEntity(const unsigned long id, const MungusMath::MVec3& scale);

@@ -468,7 +468,7 @@ inline const unsigned long Mungus::Application::createActor(const std::string & 
 }
 
 void Mungus::Application::renderActors(void) {
-	renderer->renderActors(world->getActors(), world->getCamera());
+	renderer->renderActors(world->getVisibleActors(), world->getCamera());
 }
 
 void Mungus::Application::updateCameraPosition(void) {

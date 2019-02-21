@@ -27,7 +27,7 @@ namespace Mungus {
 		const std::unordered_map<std::string, Shader> inline getPrograms(void) const { return programs; }
 
 
-		void renderActors( const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& entities, const Camera& camera);
+		void renderActors(std::vector<std::shared_ptr<Mungus::Actor>> actors, const Camera& camera);
 		void renderActor(const Mungus::Actor& actor, const MungusMath::MMat4& frameTransformations);
 		inline const float getLastFrameTime(void) const { return lastFrameTime; };
 		inline void setLastFrameTime(float lastFrameTime) { this->lastFrameTime = lastFrameTime; }

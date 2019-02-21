@@ -4,6 +4,7 @@
 namespace Mungus {
 
 	class Actor;
+	class Camera;
 	class Asset;
 
 	struct BoundingBox {
@@ -45,6 +46,13 @@ namespace Mungus {
 				(rightBound.x - leftBound.x), (rightBound.y - leftBound.y), (rightBound.z - leftBound.z)
 			}.size() / 2;
 		}
+		inline MungusMath::MVec3 getCenter(void) const {
+			return MungusMath::MVec3(
+				(leftBound.x + rightBound.x) / 2,
+				(leftBound.y + rightBound.y) / 2,
+				(leftBound.z + rightBound.z) / 2
+			);
+		}
 	};
 
 	template <typename T>
@@ -69,6 +77,8 @@ namespace Mungus {
 		
 		bool intersect(const BoundingBox& first, const BoundingBox& second) const;
 		bool intersect(const BoundingBox& box, const MungusMath::Line& line) const;
+
+		std::vector<std::shared_ptr<T>> getVisibleElements(const Mungus::Camera& camera);
 
 
 		// todo: make these private

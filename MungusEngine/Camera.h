@@ -1,9 +1,10 @@
 #pragma once
+#include "stdafx.h"
 #include "Entity.h"
 
 namespace Mungus {
 	class Actor;
-
+	class BoundingBox;
 	struct CursorLocation;
 
 	class Camera : public Entity {
@@ -50,6 +51,7 @@ namespace Mungus {
 		inline void setAspectRatio(float aspectRatio) { std::cout << aspectRatio << "\n"; this->aspectRatio = aspectRatio; }
 
 		bool visible(const Actor& actor) const;
+		bool visible(const std::shared_ptr<Mungus::BoundingBox> boundingBox) const;
 	};
 
 }

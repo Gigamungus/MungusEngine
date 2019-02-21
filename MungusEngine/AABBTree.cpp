@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "AABBTree.h"
+#include "Camera.h"
 #include "Actor.h"
 #include "World.h"
 #include "Asset.h"
@@ -203,6 +204,30 @@ bool Mungus::AABBTree<T>::intersect(const BoundingBox & box, const MungusMath::L
 	float maxVecs = MungusUtil::min3(maxVecsToX, maxVecsToY, maxVecsToZ);
 
 	return minVecs < maxVecs && maxVecs > 0;
+}
+
+template<typename T>
+std::vector<std::shared_ptr<T>> Mungus::AABBTree<T>::getVisibleElements(const Mungus::Camera& camera) {
+	std::vector<std::shared_ptr<T>> visibleElements;
+	std::queue<std::shared_ptr<Mungus::BoundingBox>> candidates;
+	candidates.push(root);
+
+	while (!candidates.empty()) {
+		std::shared_ptr<Mungus::BoundingBox> nextElement = candidates.front();
+		candidates.pop();
+
+		if (camera.visible(nextElement)) {
+			if (nextElement->isLeaf()) {
+				visibleElements.push_back(elements.at(nextElement->elementId));
+			}
+			else {
+				candidates.push(nextElement->left);
+				candidates.push(nextElement->right);
+			}
+		}
+	}
+
+	return visibleElements;
 }
 
 template<typename T>

@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#include "Camera.h"
 #include "Actor.h"
+#include "Camera.h"
 #include "AABBTree.h"
 #include "Application.h"
 
@@ -88,6 +88,28 @@ bool Mungus::Camera::visible(const Actor& actor) const {
 		&& (MungusMath::rotateAboutAxis(cameraRight * -1.0f, cameraUp, fieldOfView / (2 * aspectRatio)).dot(relativeActorPosition)) + radius > 0 // right frustum side
 		&& (MungusMath::rotateAboutAxis(cameraUp, cameraRight, fieldOfView / 2).dot(relativeActorPosition)) + radius > 0 // bottom frustum side
 		&& (MungusMath::rotateAboutAxis(cameraUp * -1.0f, cameraRight, -fieldOfView / 2).dot(relativeActorPosition)) + radius > 0 // top frustum side
+		);
+
+	return visible;
+}
+
+bool Mungus::Camera::visible(const std::shared_ptr<Mungus::BoundingBox> boundingBox) const {
+
+	MungusMath::MVec3 relativeBBoxPosition = boundingBox->getCenter() - position;
+
+	float radius = boundingBox->radius();
+
+	MungusMath::MVec3 cameraForward = forward();
+	MungusMath::MVec3 cameraRight = right();
+	MungusMath::MVec3 cameraUp = up();
+
+	bool visible = (
+		cameraForward.dot(relativeBBoxPosition) + nearRenderDistance + radius > 0 // close frustum side
+		&& (cameraForward * -1.0f).dot(relativeBBoxPosition) + farRenderDistance + radius > 0 // far frustum side
+		&& (MungusMath::rotateAboutAxis(cameraRight, cameraUp, -fieldOfView / (2 * aspectRatio)).dot(relativeBBoxPosition)) + radius > 0 // left frustum side
+		&& (MungusMath::rotateAboutAxis(cameraRight * -1.0f, cameraUp, fieldOfView / (2 * aspectRatio)).dot(relativeBBoxPosition)) + radius > 0 // right frustum side
+		&& (MungusMath::rotateAboutAxis(cameraUp, cameraRight, fieldOfView / 2).dot(relativeBBoxPosition)) + radius > 0 // bottom frustum side
+		&& (MungusMath::rotateAboutAxis(cameraUp * -1.0f, cameraRight, -fieldOfView / 2).dot(relativeBBoxPosition)) + radius > 0 // top frustum side
 		);
 
 	return visible;

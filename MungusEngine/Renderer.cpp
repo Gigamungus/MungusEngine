@@ -36,18 +36,10 @@ void inline Mungus::Renderer::setBackground(MungusMath::MVec4 color) {
 	glClearColor(color.x, color.y, color.z, color.w);
 }
 
-void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>>& actors, const Camera& camera) {
+void Mungus::Renderer::renderActors(std::vector<std::shared_ptr<Mungus::Actor>> actors, const Camera& camera) {
 	MungusMath::MMat4 frameTransformations = camera.perspectiveMatrix() * camera.viewMatrix();
 
-	std::vector<std::shared_ptr<Mungus::Actor>> sortedActors = std::vector<std::shared_ptr<Mungus::Actor>>();
-
-	for (auto actor : actors) {
-		if (camera.visible(*actor.second)) {
-			sortedActors.push_back(actor.second);
-		}
-	}
-
-	std::sort(sortedActors.begin(), sortedActors.end(), [&](const std::shared_ptr<Mungus::Actor> obj1, std::shared_ptr<Mungus::Actor> obj2) {
+	std::sort(actors.begin(), actors.end(), [&](const std::shared_ptr<Mungus::Actor> obj1, std::shared_ptr<Mungus::Actor> obj2) {
 		int progId1 = obj1->getProgramId();
 		int progId2 = obj2->getProgramId();
 		if (progId1 != progId2) {
@@ -66,7 +58,7 @@ void Mungus::Renderer::renderActors(const std::unordered_map<unsigned long, std:
 	int progId = 0;
 	int vaoId = 0;
 
-	for (auto actor : sortedActors) {
+	for (auto actor : actors) {
 		if (actor->getProgramId() != progId) {
 			progId = actor->getProgramId();
 			glUseProgram(progId);
