@@ -21,8 +21,9 @@ public:
 		MungusMath::MVec3 direction = MungusMath::MVec3::normalize({ 23, -25, 1 });
 		MungusMath::MVec3 position = MungusMath::MVec3({ 0.25, 0.25, 0 }) + (direction * 1000.0f);
 
+		enableWireFrameMode();
 
-		for (int i = 0; i < 200000; i++) {
+		for (int i = 0; i < 1; i++) {
 			if (i % 100 == 0) {
 				std::cout << i << "\n";
 			}
@@ -36,9 +37,11 @@ public:
 	virtual void mainLoop(void) override {
 		setBackground(MungusMath::MVec4{ 0.45f, 0.55f, 0.60f, 1.00f });
 
+		testChangeVertexCoord("cube", 0, MungusMath::MVec3(-0.01, 0, 0));
+
 		//std::cout << getPrimarySelection() << "\n";
-		
-		/*for (auto entity : entities) {
+		/*
+		for (auto entity : entities) {
 			if (entity % 3 == 0) {
 				turnEntity(entity, 3);
 			}

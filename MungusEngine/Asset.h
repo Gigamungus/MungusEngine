@@ -7,7 +7,7 @@ namespace Mungus {
 
 	class MUNGUS Asset {
 	private:
-		std::unordered_map<std::string, std::vector<std::vector<float>>> hitboxCoords;
+		std::unordered_map<std::string, std::vector<std::vector<float>>> boundingBoxCoords;
 
 	public:
 		std::string assetName;
@@ -20,5 +20,7 @@ namespace Mungus {
 		virtual ~Asset() {}
 
 		const std::vector<float>& getHitboxCoords(const std::string& animation, unsigned int frame) const;
+
+		void editVertexCoordinate(long vertexId, const MungusMath::MVec3& newPosition);
 	};
 }

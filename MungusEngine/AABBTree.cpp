@@ -4,13 +4,13 @@
 #include "Actor.h"
 #include "World.h"
 #include "Asset.h"
+#include "VAO.h"
 
 
 template<typename T>
 Mungus::AABBTree<T>::AABBTree() :
 	root(nullptr),
-	numElements(0),
-	nextId(0)
+	numElements(0)
 {}
 
 template<typename T>
@@ -83,9 +83,9 @@ unsigned long Mungus::AABBTree<T>::insert(unsigned long elementId) {
 }
 
 template<typename T>
-unsigned long Mungus::AABBTree<T>::insert(std::shared_ptr<T> element) {
-	elements[++nextId] = element;
-	return insert(nextId);
+unsigned long Mungus::AABBTree<T>::insert(std::shared_ptr<T> element, unsigned long entityId) {
+	elements[entityId] = element;
+	return insert(entityId);
 }
 
 template<typename T>
@@ -95,7 +95,7 @@ void Mungus::AABBTree<T>::remove(unsigned long actorId) {
 		return;
 	}
 
-	std::shared_ptr<BoundingBox> actorBox = elements.at(actorId)->getBoundingBox();
+	std::shared_ptr<Mungus::BoundingBox> actorBox = elements.at(actorId)->getBoundingBox();
 
 	std::queue<std::shared_ptr<Mungus::BoundingBox>> collidors = std::queue<std::shared_ptr<Mungus::BoundingBox>>();
 	collidors.push(root);
@@ -270,12 +270,12 @@ void Mungus::AABBTree<T>::setBoundsFromChildren(std::shared_ptr<BoundingBox> hit
 }
 
 template<typename T>
-unsigned long Mungus::AABBTree<T>::findFirstIntersecting(const MungusMath::Line& line) {
+long Mungus::AABBTree<T>::findFirstIntersecting(const MungusMath::Line& line) {
 	if (root == nullptr || !intersect(*root, line))
 		return 0;
 
 	std::queue<std::shared_ptr<Mungus::BoundingBox>> intersectingBranches = std::queue<std::shared_ptr<Mungus::BoundingBox>>();
-	std::vector<unsigned long> intersectingActors;
+	std::vector<long> intersectingActors;
 
 	intersectingBranches.push(root);
 	int i = 0;
@@ -296,7 +296,7 @@ unsigned long Mungus::AABBTree<T>::findFirstIntersecting(const MungusMath::Line&
 		intersectingBranches.pop();
 	}
 
-	unsigned long closestActor = 0;
+	long closestActor = -1;
 	float closestDistance = std::numeric_limits<float>::infinity();
 
 	for (auto id : intersectingActors) {
@@ -312,53 +312,6 @@ unsigned long Mungus::AABBTree<T>::findFirstIntersecting(const MungusMath::Line&
 }
 
 template<typename T>
-const std::unordered_map<unsigned long, std::shared_ptr<T>> Mungus::AABBTree<T>::getActors(void) const {
-	return elements;
-}
-
-template<typename T>
-void Mungus::AABBTree<T>::setActorPosition(unsigned long id, const MungusMath::MVec3 & position) {
-	remove(id);
-	elements.at(id)->setPosition(position);
-	insert(id);
-}
-
-template<typename T>
-void Mungus::AABBTree<T>::scaleActor(unsigned long id, const MungusMath::MVec3 & scale) {
-	remove(id);
-	elements.at(id)->scaleBy(scale.x, scale.y, scale.z);
-	insert(id);
-}
-
-template<typename T>
-void Mungus::AABBTree<T>::rotateActor(unsigned long id, const MungusMath::MVec3 & axis, float angle) {
-	remove(id);
-	elements.at(id)->rotate(axis, angle);
-	insert(id);
-}
-
-template<typename T>
-void Mungus::AABBTree<T>::turnActor(unsigned long id, float angle) {
-	remove(id);
-	elements.at(id)->turn(angle);
-	insert(id);
-}
-
-template<typename T>
-void Mungus::AABBTree<T>::pitchActor(unsigned long id, float angle) {
-	remove(id);
-	elements.at(id)->pitch(angle);
-	insert(id);
-}
-
-template<typename T>
-void Mungus::AABBTree<T>::rollActor(unsigned long id, float angle) {
-	remove(id);
-	elements.at(id)->roll(angle);
-	insert(id);
-}
-
-template<class T>
 void Mungus::AABBTree<T>::restoreAwesomeness(std::shared_ptr<Mungus::BoundingBox> badNode) {
 	while (badNode != nullptr) {
 		if (!badNode->isLeaf()) {
@@ -373,7 +326,7 @@ void Mungus::AABBTree<T>::restoreAwesomeness(std::shared_ptr<Mungus::BoundingBox
 	}
 }
 
-template<class T>
+template<typename T>
 void Mungus::AABBTree<T>::fixBoxHeight(std::shared_ptr<Mungus::BoundingBox> badNode) {
 	if (badNode != nullptr) {
 		int left = getBoxHeight(badNode->left);
@@ -382,7 +335,7 @@ void Mungus::AABBTree<T>::fixBoxHeight(std::shared_ptr<Mungus::BoundingBox> badN
 	}
 }
 
-template<class T>
+template<typename T>
 int Mungus::AABBTree<T>::getBoxHeight(std::shared_ptr<Mungus::BoundingBox> node) const {
 	return node == nullptr ? -1 : node->height;
 }
@@ -435,4 +388,51 @@ void Mungus::AABBTree<T>::balanceNode(std::shared_ptr<Mungus::BoundingBox> badNo
 			fixBoxHeight(rightNode);
 		}
 	}
+}
+
+template<typename T>
+const std::unordered_map<unsigned long, std::shared_ptr<T>> Mungus::AABBTree<T>::getElements(void) const {
+	return elements;
+}
+
+template<typename T>
+void Mungus::AABBTree<T>::setElementPosition(unsigned long id, const MungusMath::MVec3 & position) {
+	remove(id);
+	elements.at(id)->setPosition(position);
+	insert(id);
+}
+
+template<>
+void Mungus::AABBTree<Mungus::Actor>::scaleActor(unsigned long id, const MungusMath::MVec3 & scale) {
+	remove(id);
+	elements.at(id)->scaleBy(scale.x, scale.y, scale.z);
+	insert(id);
+}
+
+template<>
+void Mungus::AABBTree<Mungus::Actor>::rotateActor(unsigned long id, const MungusMath::MVec3 & axis, float angle) {
+	remove(id);
+	elements.at(id)->rotate(axis, angle);
+	insert(id);
+}
+
+template<>
+void Mungus::AABBTree<Mungus::Actor>::turnActor(unsigned long id, float angle) {
+	remove(id);
+	elements.at(id)->turn(angle);
+	insert(id);
+}
+
+template<>
+void Mungus::AABBTree<Mungus::Actor>::pitchActor(unsigned long id, float angle) {
+	remove(id);
+	elements.at(id)->pitch(angle);
+	insert(id);
+}
+
+template<>
+void Mungus::AABBTree<Mungus::Actor>::rollActor(unsigned long id, float angle) {
+	remove(id);
+	elements.at(id)->roll(angle);
+	insert(id);
 }

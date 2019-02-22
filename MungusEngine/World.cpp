@@ -10,6 +10,7 @@
 Mungus::World::World(const Application* owner) :
 	owner(owner),
 	frameCount(0),
+	nextActorId(0),
 	camera(std::make_shared<Camera>()),
 	actorsTree(std::make_shared<Mungus::AABBTree<Actor>>())
 {};
@@ -20,7 +21,7 @@ void inline Mungus::World::loadActor(const std::string& title,
 }
 
 inline const std::unordered_map<unsigned long, std::shared_ptr<Mungus::Actor>> Mungus::World::getActors(void) const {
-	return actorsTree->getActors();
+	return actorsTree->getElements();
 }
 
 inline std::vector<std::shared_ptr<Mungus::Actor>> Mungus::World::getVisibleActors(void) const {
@@ -33,13 +34,13 @@ const unsigned long Mungus::World::createActor(const std::string & name, const M
 		std::shared_ptr<Mungus::Actor> newActor = std::make_shared<Mungus::Actor>(*base);
 		newActor->setPosition(initialPosition);
 
-		return actorsTree->insert(newActor);
+		return actorsTree->insert(newActor, ++nextActorId);
 	}
 	return 0;
 }
 
 const unsigned long Mungus::World::setEntityPosition(const unsigned long id, const MungusMath::MVec3& position) {
-	actorsTree->setActorPosition(id, position);
+	actorsTree->setElementPosition(id, position);
 	
 	return id;
 }
@@ -155,6 +156,10 @@ inline const Mungus::Camera Mungus::World::getCamera(void) const {
 	return *camera;
 }
 
+std::unordered_map<std::string, std::shared_ptr<Mungus::Asset>>* Mungus::World::getAssets(void) {
+	return &assets;
+}
+
 inline Mungus::Camera& Mungus::World::getCamera(void) {
 	return *camera;
 }
@@ -175,6 +180,6 @@ MungusMath::Line Mungus::World::getRayFromCursorLocation(const CursorLocation & 
 	return camera->getRayFromCursorLocation(cursorLocation, windowWidth, windowHeight);
 }
 
-unsigned long Mungus::World::findFirstIntersecting(const MungusMath::Line & line) {
+long Mungus::World::findFirstIntersecting(const MungusMath::Line & line) {
 	return actorsTree->findFirstIntersecting(line);
 }

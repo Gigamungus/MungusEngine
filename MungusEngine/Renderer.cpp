@@ -110,6 +110,14 @@ int Mungus::Renderer::getWindowHeight(void) const {
 	return height;
 }
 
+void Mungus::Renderer::enableWireFrameMode(void) const {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+}
+
+void Mungus::Renderer::exitWireFrameMode(void) const {
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
 //////////// end member function implementations
 
 
@@ -166,7 +174,6 @@ void glewStartup(void) {
 	glDepthMask(GL_TRUE);
 	glDepthFunc(GL_LEQUAL);
 	glDepthRange(1.0f, 0.0f);
-
 }
 
 void compileShaders(std::unordered_map<std::string, Mungus::Shader>& programs) {

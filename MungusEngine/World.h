@@ -16,6 +16,7 @@ namespace Mungus {
 	private:
 		const Application* owner;
 		unsigned long frameCount;
+		unsigned long nextActorId;
 		std::unordered_map<std::string, std::shared_ptr<Mungus::Asset>> assets;
 		std::shared_ptr<AABBTree<Actor>> actorsTree;
 		std::shared_ptr<Camera> camera;
@@ -28,6 +29,7 @@ namespace Mungus {
 								const std::unordered_map<std::string, Shader>& programs);
 
 		const Camera inline getCamera(void) const;
+		std::unordered_map<std::string, std::shared_ptr<Mungus::Asset>>* getAssets(void);
 		Camera& getCamera(void);
 		const inline unsigned long getFrameCount(void) const { return frameCount; }
 		void inline incrementFrameCount(void) { frameCount++; }
@@ -72,7 +74,7 @@ namespace Mungus {
 
 		MungusMath::Line getRayFromCursorLocation(const CursorLocation& cursorLocation, float windowWidth, float windowHeight) const;
 
-		unsigned long findFirstIntersecting(const MungusMath::Line& line);
+		long findFirstIntersecting(const MungusMath::Line& line);
 
 	};
 

@@ -3,6 +3,7 @@
 
 namespace Mungus {
 	class Shader;
+	struct BoundingBox;
 
 	static std::unordered_map<std::string, unsigned int> typeMap = {
 		{"byte", GL_BYTE},
@@ -26,23 +27,43 @@ namespace Mungus {
 		{GL_DOUBLE, sizeof(double)}
 	};
 
+	class VAO;
 	class VBO;
 	class IBO;
+	template <typename T> class AABBTree;
+
+	struct VertexPosition {
+		MungusMath::MVec3 position;
+		std::shared_ptr<VAO> owner;
+		int id;
+
+		VertexPosition(float x, float y, float z, int id, std::shared_ptr<VAO> owner) :
+			position(MungusMath::MVec3(x, y, z)),
+			id(id),
+			owner(owner)
+		{}
+
+		MungusMath::MVec3 getPosition(void) const { return position; }
+		std::shared_ptr<Mungus::BoundingBox> getBoundingBox(void) const;
+		void setPosition(const MungusMath::MVec3& newPosition);
+	};
 
 	class VAO {
 	private:
 		unsigned int id;
 		std::shared_ptr<VBO> vbo;
 		std::shared_ptr<IBO> ibo;
-		int numTriangleVertices;
+		std::shared_ptr<AABBTree<VertexPosition>> vertexTree;
 
 	public:
 		VAO(void) {}
 		VAO(const Shader& program, const std::vector<json>& vertices, const json& primitives);
 		virtual ~VAO();
 
-		unsigned int getId(void) const { return id; }
-		int getNumTriangleVertices(void) const { return numTriangleVertices; };
+		inline unsigned int getId(void) const { return id; }
+		int getNumTriangleVertices(void) const;
+		void moveVertex(long id, MungusMath::MVec3 newPosition);
+		void updateVertexRenderPosition(int id, MungusMath::MVec3 newPosition);
 	};
 
 }

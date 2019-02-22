@@ -34,6 +34,9 @@ namespace Mungus {
 
 		int getWindowWidth(void) const;
 		int getWindowHeight(void) const;
+
+		void enableWireFrameMode(void) const;
+		void exitWireFrameMode(void) const;
 	};
 
 }

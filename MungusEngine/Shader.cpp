@@ -9,7 +9,7 @@ Mungus::Shader::Shader(const json & source) :
 	id = glCreateProgram();
 
 	int i = 0;
-	for (Mungus::VertexAttribute attrib : *layout->GetAttributes()) {
+	for (Mungus::VertexAttribute attrib : *layout->getAttributes()) {
 		glBindAttribLocation(id, i, attrib.name.c_str());
 		i++;
 	}

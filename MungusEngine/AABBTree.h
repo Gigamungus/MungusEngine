@@ -4,11 +4,12 @@
 namespace Mungus {
 
 	class Actor;
+	struct VertexPosition;
 	class Camera;
 	class Asset;
 
 	struct BoundingBox {
-		unsigned long elementId;
+		long elementId;
 		MungusMath::MVec3 leftBound;
 		MungusMath::MVec3 rightBound;
 
@@ -17,14 +18,14 @@ namespace Mungus {
 		std::shared_ptr<Mungus::BoundingBox> left = nullptr;
 		std::shared_ptr<Mungus::BoundingBox> right = nullptr;
 
-		BoundingBox() : elementId(0), height(1) {}
+		BoundingBox() : elementId(-1), height(1) {}
 		BoundingBox(unsigned long elementId, MungusMath::MVec3 lowerBound, MungusMath::MVec3 upperBound) :
 			elementId(elementId),
 			leftBound(lowerBound),
 			rightBound(upperBound),
 			height(0)
 		{}
-		inline bool isLeaf(void) const { return elementId != 0; }
+		inline bool isLeaf(void) const { return elementId != -1; }
 		inline bool isRoot(void) const { return parent == nullptr; }
 		inline void swapChildren() {
 			std::shared_ptr<Mungus::BoundingBox> tmp = left;
@@ -59,7 +60,6 @@ namespace Mungus {
 	class MUNGUS AABBTree {
 		std::unordered_map<unsigned long, std::shared_ptr<T>> elements;
 		unsigned long numElements;
-		unsigned long nextId;
 		std::shared_ptr<BoundingBox> root;
 
 
@@ -70,10 +70,10 @@ namespace Mungus {
 		AABBTree();
 		virtual ~AABBTree();
 
-		unsigned long insert(std::shared_ptr<T> element);
+		unsigned long insert(std::shared_ptr<T> element, unsigned long entityId);
 		void remove(unsigned long entityId);
 		void emptyTree(void);
-		unsigned long findFirstIntersecting(const MungusMath::Line& line);
+		long findFirstIntersecting(const MungusMath::Line& line);
 		
 		bool intersect(const BoundingBox& first, const BoundingBox& second) const;
 		bool intersect(const BoundingBox& box, const MungusMath::Line& line) const;
@@ -85,14 +85,14 @@ namespace Mungus {
 		float surfaceArea(std::shared_ptr<BoundingBox> hitBox) const;
 		float hypotheticalSurfaceArea(std::shared_ptr<BoundingBox> firstHitBox, std::shared_ptr<BoundingBox> secondHitBox) const;
 		void setBoundsFromChildren(std::shared_ptr<BoundingBox> hitBox);
-		const std::unordered_map<unsigned long, std::shared_ptr<T>> getActors(void) const;
+		const std::unordered_map<unsigned long, std::shared_ptr<T>> getElements(void) const;
 		void restoreAwesomeness(std::shared_ptr<Mungus::BoundingBox> badNode);
 		void fixBoxHeight(std::shared_ptr<Mungus::BoundingBox> badNode);
 		void balanceNode(std::shared_ptr<Mungus::BoundingBox> badNode);
 		int getBoxHeight(std::shared_ptr<Mungus::BoundingBox> node) const;
 
 		// todo: template specialize these
-		void setActorPosition(unsigned long id, const MungusMath::MVec3& position);
+		void setElementPosition(unsigned long id, const MungusMath::MVec3& position);
 		void scaleActor(unsigned long id, const MungusMath::MVec3& scale);
 		void rotateActor(unsigned long id, const MungusMath::MVec3& axis, float angle);
 		void turnActor(unsigned long id, float angle);
@@ -102,5 +102,6 @@ namespace Mungus {
 
 
 	template class AABBTree<Mungus::Actor>;
+	template class AABBTree<Mungus::VertexPosition>;
 }
 

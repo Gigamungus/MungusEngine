@@ -58,7 +58,7 @@ namespace Mungus {
 		unsigned long getPrimarySelection(void) const { return primarySelection; }
 		void setPrimarySelection(unsigned long newSelection) { primarySelection = newSelection; }
 
-		unsigned long findFirstIntersectingWithRay(const MungusMath::Line& line);
+		long findFirstIntersectingWithRay(const MungusMath::Line& line);
 		const unsigned long inline createActor(const std::string& name, const MungusMath::MVec3& initialPosition = MungusMath::MVec3{0, 0, 0});
 		const unsigned long setEntityPosition(const unsigned long id, float x, float y, float z);
 		const unsigned long scaleEntity(const unsigned long id, float x, float y, float z);
@@ -112,6 +112,15 @@ namespace Mungus {
 			void setAspectRatio(float aspectRatio);
 
 			//////////end renderer functions ///////////////
+
+			////////// asset editor functions //////////////
+
+			void enableWireFrameMode(void) const;
+			void exitWireFrameMode(void) const;
+
+			void testChangeVertexCoord(const std::string& asset, long vertexId, const MungusMath::MVec3& newPosition);
+
+			//////////end asset editor functions ///////////
 
 		////////////////// end client call functions //////////////////
 

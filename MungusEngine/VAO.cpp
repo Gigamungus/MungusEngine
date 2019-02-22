@@ -4,12 +4,14 @@
 #include "VBO.h"
 #include "IBO.h"
 #include "Shader.h"
+#include "AABBTree.h"
 
 Mungus::VAO::VAO(const Shader& program, const std::vector<json>& vertices, const json& primitives) :
 	id(0),
-	numTriangleVertices(0),
 	ibo(nullptr),
-	vbo(nullptr) {
+	vbo(nullptr),
+	vertexTree(std::make_shared<Mungus::AABBTree<Mungus::VertexPosition>>())
+{
 
 	glGenVertexArrays(1, &id);
 	glBindVertexArray(id);
@@ -17,13 +19,44 @@ Mungus::VAO::VAO(const Shader& program, const std::vector<json>& vertices, const
 	vbo = std::make_shared<VBO>(program.getLayout(), vertices);
 	ibo = std::make_shared<IBO>(primitives);
 
-	numTriangleVertices = ibo->getNumTriangleVertices();
+	int i = 0;
+
+	for (json vertex : *vbo->getVertices()) {
+		vertexTree->insert(std::make_shared<Mungus::VertexPosition>(
+			vertex[vbo->getLayout()->getIndexOfAttribute("posx")],
+			vertex[vbo->getLayout()->getIndexOfAttribute("posy")],
+			vertex[vbo->getLayout()->getIndexOfAttribute("posz")],
+			i, std::make_shared<Mungus::VAO>(*this)), i);
+		i++;
+	}
 
 	glBindVertexArray(0);
+}
+
+Mungus::VAO::~VAO() {
 	ibo = nullptr;
 	vbo = nullptr;
 }
 
-Mungus::VAO::~VAO() {
+int Mungus::VAO::getNumTriangleVertices(void) const {
+	return ibo->getNumTriangleVertices();
+}
 
+void Mungus::VAO::moveVertex(long id, MungusMath::MVec3 newPosition) {
+	vertexTree->setElementPosition(id, newPosition);
+}
+
+void Mungus::VAO::updateVertexRenderPosition(int id, MungusMath::MVec3 newPosition) {
+	vbo->moveVertex(id, newPosition);
+}
+
+std::shared_ptr<Mungus::BoundingBox> Mungus::VertexPosition::getBoundingBox(void) const {
+	float vertexRadius = 0.1;
+	MungusMath::MVec3 offset(vertexRadius, vertexRadius, vertexRadius);
+	return std::make_shared<Mungus::BoundingBox>((unsigned long)id, position - offset, position + offset);
+}
+
+void Mungus::VertexPosition::setPosition(const MungusMath::MVec3 & newPosition) {
+	position = newPosition;
+	owner->updateVertexRenderPosition(id, newPosition);
 }

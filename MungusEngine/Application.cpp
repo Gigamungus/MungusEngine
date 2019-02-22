@@ -5,6 +5,7 @@
 #include "Controller.h"
 #include "Camera.h"
 #include "Shader.h"
+#include "Asset.h"
 
 #include "MungusMath.h"
 #include "MungusUtil.h"
@@ -221,7 +222,7 @@ void Mungus::Application::enableCursor(void) const {
 	glfwSetInputMode(renderer->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
-unsigned long Mungus::Application::findFirstIntersectingWithRay(const MungusMath::Line & line) {
+long Mungus::Application::findFirstIntersectingWithRay(const MungusMath::Line & line) {
 	return world->findFirstIntersecting(line);
 }
 
@@ -387,6 +388,18 @@ void Mungus::Application::setFieldOfView(float fieldOfView) {
 
 void Mungus::Application::setAspectRatio(float aspectRatio) {
 	world->getCamera().setAspectRatio(aspectRatio);
+}
+
+void Mungus::Application::enableWireFrameMode(void) const {
+	renderer->enableWireFrameMode();
+}
+
+void Mungus::Application::exitWireFrameMode(void) const {
+	renderer->exitWireFrameMode();
+}
+
+void Mungus::Application::testChangeVertexCoord(const std::string & asset, long vertexId, const MungusMath::MVec3 & newPosition) {
+	world->getAssets()->at(asset)->editVertexCoordinate(vertexId, newPosition);
 }
 
 ////////////////////////////////////////////
