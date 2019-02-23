@@ -64,6 +64,7 @@ namespace Mungus {
 		int getNumTriangleVertices(void) const;
 		void moveVertex(long id, MungusMath::MVec3 newPosition);
 		void updateVertexRenderPosition(int id, MungusMath::MVec3 newPosition);
+		long findIntersectingVertex(const MungusMath::Line& ray) const;
 	};
 
 }

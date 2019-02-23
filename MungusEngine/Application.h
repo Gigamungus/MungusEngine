@@ -20,9 +20,12 @@ namespace Mungus {
 		void cursorCallBack(GLFWwindow* window, double xpos, double ypos);
 		void updateCameraPosition(void);
 		void updateMouseLocation(void);
+
 		float lmbClickTime;
 		float rmbClickTime;
 		unsigned long primarySelection;
+		bool editingAsset;
+		std::string assetBeingEdited;
 
 	protected:
 		std::shared_ptr<Mungus::World> world;
@@ -38,6 +41,7 @@ namespace Mungus {
 
 
 		///////////// client can call these ///////////////
+		void addKeyCallback(int key, std::function<void(Mungus::Application*, int, int, int, int)> callback);
 		void setNoClipBindings(void);
 
 		const float time(void) const;
@@ -58,7 +62,8 @@ namespace Mungus {
 		unsigned long getPrimarySelection(void) const { return primarySelection; }
 		void setPrimarySelection(unsigned long newSelection) { primarySelection = newSelection; }
 
-		long findFirstIntersectingWithRay(const MungusMath::Line& line);
+		long findFirstActorIntersectingWithRay(const MungusMath::Line& line);
+		long findFirstVertexIntersectingWithRay(const MungusMath::Line & line);
 		const unsigned long inline createActor(const std::string& name, const MungusMath::MVec3& initialPosition = MungusMath::MVec3{0, 0, 0});
 		const unsigned long setEntityPosition(const unsigned long id, float x, float y, float z);
 		const unsigned long scaleEntity(const unsigned long id, float x, float y, float z);

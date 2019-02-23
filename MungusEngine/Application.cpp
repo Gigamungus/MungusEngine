@@ -64,8 +64,54 @@ struct Mungus::ActiveBindings {
 };
 
 //////// client call functions /////////////
+void Mungus::Application::addKeyCallback(int key, std::function<void(Mungus::Application*, int, int, int, int)> callback) {
+	switch (key) {
+		case A_KEY: { bindings->aBindings.push(callback);			break; }
+		case B_KEY: { bindings->bBindings.push(callback);			break; }
+		case C_KEY: { bindings->cBindings.push(callback);			break; }
+		case D_KEY: { bindings->dBindings.push(callback);			break; }
+		case E_KEY: { bindings->eBindings.push(callback);			break; }
+		case F_KEY: { bindings->fBindings.push(callback);			break; }
+		case G_KEY: { bindings->gBindings.push(callback);			break; }
+		case H_KEY: { bindings->hBindings.push(callback);			break; }
+		case I_KEY: { bindings->iBindings.push(callback);			break; }
+		case J_KEY: { bindings->jBindings.push(callback);			break; }
+		case K_KEY: { bindings->kBindings.push(callback);			break; }
+		case L_KEY: { bindings->lBindings.push(callback);			break; }
+		case M_KEY: { bindings->mBindings.push(callback);			break; }
+		case N_KEY: { bindings->nBindings.push(callback);			break; }
+		case O_KEY: { bindings->oBindings.push(callback);			break; }
+		case P_KEY: { bindings->pBindings.push(callback);			break; }
+		case Q_KEY: { bindings->qBindings.push(callback);			break; }
+		case R_KEY: { bindings->rBindings.push(callback);			break; }
+		case S_KEY: { bindings->sBindings.push(callback);			break; }
+		case T_KEY: { bindings->tBindings.push(callback);			break; }
+		case U_KEY: { bindings->uBindings.push(callback);			break; }
+		case V_KEY: { bindings->vBindings.push(callback);			break; }
+		case W_KEY: { bindings->wBindings.push(callback);			break; }
+		case X_KEY: { bindings->xBindings.push(callback);			break; }
+		case Y_KEY: { bindings->yBindings.push(callback);			break; }
+		case Z_KEY: { bindings->zBindings.push(callback);			break; }
+		case ZERO_KEY: { bindings->zeroBindings.push(callback);		break; }
+		case ONE_KEY: { bindings->oneBindings.push(callback);		break; }
+		case TWO_KEY: { bindings->twoBindings.push(callback);		break; }
+		case THREE_KEY: { bindings->threeBindings.push(callback);	break; }
+		case FOUR_KEY: { bindings->fourBindings.push(callback);		break; }
+		case FIVE_KEY: { bindings->fiveBindings.push(callback);		break; }
+		case SIX_KEY: { bindings->sixBindings.push(callback);		break; }
+		case SEVEN_KEY: { bindings->sevenBindings.push(callback);	break; }
+		case EIGHT_KEY: { bindings->eightBindings.push(callback);	break; }
+		case NINE_KEY: { bindings->nineBindings.push(callback);		break; }
+		case ESCAPE_KEY: { bindings->escapeBindings.push(callback);	break; }
+		case SPACE_KEY: { bindings->spaceBindings.push(callback);	break; }
+		default:
+			MLOG("binding to unknown key: " << key)
+			break;
+	}
+}
+
 void Mungus::Application::setNoClipBindings(void) {
-	bindings->aBindings.push([](Mungus::Application* app, int key, int scanCode, int action, int mods) {
+	addKeyCallback(A_KEY, ([](Mungus::Application* app, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
 			app->setCameraTurningStatus(MPLANAR_REVERSE);
@@ -76,7 +122,7 @@ void Mungus::Application::setNoClipBindings(void) {
 		default:
 			break;
 		};
-	});
+	}));
 	bindings->dBindings.push([](Mungus::Application* app, int key, int scanCode, int action, int mods) {
 		switch (action) {
 		case GLFW_PRESS:
@@ -184,7 +230,14 @@ void Mungus::Application::setNoClipBindings(void) {
 	});
 
 	bindings->leftClickBindings.push([](Mungus::Application* app, int button, int action, int mods) {
-		app->setPrimarySelection(app->findFirstIntersectingWithRay(app->getRayFromCursorLocation(app->getLastMouseLocation())));
+		MungusMath::Line ray = app->getRayFromCursorLocation(app->getLastMouseLocation());
+		long actor = app->findFirstActorIntersectingWithRay(ray);
+		app->setPrimarySelection(actor);
+
+		long vertex = app->findFirstVertexIntersectingWithRay(ray);
+		std::cout << "found vertex: " << vertex << "\n";
+
+
 	}); 
 
 	bindings->rightClickBindings.push([](Mungus::Application* app, int button, int action, int mods) {
@@ -222,8 +275,16 @@ void Mungus::Application::enableCursor(void) const {
 	glfwSetInputMode(renderer->getWindow(), GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 }
 
-long Mungus::Application::findFirstIntersectingWithRay(const MungusMath::Line & line) {
-	return world->findFirstIntersecting(line);
+long Mungus::Application::findFirstActorIntersectingWithRay(const MungusMath::Line & line) {
+	return world->findFirstIntersectingActor(line);
+}
+
+long Mungus::Application::findFirstVertexIntersectingWithRay(const MungusMath::Line & line) {
+	if (editingAsset) {
+		return world->findFirstIntersectingVertex(assetBeingEdited, line);
+	}
+	MLOG("tried to find vertex intersection while not editing any asset")
+	return -1;
 }
 
 const unsigned long Mungus::Application::frameCount(void) const {
@@ -431,7 +492,9 @@ Mungus::Application::Application(void) :
 	lastMouseLocation(std::make_shared<Mungus::CursorLocation>()),
 	lmbClickTime(0),
 	rmbClickTime(0),
-	primarySelection(0)
+	primarySelection(0),
+	editingAsset(true),
+	assetBeingEdited("cube")
 {
 	glfwSetWindowUserPointer(renderer->getWindow(), this);
 	glfwSetKeyCallback(renderer->getWindow(), [](GLFWwindow* window, int key, int scanCode, int action, int mods) {

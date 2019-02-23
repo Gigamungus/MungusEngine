@@ -180,6 +180,10 @@ MungusMath::Line Mungus::World::getRayFromCursorLocation(const CursorLocation & 
 	return camera->getRayFromCursorLocation(cursorLocation, windowWidth, windowHeight);
 }
 
-long Mungus::World::findFirstIntersecting(const MungusMath::Line & line) {
+long Mungus::World::findFirstIntersectingActor(const MungusMath::Line & line) {
 	return actorsTree->findFirstIntersecting(line);
+}
+
+long Mungus::World::findFirstIntersectingVertex(const std::string & asset, const MungusMath::Line & ray) const {
+	return assets.at(asset)->findIntersectingVertex(ray);
 }

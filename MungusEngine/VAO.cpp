@@ -50,10 +50,19 @@ void Mungus::VAO::updateVertexRenderPosition(int id, MungusMath::MVec3 newPositi
 	vbo->moveVertex(id, newPosition);
 }
 
+long Mungus::VAO::findIntersectingVertex(const MungusMath::Line & ray) const {
+	return vertexTree->findFirstIntersecting(ray);
+}
+
 std::shared_ptr<Mungus::BoundingBox> Mungus::VertexPosition::getBoundingBox(void) const {
 	float vertexRadius = 0.1;
 	MungusMath::MVec3 offset(vertexRadius, vertexRadius, vertexRadius);
-	return std::make_shared<Mungus::BoundingBox>((unsigned long)id, position - offset, position + offset);
+	MungusMath::MVec3 lowerBound = position - offset;
+	MungusMath::MVec3 upperBound = position + offset;
+	float tmp = lowerBound.z;
+	lowerBound.z = -upperBound.z;
+	upperBound.z = -tmp;
+	return std::make_shared<Mungus::BoundingBox>((unsigned long)id, lowerBound, upperBound);
 }
 
 void Mungus::VertexPosition::setPosition(const MungusMath::MVec3 & newPosition) {

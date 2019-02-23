@@ -26,8 +26,16 @@ Mungus::Asset::Asset(	const std::string& name,
 	vao = std::make_shared<VAO>(*program, vertices, primitives);
 }
 
-const std::vector<float>& Mungus::Asset::getHitboxCoords(const std::string & animation, unsigned int frame) const {
-	return boundingBoxCoords.at(animation)[frame];
+const std::vector<float> Mungus::Asset::getHitboxCoords(const std::string & animation, unsigned int frame) const {
+	std::vector<float> coords = boundingBoxCoords.at(animation)[frame];
+	float tmp = coords[2];
+	coords[2] = -coords[5];
+	coords[5] = -tmp;
+	return coords;
+}
+
+long Mungus::Asset::findIntersectingVertex(const MungusMath::Line & ray) const {
+	return vao->findIntersectingVertex(ray);
 }
 
 void Mungus::Asset::editVertexCoordinate(long vertexId, const MungusMath::MVec3 & newPosition) {

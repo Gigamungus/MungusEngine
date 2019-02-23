@@ -74,7 +74,8 @@ namespace Mungus {
 
 		MungusMath::Line getRayFromCursorLocation(const CursorLocation& cursorLocation, float windowWidth, float windowHeight) const;
 
-		long findFirstIntersecting(const MungusMath::Line& line);
+		long findFirstIntersectingActor(const MungusMath::Line& line);
+		long findFirstIntersectingVertex(const std::string& asset, const MungusMath::Line& ray) const;
 
 	};
 

@@ -126,9 +126,9 @@ void Mungus::VBO::moveVertex(int id, MungusMath::MVec3 newPosition) {
 	float* yData = (float*)(yByteData);
 	float* zData = (float*)(zByteData);
 
-	*xData += newPosition.x;
-	*yData += newPosition.y;
-	*zData += newPosition.z;
+	*xData = newPosition.x;
+	*yData = newPosition.y;
+	*zData = newPosition.z;
 
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 
