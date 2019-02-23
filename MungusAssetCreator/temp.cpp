@@ -29,7 +29,7 @@ public:
 				std::cout << i << "\n";
 			}
 			unsigned int newEntity = createActor(CUBE);
-			//, MungusMath::MVec3(((2 * (i % 10)) + (25 * (i / 1000))) % 250, (2 * ((i % 1000) / 100)), 2 + (2 * ((i / 10)) % 20) + (int)(25 * (i / 10000)))
+			//setEntityPosition(newEntity, ((2 * (i % 10)) + (25 * (i / 1000))) % 250, (2 * ((i % 1000) / 100)), 2 + (2 * ((i / 10)) % 20) + (int)(25 * (i / 10000)));
 			entities.push_back(newEntity);
 		}
 	}

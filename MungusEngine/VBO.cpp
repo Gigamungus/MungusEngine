@@ -1,12 +1,16 @@
 #include "stdafx.h"
+#include "Asset.h"
 #include "VBO.h"
 #include "VAO.h"
 #include "VLO.h"
+#include "IBO.h"
 
 Mungus::VBO::VBO(std::shared_ptr<VLO> layout, const std::vector<json>& vertexJSON) :
 	id(0),
 	vertexLayout(layout),
-	vertices(std::make_shared<std::vector<json>>(vertexJSON)) {
+	vertices(std::make_shared<std::vector<json>>(vertexJSON)),
+	connections(std::unordered_map<unsigned int, std::unordered_set<unsigned int>>())
+{
 	glGenBuffers(1, &id);
 	glBindBuffer(GL_ARRAY_BUFFER, id);
 
@@ -15,9 +19,11 @@ Mungus::VBO::VBO(std::shared_ptr<VLO> layout, const std::vector<json>& vertexJSO
 	auto attributes = *layout->getAttributes();
 	int i = 0;
 	int j = 0;
+	int k = 0;
 
 	for (json vertex : vertexJSON) {
 		int attributeIndex = 0;
+		connections[k] = std::unordered_set<unsigned int>();
 
 		for (Mungus::VertexAttribute attribute : attributes) {
 			switch (attribute.type) {
@@ -75,6 +81,7 @@ Mungus::VBO::VBO(std::shared_ptr<VLO> layout, const std::vector<json>& vertexJSO
 			}
 			attributeIndex++;
 		}
+		k++;
 	}
 
 	i = 0;
@@ -133,4 +140,31 @@ void Mungus::VBO::moveVertex(int id, MungusMath::MVec3 newPosition) {
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 
 	unbind();
+}
+
+void Mungus::VBO::addConnections(const TriangleIndices& connectedVertices) {
+	unsigned int vertex1 = connectedVertices.index1;
+	unsigned int vertex2 = connectedVertices.index2;
+	unsigned int vertex3 = connectedVertices.index3;
+
+	connections.at(vertex1).insert(vertex2);
+	connections.at(vertex1).insert(vertex3);
+	connections.at(vertex2).insert(vertex1);
+	connections.at(vertex2).insert(vertex3);
+	connections.at(vertex3).insert(vertex1);
+	connections.at(vertex3).insert(vertex2);
+}
+
+MungusMath::MVec3 Mungus::VBO::getVertexPosition(unsigned int vertexId) const {
+	json vertex = (*vertices)[vertexId];
+
+	int indexOfx = vertexLayout->getIndexOfAttribute(POSX);
+	int indexOfy = vertexLayout->getIndexOfAttribute(POSY);
+	int indexOfz = vertexLayout->getIndexOfAttribute(POSZ);
+
+	return MungusMath::MVec3(vertex[indexOfx], vertex[indexOfy], vertex[indexOfz]);
+}
+
+float Mungus::VBO::getDistanceBetweenVertices(unsigned int vert1, unsigned int vert2) const {
+	return MungusMath::pointDistance(getVertexPosition(vert1), getVertexPosition(vert2));
 }

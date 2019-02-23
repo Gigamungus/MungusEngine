@@ -16,11 +16,15 @@ Mungus::VAO::VAO(const Shader& program, const std::vector<json>& vertices, const
 	glGenVertexArrays(1, &id);
 	glBindVertexArray(id);
 
-	vbo = std::make_shared<VBO>(program.getLayout(), vertices);
 	ibo = std::make_shared<IBO>(primitives);
+	vbo = std::make_shared<VBO>(program.getLayout(), vertices);
+	const std::vector<TriangleIndices> triangleIndices = *ibo->getTriangleIndices();
+
+	for (TriangleIndices indices : triangleIndices) {
+		vbo->addConnections(indices);
+	}
 
 	int i = 0;
-
 	for (json vertex : *vbo->getVertices()) {
 		vertexTree->insert(std::make_shared<Mungus::VertexPosition>(
 			vertex[vbo->getLayout()->getIndexOfAttribute("posx")],
@@ -54,8 +58,27 @@ long Mungus::VAO::findIntersectingVertex(const MungusMath::Line & ray) const {
 	return vertexTree->findFirstIntersecting(ray);
 }
 
+const std::unordered_set<unsigned int>* Mungus::VAO::getConnectedVertices(unsigned int vertexId) const {
+	return vbo->getConnectedVertices(vertexId);;
+}
+
+float Mungus::VAO::getDistanceBetweenVertices(unsigned int vert1, unsigned int vert2) const {
+	return vbo->getDistanceBetweenVertices(vert1, vert2);
+}
+
 std::shared_ptr<Mungus::BoundingBox> Mungus::VertexPosition::getBoundingBox(void) const {
-	float vertexRadius = 0.1;
+	float vertexRadius = std::numeric_limits<float>::infinity();
+	for (unsigned int connectedVertex : *owner->getConnectedVertices(id)) {
+		float connectionLength = owner->getDistanceBetweenVertices(id, connectedVertex);
+		if (connectionLength < vertexRadius) {
+			vertexRadius = connectionLength;
+		}
+	}
+
+	vertexRadius = (vertexRadius == std::numeric_limits<float>::infinity()) ? 0.1 : vertexRadius / 4.0;
+
+	std::cout << "vertex: " << id << " given hitbox radius of: " << vertexRadius << "\n";
+
 	MungusMath::MVec3 offset(vertexRadius, vertexRadius, vertexRadius);
 	MungusMath::MVec3 lowerBound = position - offset;
 	MungusMath::MVec3 upperBound = position + offset;

@@ -43,7 +43,9 @@ namespace Mungus {
 			owner(owner)
 		{}
 
-		MungusMath::MVec3 getPosition(void) const { return position; }
+		MungusMath::MVec3 getPosition(void) const {
+			return position;
+		}
 		std::shared_ptr<Mungus::BoundingBox> getBoundingBox(void) const;
 		void setPosition(const MungusMath::MVec3& newPosition);
 	};
@@ -65,6 +67,8 @@ namespace Mungus {
 		void moveVertex(long id, MungusMath::MVec3 newPosition);
 		void updateVertexRenderPosition(int id, MungusMath::MVec3 newPosition);
 		long findIntersectingVertex(const MungusMath::Line& ray) const;
+		const std::unordered_set<unsigned int>* getConnectedVertices(unsigned int vertexId) const;
+		float getDistanceBetweenVertices(unsigned int vert1, unsigned int vert2) const;
 	};
 
 }

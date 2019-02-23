@@ -272,15 +272,13 @@ void Mungus::AABBTree<T>::setBoundsFromChildren(std::shared_ptr<BoundingBox> hit
 template<typename T>
 long Mungus::AABBTree<T>::findFirstIntersecting(const MungusMath::Line& line) {
 	if (root == nullptr || !intersect(*root, line))
-		return 0;
+		return -1;
 
 	std::queue<std::shared_ptr<Mungus::BoundingBox>> intersectingBranches = std::queue<std::shared_ptr<Mungus::BoundingBox>>();
 	std::vector<long> intersectingActors;
 
 	intersectingBranches.push(root);
-	int i = 0;
 	while (!intersectingBranches.empty()) {
-		i++;
 		if (intersectingBranches.front()->isLeaf()) {
 			intersectingActors.push_back(intersectingBranches.front()->elementId);
 		}
@@ -307,7 +305,6 @@ long Mungus::AABBTree<T>::findFirstIntersecting(const MungusMath::Line& line) {
 		}
 	}
 
-	std::cout << "searched " << i << " items to find item: " << closestActor << "\n";
 	return closestActor;
 }
 

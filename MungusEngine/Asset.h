@@ -1,6 +1,10 @@
 #pragma once
 #include "stdafx.h"
 
+#define POSX "posx"
+#define POSY "posy"
+#define POSZ "posz"
+
 namespace Mungus {
 	class Shader;
 	class VAO;
