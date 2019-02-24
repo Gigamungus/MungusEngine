@@ -50,7 +50,6 @@ namespace Mungus {
 		inline void setFieldOfView(float fieldOfView) { this->fieldOfView = fieldOfView; }
 		inline void setAspectRatio(float aspectRatio) { std::cout << aspectRatio << "\n"; this->aspectRatio = aspectRatio; }
 
-		bool visible(const Actor& actor) const;
 		bool visible(const std::shared_ptr<Mungus::BoundingBox> boundingBox) const;
 	};
 

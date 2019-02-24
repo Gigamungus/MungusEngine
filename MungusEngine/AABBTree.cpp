@@ -278,7 +278,9 @@ long Mungus::AABBTree<T>::findFirstIntersecting(const MungusMath::Line& line) {
 	std::vector<long> intersectingActors;
 
 	intersectingBranches.push(root);
+	int i = 0;
 	while (!intersectingBranches.empty()) {
+		i++;
 		if (intersectingBranches.front()->isLeaf()) {
 			intersectingActors.push_back(intersectingBranches.front()->elementId);
 		}
@@ -305,6 +307,7 @@ long Mungus::AABBTree<T>::findFirstIntersecting(const MungusMath::Line& line) {
 		}
 	}
 
+	std::cout << "searched " << i << " items to find item: " << closestActor << "\n";
 	return closestActor;
 }
 

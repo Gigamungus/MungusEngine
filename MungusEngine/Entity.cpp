@@ -4,7 +4,7 @@
 
 Mungus::Entity::Entity() :
 	position({ 0, 0, 0 }),
-	orientation({1, 0, 0, 0, 0, 1, 0, 0, 0, 0, -1, 0, 0, 0, 0, 1})
+	orientation({1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1})
 {}
 
 const MungusMath::MVec3 Mungus::Entity::getPosition(void) const {
@@ -16,20 +16,19 @@ const MungusMath::MMat4 Mungus::Entity::getOrientation(void) const {
 }
 
 void Mungus::Entity::rotate(const MungusMath::MVec3 & axis, float angle) {
-	orientation = orientation * MungusMath::MMat4::rotation(axis.x, axis.y, -axis.z, angle);
+	orientation = orientation * MungusMath::MMat4::rotation(axis.x, axis.y, axis.z, angle);
 }
 
 void Mungus::Entity::pitch(float angle) {
-	angle = -angle;
 	auto rightVector = planarRight();
 	float pitchAngle = MungusMath::radsToDeg(acosf(forward().dot(planarUp() * -1)));
 
-	if (0.1f > pitchAngle - angle) {
-		angle = pitchAngle - 0.1f;
+	if (0.1f > pitchAngle + angle) {
+		angle = 0.1f - pitchAngle;
 	}
 
-	if (pitchAngle - angle > 179.9f) {
-		angle = pitchAngle - 179.9f;
+	if (pitchAngle + angle > 179.9f) {
+		angle = 179.9f - pitchAngle;
 	}
 	//if (0.0 < pitchAngle - angle && pitchAngle - angle < 180.0) {
 	orientation = MungusMath::MMat4::rotation(rightVector.x, rightVector.y, rightVector.z, angle) * orientation;
@@ -41,7 +40,7 @@ void Mungus::Entity::roll(float angle) {
 }
 
 void Mungus::Entity::turn(float angle) {
-	orientation = MungusMath::MMat4::rotation(0, 1, 0, angle) * orientation;
+	orientation = MungusMath::MMat4::rotation(0, 1, 0, -angle) * orientation;
 }
 
 const MungusMath::MVec3 Mungus::Entity::forward(void) const {
@@ -50,11 +49,11 @@ const MungusMath::MVec3 Mungus::Entity::forward(void) const {
 }
 
 const MungusMath::MVec3 Mungus::Entity::up(void) const {
-	return MungusMath::MVec3::normalize(forward().cross(right()));
+	return MungusMath::MVec3::normalize(right().cross(forward()));
 }
 
 const MungusMath::MVec3 Mungus::Entity::right(void) const {
-	return MungusMath::MVec3::normalize(MungusMath::MVec3{ 0.0f, 1.0f, 0.0f }.cross(forward()));
+	return MungusMath::MVec3::normalize(forward().cross(MungusMath::MVec3{ 0.0f, 1.0f, 0.0f }));
 }
 
 const MungusMath::MVec3 Mungus::Entity::planarForward(void) const {

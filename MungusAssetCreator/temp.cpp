@@ -37,6 +37,10 @@ public:
 	virtual void mainLoop(void) override {
 		setBackground(MungusMath::MVec4{ 0.45f, 0.55f, 0.60f, 1.00f });
 
+		//MungusMath::MVec3 testVec = getCameraUp();
+
+		//std::cout << " x: " << testVec.x << " y: " << testVec.y << " z: " << testVec.z << "\n";
+
 		//testChangeVertexCoord("cube", 0, MungusMath::MVec3(0, 0, (float)frameCount() / (-100.0)));
 
 		//std::cout << getPrimarySelection() << "\n";

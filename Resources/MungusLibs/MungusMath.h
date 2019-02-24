@@ -27,6 +27,11 @@ namespace MungusMath {
 		MVec3() {}
 		MVec3(float x, float y, float z) : x(x), y(y), z(z) {}
 
+		friend inline std::ostream & operator<<(std::ostream& stream, const MVec3& vec) {
+			stream << "x: " << vec.x << " y: " << vec.y << " z: " << vec.z << "\n";
+			return stream;
+		}
+
 		inline float size(void) const {
 			return sqrtf(x * x + y * y + z * z);
 		}
@@ -94,7 +99,21 @@ namespace MungusMath {
 	struct MMat3 {
 		float data[3][3];
 
+		MMat3(void) {
+			for (int i = 0; i < 3; i++)
+				for (int j = 0; j < 3; j++)
+					data[i][j] = 0;
+		}
+
 		MMat3(const MVec3& row1, const MVec3& row2, const MVec3& row3) : data{row1.x, row1.y, row1.z, row2.x, row2.y, row2.z, row3.x, row3.y, row3.z} {}
+
+		inline const float* operator[](int index) const {
+			return data[index];
+		}
+
+		inline float* operator[](int index) {
+			return data[index];
+		}
 	};
 
 	struct MMat4 {
@@ -215,6 +234,15 @@ namespace MungusMath {
 		MVec3 point1;
 		MVec3 point2;
 		MVec3 point3;
+
+		float area(void) const {
+			MVec3 V = point2 - point1;
+			MVec3 normalV = MVec3::normalize(V);
+			MVec3 U = point3 - point1;
+			MVec3 W = point3 - (point1 + (normalV * (normalV.dot(U))));
+
+			return abs((V.size() / 2.0) * W.size());
+		}
 	};
 
 	inline MMat4 lookatMatrix(const MVec3& position, const MVec3& direction, const MVec3& trueUp) {
@@ -234,6 +262,28 @@ namespace MungusMath {
 			0, 0, 1, -(position.z),
 			0, 0, 0, 1
 		};
+	}
+
+	inline float determinant(const MMat3& matrix) {
+		float determinant = 0;
+		
+		for (int i = 0; i < 3; i++) {
+			determinant += (matrix[0][i] * ((matrix[1][(i + 1) % 3] * matrix[2][(i + 2) % 3]) - (matrix[1][(i + 2) % 3] * matrix[2][(i + 1) % 3])));
+		}
+
+		return determinant;
+	}
+
+	inline MMat3 inverseMatrix(const MMat3& matrix) {
+		MMat3 inverseMatrix;
+		float det = determinant(matrix);
+
+		for (int i = 0; i < 2; i++)
+			for (int j = 0; j < 2; j++)
+				inverseMatrix[i][j] = ((matrix[(j + 1) % 3][(i + 1) % 3] * matrix[(j + 2) % 3][(i + 2) % 3])
+									 - (matrix[(j + 1) % 3][(i + 2) % 3] * matrix[(j + 2) % 3][(i + 1) % 3])) / det;
+
+		return inverseMatrix;
 	}
 
 	inline MMat4 inverseMatrix(const MMat4& matrix) {
@@ -390,29 +440,38 @@ namespace MungusMath {
 		return MVec3::normalize((point2 - point1).cross(point3 - point1));
 	}
 
-	inline float signedTetrahedronVolume(const MVec3& point1, const MVec3& point2, const MVec3& point3, const MVec3& point4) {
-		return (1.0 / 6.0) * ((point2 - point1).cross(point3 - point1).dot(point4 - point1));
-	}
-
 	inline bool intersectLineTriangle(const Triangle& triangle, const Line& line) {
-		MVec3 direction = MVec3::normalize(line.direction);
-		MVec3 farPositiveLinePoint = line.position + (direction * 1000);
-		MVec3 farNegativeLinePoint = line.position - (direction * 1000);
+		MVec3 tPointA = triangle.point1;
+		MVec3 tPointB = triangle.point2;
+		MVec3 tPointC = triangle.point3;
+		MVec3 lineStart = line.position;
+		MVec3 lineDirection = line.direction;
+		MVec3 triangleNormal = (tPointB - tPointA).cross(tPointC - tPointA);
 
-		return (
-			signedTetrahedronVolume(farPositiveLinePoint, triangle.point1, triangle.point2, triangle.point3) /
-			signedTetrahedronVolume(farNegativeLinePoint, triangle.point1, triangle.point2, triangle.point3) < 0
-			) && 
-			(
-			signedTetrahedronVolume(farPositiveLinePoint, farNegativeLinePoint, triangle.point1, triangle.point2) > 0 ? (
-				signedTetrahedronVolume(farPositiveLinePoint, farNegativeLinePoint, triangle.point2, triangle.point3) > 0 &&
-				signedTetrahedronVolume(farPositiveLinePoint, farNegativeLinePoint, triangle.point3, triangle.point1) > 0
-			) : (
-				signedTetrahedronVolume(farPositiveLinePoint, farNegativeLinePoint, triangle.point2, triangle.point3) < 0 &&
-				signedTetrahedronVolume(farPositiveLinePoint, farNegativeLinePoint, triangle.point3, triangle.point1) < 0
-			));
+		float tCoeff = lineDirection.dot(triangleNormal);
 
+		if (tCoeff == 0.0) {
+			// line is parralel to triangle
+			return false;
+		}
+
+		float constantCoeff = lineStart.dot(triangleNormal);
+		float planeEqtnRHS = (triangleNormal.x * tPointA.x) + (triangleNormal.y * tPointA.y) + (triangleNormal.z * tPointA.z) - constantCoeff;
+		float lineForwardsToCoplanar = planeEqtnRHS / tCoeff;
+
+		if (lineForwardsToCoplanar < 0.0) {
+			// triangle is behind the line starting point
+			return false;
+		}
+
+		MVec3 coplanarPoint = lineStart + (lineDirection * lineForwardsToCoplanar);
+
+		return Triangle{ tPointA, tPointB, coplanarPoint }.area()
+			 + Triangle{ coplanarPoint, tPointB, tPointC }.area()
+			 + Triangle{ tPointA, coplanarPoint, tPointC }.area()
+			 < Triangle{ tPointA, tPointB, tPointC }.area() * 1.01;
 	}
+
 }
 
 #endif // MUNGUS_MATH

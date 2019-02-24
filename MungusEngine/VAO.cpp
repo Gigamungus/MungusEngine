@@ -55,6 +55,14 @@ void Mungus::VAO::updateVertexRenderPosition(int id, MungusMath::MVec3 newPositi
 }
 
 long Mungus::VAO::findIntersectingVertex(const MungusMath::Line & ray) const {
+
+	for (TriangleIndices indices : *ibo->getTriangleIndices()) {
+		if (MungusMath::intersectLineTriangle(MungusMath::Triangle{vbo->getVertexPosition(indices.index1), vbo->getVertexPosition(indices.index2) , vbo->getVertexPosition(indices.index3) }, ray)) {
+			std::cout << "clicked triangle: " << indices.index1 << ", " << indices.index2 << ", " << indices.index3 << "\n";
+		}
+	}
+
+
 	return vertexTree->findFirstIntersecting(ray);
 }
 
@@ -77,14 +85,10 @@ std::shared_ptr<Mungus::BoundingBox> Mungus::VertexPosition::getBoundingBox(void
 
 	vertexRadius = (vertexRadius == std::numeric_limits<float>::infinity()) ? 0.1 : vertexRadius / 4.0;
 
-	std::cout << "vertex: " << id << " given hitbox radius of: " << vertexRadius << "\n";
-
 	MungusMath::MVec3 offset(vertexRadius, vertexRadius, vertexRadius);
 	MungusMath::MVec3 lowerBound = position - offset;
 	MungusMath::MVec3 upperBound = position + offset;
-	float tmp = lowerBound.z;
-	lowerBound.z = -upperBound.z;
-	upperBound.z = -tmp;
+
 	return std::make_shared<Mungus::BoundingBox>((unsigned long)id, lowerBound, upperBound);
 }
 
